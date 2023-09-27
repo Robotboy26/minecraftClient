@@ -11,10 +11,11 @@ import dev.vili.haiku.Haiku;
 import dev.vili.haiku.module.Module;
 import dev.vili.haiku.setting.Setting;
 import dev.vili.haiku.setting.settings.BooleanSetting;
+import dev.vili.haiku.setting.settings.ColorSetting;
 import dev.vili.haiku.setting.settings.ModeSetting;
 import dev.vili.haiku.setting.settings.NumberSetting;
 import dev.vili.haiku.setting.settings.StringSetting;
-import dev.vili.haiku.util.HaikuLogger;
+import dev.vili.haiku.utils.HaikuLogger;
 import net.minecraft.client.MinecraftClient;
 
 import java.io.File;
@@ -74,6 +75,10 @@ public class ConfigManager {
                         case "BooleanSetting" -> {
                             BooleanSetting booleanSetting = (BooleanSetting) setting;
                             properties.setProperty(module.getName() + "." + setting.getName(), String.valueOf(booleanSetting.isEnabled()));
+                        }
+                        case "ColorSetting" -> {
+                            ColorSetting colorSetting = (ColorSetting) setting;
+                            properties.setProperty(module.getName() + "." + setting.getName(), String.valueOf(colorSetting.color()));
                         }
                         case "NumberSetting" -> {
                             NumberSetting numberSetting = (NumberSetting) setting;

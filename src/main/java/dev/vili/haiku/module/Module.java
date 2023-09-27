@@ -10,7 +10,7 @@ package dev.vili.haiku.module;
 import dev.vili.haiku.Haiku;
 import dev.vili.haiku.setting.Setting;
 import dev.vili.haiku.setting.settings.KeybindSetting;
-import dev.vili.haiku.util.HaikuLogger;
+import dev.vili.haiku.utils.HaikuLogger;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.util.Formatting;
 

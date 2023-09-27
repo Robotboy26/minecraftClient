@@ -10,7 +10,11 @@ package dev.vili.haiku.module;
 import dev.vili.haiku.Haiku;
 import dev.vili.haiku.event.events.KeyEvent;
 import dev.vili.haiku.eventbus.HaikuSubscribe;
-import dev.vili.haiku.module.modules.*;
+import dev.vili.haiku.module.modules.combat.Criticals;
+//import dev.vili.haiku.module.modules.combat.*;
+import dev.vili.haiku.module.modules.movement.*;
+import dev.vili.haiku.module.modules.player.*;
+import dev.vili.haiku.module.modules.render.*;
 import net.minecraft.client.util.InputUtil;
 import org.lwjgl.glfw.GLFW;
 
@@ -24,12 +28,45 @@ public class ModuleManager {
         modules = new ArrayList<>();
 
         /* Add modules here */
-        modules.add(new Dummy());
+        /* Combat */
+        modules.add(new Criticals());
+
+        /* Movement */
+        modules.add(new AutoSprint());
+        modules.add(new AutoWalk());
+        modules.add(new BoatFly());
+        modules.add(new BunnyHop());
+        modules.add(new ClickTP());
+        modules.add(new EntityControl());
         modules.add(new Fly());
+        modules.add(new Jetpack());
+        modules.add(new NoFall());
+        modules.add(new NoSlow());
+        modules.add(new SafeWalk());
+        modules.add(new Speed());
+        modules.add(new Spider());
+        modules.add(new Step());
+
+        /* Player */
+        modules.add(new AntiHunger());
+        modules.add(new AntiWither());
+        modules.add(new AutoLeave());
+        modules.add(new Dummy());
+        modules.add(new Invisability());
+        modules.add(new Invulnerable());
+        modules.add(new QuickDisconnect());
+
+        /* Render */
+        modules.add(new AntiBlind());
+        modules.add(new BetterTab());
+        modules.add(new Breadcrumbs());
+        modules.add(new Bright());
+        modules.add(new FullBright());
         modules.add(new Gui());
-        modules.add(new OneGui());
         modules.add(new Hud());
-        modules.add(new Sprint());
+        modules.add(new NoBackground());
+        modules.add(new OneGui());
+        modules.add(new TrueSight());
     }
 
     /**

@@ -7,12 +7,22 @@
 
 package dev.vili.haiku.gui;
 
+import java.util.Arrays;
+import java.util.HashMap;
+
+import org.lwjgl.glfw.GLFW;
+
 import dev.vili.haiku.Haiku;
 import dev.vili.haiku.gui.tabs.LogsTab;
 import dev.vili.haiku.module.Module;
 import dev.vili.haiku.setting.Setting;
-import dev.vili.haiku.setting.settings.*;
-import dev.vili.haiku.util.HaikuLogger;
+import dev.vili.haiku.setting.settings.BooleanSetting;
+import dev.vili.haiku.setting.settings.ColorSetting;
+import dev.vili.haiku.setting.settings.KeybindSetting;
+import dev.vili.haiku.setting.settings.ModeSetting;
+import dev.vili.haiku.setting.settings.NumberSetting;
+import dev.vili.haiku.setting.settings.StringSetting;
+import dev.vili.haiku.utils.HaikuLogger;
 import imgui.ImGui;
 import imgui.flag.ImGuiCol;
 import imgui.flag.ImGuiConfigFlags;
@@ -29,10 +39,6 @@ import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.util.InputUtil;
 import net.minecraft.text.Text;
-import org.lwjgl.glfw.GLFW;
-
-import java.util.Arrays;
-import java.util.HashMap;
 
 /**
  * Haiku's other click gui.
@@ -47,8 +53,9 @@ public class HaikuOneGui extends Screen {
     private Module activeModule;
     private Module.Category selectedCategory;
     private final MinecraftClient mc = MinecraftClient.getInstance();
+    float[] color = new float[3];
 
-    public HaikuOneGui() {
+    public HaikuOneGui(float[] color) {
         super(Text.literal("Haiku"));
         long windowHandle = mc.getWindow().getHandle();
         ImGui.createContext();
@@ -83,6 +90,7 @@ public class HaikuOneGui extends Screen {
         ImGui.getIO().addConfigFlags(ImGuiConfigFlags.NavEnableKeyboard);
         ImGui.getIO().setConfigWindowsMoveFromTitleBarOnly(true);
         ImGui.getStyle().setColor(ImGuiCol.TitleBgActive, 0, 0, 0, 255);
+        ImGui.getStyle().setColor(ImGuiCol.WindowBg, color[0], color[1], color[2], 255);
 
         // Window
         if (ImGui.begin(Haiku.MOD_NAME + " " + Haiku.MOD_VERSION + " ~~Made by Vili", ImGuiWindowFlags.NoResize)) {
@@ -164,6 +172,15 @@ public class HaikuOneGui extends Screen {
                     ImGui.checkbox(setting.getName(), booleanValue);
                     if (booleanSetting.isEnabled() != booleanValue.get()) {
                         booleanSetting.setEnabled(booleanValue.get());
+                    }
+                }
+                case "ColorSetting" -> {
+                    ColorSetting colorSetting = (ColorSetting) setting;
+                    float[] colorValue = (float[]) settingsMap.getOrDefault(setting, new float[]{colorSetting.getRed(), colorSetting.getGreen(), colorSetting.getBlue()});
+                    settingsMap.put(setting, colorValue);
+                    ImGui.colorEdit3(setting.getName(), colorValue);
+                    if (colorValue[0] != colorSetting.getRed() || colorValue[1] != colorSetting.getGreen() || colorValue[2] != colorSetting.getBlue()) {
+                        colorSetting.setColor(colorValue[0], colorValue[1], colorValue[2]);
                     }
                 }
                 case "NumberSetting" -> {

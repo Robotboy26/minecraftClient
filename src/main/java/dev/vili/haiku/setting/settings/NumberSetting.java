@@ -27,7 +27,11 @@ public class NumberSetting extends Setting {
      * Gets the value of the setting.
      */
     public double getValue() {
-        return value;
+        return Math.round(this.value * 100.0) / 100.0;
+    }
+
+    public float floatValue() {
+        return (float) this.getValue();
     }
 
     /**

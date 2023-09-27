@@ -9,7 +9,7 @@ package dev.vili.haiku.command.commands;
 
 import dev.vili.haiku.Haiku;
 import dev.vili.haiku.command.Command;
-import dev.vili.haiku.util.HaikuLogger;
+import dev.vili.haiku.utils.HaikuLogger;
 
 import java.util.stream.Collectors;
 

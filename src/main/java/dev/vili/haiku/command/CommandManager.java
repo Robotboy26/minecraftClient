@@ -7,15 +7,15 @@
 
 package dev.vili.haiku.command;
 
-import dev.vili.haiku.command.commands.HelpCmd;
-import dev.vili.haiku.util.HaikuLogger;
+import dev.vili.haiku.command.commands.*;
+import dev.vili.haiku.utils.HaikuLogger;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 public class CommandManager {
-    public String prefix = "-";
+    public String prefix = "!";
     public List<Command> commands;
     boolean commandFound;
 
@@ -23,6 +23,7 @@ public class CommandManager {
         commands = new ArrayList<>();
 
         /* Add commands here */
+        commands.add(new ClosestPlayer());
         commands.add(new HelpCmd());
     }
 

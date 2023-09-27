@@ -13,7 +13,7 @@ import dev.vili.haiku.gui.HaikuOneGui;
 import dev.vili.haiku.module.Module;
 import dev.vili.haiku.setting.Setting;
 import dev.vili.haiku.setting.settings.*;
-import dev.vili.haiku.util.HaikuLogger;
+import dev.vili.haiku.utils.HaikuLogger;
 import imgui.ImGui;
 import imgui.flag.ImGuiConfigFlags;
 import imgui.flag.ImGuiWindowFlags;
@@ -23,6 +23,7 @@ import imgui.type.ImString;
 import net.minecraft.client.util.InputUtil;
 import org.lwjgl.glfw.GLFW;
 
+import java.util.Arrays;
 import java.util.HashMap;
 
 public class ModuleTabs {
@@ -118,6 +119,13 @@ public class ModuleTabs {
                         ImGui.checkbox(setting.name, (ImBoolean) settingsMap.get(setting));
                         if (((BooleanSetting) setting).isEnabled() != ((ImBoolean) settingsMap.get(setting)).get()) {
                             ((BooleanSetting) setting).setEnabled(((ImBoolean) settingsMap.get(setting)).get());
+                        }
+                    }
+                    case "ColorSetting" -> {
+                        float[] color = (float[]) settingsMap.get(setting);
+                        ImGui.colorEdit3(setting.name, color);
+                        if (!Arrays.equals(color, ((ColorSetting) setting).color())) {
+                            ((ColorSetting) setting).setColor(color[0], color[1], color[2]);
                         }
                     }
                     case "NumberSetting" -> {
