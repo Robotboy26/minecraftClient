@@ -38,11 +38,11 @@ public class ModuleManager {
         modules.add(new BunnyHop());
         modules.add(new ClickTP());
         modules.add(new EntityControl());
+        modules.add(new FallFly());
         modules.add(new Fly());
         modules.add(new Jetpack());
         modules.add(new NoFall());
         modules.add(new NoSlow());
-        modules.add(new SafeWalk());
         modules.add(new Speed());
         modules.add(new Spider());
         modules.add(new Step());
@@ -50,10 +50,13 @@ public class ModuleManager {
         /* Player */
         modules.add(new AntiHunger());
         modules.add(new AntiWither());
-        modules.add(new AutoLeave());
+        modules.add(new AutoLog());
+        modules.add(new AutoTotem());
         modules.add(new Dummy());
+        modules.add(new FastRegen());
         modules.add(new Invisability());
         modules.add(new Invulnerable());
+        modules.add(new NoDrag());
         modules.add(new QuickDisconnect());
 
         /* Render */

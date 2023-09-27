@@ -11,11 +11,11 @@ import org.lwjgl.glfw.GLFW;
 public final class Bright extends Module 
 {
     public Bright() {
-        super("Bright", "Gives you night vision.", GLFW.GLFW_KEY_UNKNOWN, Category.RENDER);
+        super("Bright", "Gives you night vision.", GLFW.GLFW_KEY_BACKSPACE, Category.RENDER);
     }
     @Override
     public void onEnable() {
-        mc.player.addStatusEffect(new StatusEffectInstance(StatusEffects.NIGHT_VISION, 1000));
+        mc.player.addStatusEffect(new StatusEffectInstance(StatusEffects.NIGHT_VISION, 2147483647));
         super.onEnable();
     }
 
@@ -28,7 +28,8 @@ public final class Bright extends Module
     @HaikuSubscribe
     public void onTick() {
         if (!mc.player.hasStatusEffect(StatusEffects.NIGHT_VISION)) {
-            mc.player.addStatusEffect(new StatusEffectInstance(StatusEffects.NIGHT_VISION, 1000));
+            mc.player.removeStatusEffect(StatusEffects.NIGHT_VISION);
+            mc.player.addStatusEffect(new StatusEffectInstance(StatusEffects.NIGHT_VISION, 2147483647));
         }
     }
 }

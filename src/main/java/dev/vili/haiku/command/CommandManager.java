@@ -23,7 +23,6 @@ public class CommandManager {
         commands = new ArrayList<>();
 
         /* Add commands here */
-        commands.add(new ClosestPlayer());
         commands.add(new HelpCmd());
     }
 

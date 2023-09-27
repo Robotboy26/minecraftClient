@@ -16,3 +16,4 @@ public class Event extends HaikuEvent {
     public Event() {
     }
 }
+

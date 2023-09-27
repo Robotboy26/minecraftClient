@@ -147,6 +147,7 @@ public abstract class Module {
         MOVEMENT,
         RENDER,
         PLAYER,
-        MISC
+        MISC,
+        DEV
     }
 }
