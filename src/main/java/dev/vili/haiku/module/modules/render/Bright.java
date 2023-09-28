@@ -11,7 +11,7 @@ import org.lwjgl.glfw.GLFW;
 public final class Bright extends Module 
 {
     public Bright() {
-        super("Bright", "Gives you night vision.", GLFW.GLFW_KEY_BACKSPACE, Category.RENDER);
+        super("Bright", "Gives you night vision.", GLFW.GLFW_KEY_C, Category.RENDER);
     }
     @Override
     public void onEnable() {
