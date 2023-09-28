@@ -64,11 +64,13 @@ public class ModuleManager {
         modules.add(new BetterTab());
         modules.add(new Breadcrumbs());
         modules.add(new Bright());
+        modules.add(new Freecam());
         modules.add(new FullBright());
         modules.add(new Gui());
         modules.add(new Hud());
         modules.add(new NoBackground());
         modules.add(new OneGui());
+        modules.add(new Tracers());
         modules.add(new TrueSight());
     }
 

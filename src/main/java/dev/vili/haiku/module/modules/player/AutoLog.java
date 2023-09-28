@@ -8,8 +8,16 @@
  */
 package dev.vili.haiku.module.modules.player;
 
+import org.lwjgl.glfw.GLFW;
 
-
+import dev.vili.haiku.event.events.TickEvent;
+import dev.vili.haiku.eventbus.HaikuSubscribe;
+import dev.vili.haiku.module.Module;
+import dev.vili.haiku.setting.settings.BooleanSetting;
+import dev.vili.haiku.setting.settings.NumberSetting;
+import dev.vili.haiku.utils.HaikuLogger;
+import dev.vili.haiku.utils.world.DamageUtils;
+import dev.vili.haiku.utils.world.EntityUtils;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.decoration.EndCrystalEntity;
@@ -19,43 +27,45 @@ import net.minecraft.item.Items;
 import net.minecraft.text.Text;
 
 public class AutoLog extends Module {
+	public final BooleanSetting health = new BooleanSetting("Health-AutoLog", "Disconnects when you're under a certain health.", true);
+	public final NumberSetting healthValue = new NumberSetting("HealthValue-AutoLog", "The health to disconnects at.", 8, 1, 20, 0.5);
+	public final BooleanSetting ignoreTotems = new BooleanSetting("IgnoreTotems-AutoLog", "Makes you disconnect even if you're carrying totems.", false);
+	public final BooleanSetting vehicle = new BooleanSetting("Vehicle-AutoLog", "Also disconnects when your vehicle is below the specified health.", false);
+	public final BooleanSetting oneHit = new BooleanSetting("OneHit-AutoLog", "Disconnects when a nearby player can kill you in one hit.", true);
+	public final BooleanSetting crystal = new BooleanSetting("Crystal-AutoLog", "Disconnects when you're near an end crystal.", true);
+	public final NumberSetting crystalDistance = new NumberSetting("CrystalDistance-AutoLog", "The maximum distance away from a crystal to disconnect.", 6, 1, 50, 1);
+	public final BooleanSetting playerNearby = new BooleanSetting("PlayerNearby-AutoLog", "Disconnects when a player is in render distance/nearby", false);
+	public final NumberSetting playerRange = new NumberSetting("PlayerRange-AutoLog", "The range to disconnect at.", 40, 1, 250, 1);
+	public final BooleanSetting smartToggle = new BooleanSetting("SmartToggle-AutoLog", "Shows in the chat when AutoLog re-enables.", true);
 
 	private boolean smartDisabled = false;
 
 	public AutoLog() {
-		super("AutoLog", KEY_UNBOUND, ModuleCategory.COMBAT, "Automatically disconnects from servers.",
-				new SettingToggle("Health", true).withDesc("Disconnects when you're under a certain health.").withChildren(
-						new SettingSlider("Health", 1, 20, 5, 0).withDesc("The health to disconnects at."),
-						new SettingToggle("IgnoreTotems", false).withDesc("Makes you disconnect even if you're carrying totems."),
-						new SettingToggle("Vehicle", false).withDesc("Also disconnects when your vehicle is below the specified health.")),
-				new SettingToggle("OneHit", true).withDesc("Disconnects when a nearby player can kill you in one hit.").withChildren(
-						new SettingToggle("IgnoreFriends", true).withDesc("Makes you not disconnect if the player is on your friend list.")),
-				new SettingToggle("Crystal", false).withDesc("Disconnects when you're near an end crystal.").withChildren(
-						new SettingSlider("Distance", 0.1, 14, 6, 1).withDesc("The maximum distance away from a crystal to disconnect.")),
-				new SettingToggle("PlayerNearby", false).withDesc("Disconnects when a player is in render distance/nearby").withChildren(
-						new SettingToggle("Range", false).withDesc("Disconnects when a player is inside a range instead of in render distance.").withChildren(
-								new SettingSlider("Range", 1, 200, 50, 0).withDesc("The range to disconnect at.")),
-						new SettingToggle("IgnoreFriends", true).withDesc("Makes you not disconnect if the player is on your friend list.")),
-				new SettingToggle("SmartToggle", false).withDesc("Re-enables AutoLog after you rejoin and aren't meeting the log requirements.").withChildren(
-						new SettingToggle("Warn", false).withDesc("Shows in the chat when AutoLog re-enables.")));
+		super("AutoLog", "Automatically disconnects from servers.", GLFW.GLFW_KEY_UNKNOWN, Category.PLAYER);
+		this.addSettings(health, healthValue, ignoreTotems, vehicle, oneHit, crystal, crystalDistance, playerNearby, playerRange, smartToggle);
 	}
 
 	@Override
-	public void onDisable(boolean inWorld) {
+	public void onDisable() {
 		smartDisabled = false;
-
-		super.onDisable(inWorld);
+		super.onDisable();
 	}
 
-	@BleachSubscribe
-	public void onTick(EventTick event) {
+	@Override
+	public void onEnable() {
+		smartDisabled = false;
+		super.onEnable();
+	}
+
+	@HaikuSubscribe
+	public void onTick(TickEvent event) {
 		Text logText = getLogText();
 		
 		if (smartDisabled && logText == null) {
 			smartDisabled = false;
 			
-			if (getSetting(4).asToggle().getChild(0).asToggle().getState()) {
-				BleachLogger.info("Re-enabled AutoLog!");
+			if (smartToggle.isEnabled()) {
+				HaikuLogger.info("Re-enabled AutoLog!");
 			}
 		} else if (!smartDisabled && logText != null) {
 			log(logText);
@@ -68,27 +78,27 @@ public class AutoLog extends Module {
 
 		int playerHealth = (int) (mc.player.getHealth() + mc.player.getAbsorptionAmount());
 
-		if (getSetting(0).asToggle().getState()) {
-			int health = getSetting(0).asToggle().getChild(0).asSlider().getValueInt();
+		if (health.isEnabled()) {
+			int healthInt = (int) healthValue.getValue();
+			HaikuLogger.info("Health: " + healthInt);
 
-			if ((getSetting(0).asToggle().getChild(1).asToggle().getState() || !hasTotem) && playerHealth <= health) {
-				return Text.literal("[AutoLog] Your health (" + playerHealth + " HP) was lower than " + health + " HP.");
+			if ((ignoreTotems.isEnabled() || !hasTotem) && playerHealth <= healthInt) {
+				return Text.literal("[AutoLog] Your health (" + playerHealth + " HP) was lower than " + healthInt + " HP.");
 			}
 
-			if (getSetting(0).asToggle().getChild(2).asToggle().getState() &&  mc.player.getVehicle() instanceof LivingEntity) {
-				LivingEntity vehicle = (LivingEntity) mc.player.getVehicle();
-				int vehicleHealth = (int) (vehicle.getHealth() + vehicle.getAbsorptionAmount());
+			if (vehicle.isEnabled() &&  mc.player.getVehicle() instanceof LivingEntity) {
+				LivingEntity vehicleEntity = (LivingEntity) mc.player.getVehicle();
+				int vehicleHealth = (int) (vehicleEntity.getHealth() + vehicleEntity.getAbsorptionAmount());
 
-				if (vehicleHealth < health) {
+				if (vehicleHealth < healthInt) {
 					return Text.literal("[AutoLog] Your vehicle health (" + vehicleHealth + " HP) was lower than " + health + " HP.");
 				}
 			}
 		}
 
-		if (getSetting(1).asToggle().getState() && !hasTotem) {
+		if ((oneHit.isEnabled()) && !hasTotem) {
 			for (PlayerEntity player: mc.world.getPlayers()) {
-				if ((!getSetting(1).asToggle().getChild(0).asToggle().getState() && BleachHack.friendMang.has(player))
-						|| player == mc.player) {
+				if ((!oneHit.isEnabled()) || player == mc.player) {
 					continue;
 				}
 
@@ -100,38 +110,43 @@ public class AutoLog extends Module {
 			}
 		}
 
-		if (getSetting(2).asToggle().getState()) {
+		if (crystal.isEnabled()) {
 			for (Entity e: mc.world.getEntities()) {
-				if (e instanceof EndCrystalEntity && mc.player.distanceTo(e) <= getSetting(2).asToggle().getChild(0).asSlider().getValue()) {
+				if (e instanceof EndCrystalEntity && mc.player.distanceTo(e) <= crystalDistance.getValue()) {
 					return Text.literal("[AutoLog] End crystal appeared within range.");
 				}
 			}
 		}
 
-		if (getSetting(3).asToggle().getState()) {
-			double range = getSetting(3).asToggle().getChild(0).asToggle().getState()
-					? getSetting(3).asToggle().getChild(0).asToggle().getChild(0).asSlider().getValue()
-							: Double.MAX_VALUE;
+		if (playerNearby.isEnabled()) {
+			double range = playerRange.getValue();
+		}
 
 			for (PlayerEntity player: mc.world.getPlayers()) {
 				if (!EntityUtils.isOtherServerPlayer(player)
-						|| (!getSetting(3).asToggle().getChild(1).asToggle().getState() && BleachHack.friendMang.has(player))) {
+						|| (!playerNearby.isEnabled())) {
 					continue;
 				}
 
-				if (player.distanceTo(mc.player) <= range) {
+				if (playerNearby.isEnabled()) {
+					for (PlayerEntity playerEntity: mc.world.getPlayers()) {
+						if (!EntityUtils.isOtherServerPlayer(player) || !playerNearby.isEnabled()) {
+							continue;
+						}
+						if (player.distanceTo(mc.player) <= playerRange.getValue()) {
+							return Text.literal("[AutoLog] " + player.getDisplayName().getString() + " appeared " + (int) player.distanceTo(mc.player) + " blocks away.");
+						}
+					}
+				}
 					return Text.literal("[AutoLog] " + player.getDisplayName().getString() + " appeared " + (int) player.distanceTo(mc.player) + " blocks away.");
 				}
-			}
-		}
-
 		return null;
 	}
 
 	private void log(Text reason) {
 		mc.player.networkHandler.getConnection().disconnect(reason);
 
-		if (getSetting(4).asToggle().getState()) {
+		if (smartToggle.isEnabled()) {
 			smartDisabled = true;
 		} else {
 			setEnabled(false);

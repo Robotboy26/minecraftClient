@@ -15,7 +15,7 @@ import org.lwjgl.glfw.GLFW;
 
 public class OneGui extends Module {
 
-    public static final ColorSetting color = new ColorSetting("Color-OneGui", "ummmm color test this acually does nothing right now");
+    public static final ColorSetting color = new ColorSetting("Color-OneGui", "ummmm color test this acually does nothing right now", 0.5f, 0.5f, 0.5f);
 
     public OneGui() {
         super("OneGui", "One window, no tabs.", GLFW.GLFW_KEY_RIGHT_CONTROL, Category.RENDER);

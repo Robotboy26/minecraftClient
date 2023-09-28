@@ -14,7 +14,7 @@ public class ColorSetting extends Setting {
     public float green;
     public float blue;
 
-    public ColorSetting(String name, String description) {
+    public ColorSetting(String name, String description, float red, float green, float blue) {
         super(name, description);
         this.red = red;
         this.green = green;
@@ -26,9 +26,9 @@ public class ColorSetting extends Setting {
      */
     public float[] color() {
         float[] rgb = new float[3];
-        rgb[0] = 1.0f; // red
-        rgb[1] = 1.0f; // green
-        rgb[2] = 0.0f; // blue
+        rgb[0] = this.red;
+        rgb[1] = this.green;
+        rgb[2] = this.blue;
         return rgb;
     }
 
@@ -53,5 +53,13 @@ public class ColorSetting extends Setting {
         this.red = red;
         this.green = green;
         this.blue = blue;
+    }
+
+    public int[] getRGBArray() {
+        int[] rgb = new int[3];
+        rgb[0] = (int) (this.red * 255);
+        rgb[1] = (int) (this.green * 255);
+        rgb[2] = (int) (this.blue * 255);
+        return rgb;
     }
 }

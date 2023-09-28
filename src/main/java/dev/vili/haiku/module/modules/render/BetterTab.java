@@ -24,7 +24,7 @@ public class BetterTab extends Module
     public final BooleanSetting tabSize = new BooleanSetting("tablistSize-BetterTab", "How many players in total to display in the tablist.", true);
     public final NumberSetting tabHeight = new NumberSetting("columnHeight-BetterTab", "How many players to display in each column.", 20, 1, 1000, 1);
     public final BooleanSetting self = new BooleanSetting("highlightSelf-BetterTab", "Highlights yourself in the tablist.", true);
-    public final ColorSetting selfColor = new ColorSetting("selfColor-BetterTab", "The color to highlight your name with.");
+    public final ColorSetting selfColor = new ColorSetting("selfColor-BetterTab", "The color to highlight your name with.", 255, 255, 255);
     public final BooleanSetting friends = new BooleanSetting("highlightFriends-BetterTab", "Highlights friends in the tablist.", true);
     public final BooleanSetting accurateLatency = new BooleanSetting("accurateLatency-BetterTab", "Shows latency as a number in the tablist.", true);
     public final BooleanSetting gamemode = new BooleanSetting("gamemode-BetterTab", "Display gamemode next to the nick.", false);
