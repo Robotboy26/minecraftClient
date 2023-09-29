@@ -10,8 +10,9 @@ package dev.vili.haiku.module;
 import dev.vili.haiku.Haiku;
 import dev.vili.haiku.event.events.KeyEvent;
 import dev.vili.haiku.eventbus.HaikuSubscribe;
-import dev.vili.haiku.module.modules.combat.Criticals;
-//import dev.vili.haiku.module.modules.combat.*;
+import dev.vili.haiku.module.modules.combat.*;
+//import dev.vili.haiku.module.modules.dev.*;
+import dev.vili.haiku.module.modules.misc.*;
 import dev.vili.haiku.module.modules.movement.*;
 import dev.vili.haiku.module.modules.player.*;
 import dev.vili.haiku.module.modules.render.*;
@@ -29,7 +30,19 @@ public class ModuleManager {
 
         /* Add modules here */
         /* Combat */
+        modules.add(new AutoArmor());
+        modules.add(new AutoEat());
+        modules.add(new AutoLog());
+        modules.add(new AutoTotem());  
+        modules.add(new BowBot());
         modules.add(new Criticals());
+        modules.add(new CrystalAura());
+        modules.add(new Killaura());
+
+        /* dev */
+        
+        /* misc */
+        modules.add(new BetterPortal());
 
         /* Movement */
         modules.add(new AutoSprint());
@@ -37,6 +50,7 @@ public class ModuleManager {
         modules.add(new BoatFly());
         modules.add(new BunnyHop());
         modules.add(new ClickTP());
+        modules.add(new ElytraFly());
         modules.add(new EntityControl());
         modules.add(new FallFly());
         modules.add(new Fly());
@@ -50,14 +64,13 @@ public class ModuleManager {
         /* Player */
         modules.add(new AntiHunger());
         modules.add(new AntiWither());
-        modules.add(new AutoLog());
-        modules.add(new AutoTotem());
         modules.add(new Dummy());
         modules.add(new FastRegen());
         modules.add(new Invisability());
         modules.add(new Invulnerable());
         modules.add(new NoDrag());
         modules.add(new QuickDisconnect());
+        modules.add(new Reach());
 
         /* Render */
         modules.add(new AntiBlind());

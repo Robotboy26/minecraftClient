@@ -1,100 +1,51 @@
 /*
- * This file is part of the Meteor Client distribution (https://github.com/MeteorDevelopment/meteor-client).
- * Copyright (c) Meteor Development.
+ * This file is part of the BleachHack distribution (https://github.com/BleachDev/BleachHack/).
+ * Copyright (c) 2021 Bleach and contributors.
+ *
+ * This source code is subject to the terms of the GNU General Public
+ * License, version 3. If a copy of the GPL was not distributed with this
+ * file, You can obtain one at: https://www.gnu.org/licenses/gpl-3.0.txt
  */
-
 package dev.vili.haiku.module.modules.player;
 
-import dev.vili.haiku.event.events.packets.PacketEvent;
-import dev.vili.haiku.event.events.TickEvent;
-import dev.vili.haiku.eventbus.HaikuSubscribe;
-import dev.vili.haiku.module.Module;
-import dev.vili.haiku.setting.settings.BooleanSetting;
-import net.minecraft.network.packet.Packet;
-import net.minecraft.network.packet.c2s.play.ClientCommandC2SPacket;
-import net.minecraft.network.packet.c2s.play.PlayerMoveC2SPacket;
-import dev.vili.haiku.mixinterface.PlayerMoveC2SPacketAccessor;
+import java.lang.reflect.Field;
 
 import org.lwjgl.glfw.GLFW;
 
-public class AntiHunger extends Module 
-{
-    public final BooleanSetting sprint = new BooleanSetting("sprint-AntiHunger", "Spoofs sprinting packets.", true);
-    public final BooleanSetting onGround = new BooleanSetting("on-ground-AntiHunger", "Spoofs the onGround flag.", true);
-    public final BooleanSetting waterCheck = new BooleanSetting("water-check-AntiHunger", "Pauses the module if you are in water", true);
+import dev.vili.haiku.event.events.EventPacket;
+import dev.vili.haiku.eventbus.HaikuSubscribe;
+import dev.vili.haiku.module.Module;
+import dev.vili.haiku.setting.settings.BooleanSetting;
 
-    private boolean lastOnGround;
-    private boolean sendOnGroundTruePacket;
-    private boolean ignorePacket;
+import net.minecraft.network.packet.c2s.play.PlayerMoveC2SPacket;
 
-    public AntiHunger() {
-        super("Anti-Hunger", "This prevents you from getting low on food", GLFW.GLFW_KEY_UNKNOWN, Category.PLAYER);
-        this.addSettings(sprint, onGround, waterCheck);
-    }
+public class AntiHunger extends Module {
+	public final BooleanSetting relaxed = new BooleanSetting("Relaxed", "Only activate every other tick, might fix getting fly kicked", false);
 
-    @Override
-    public void onEnable() {
-        lastOnGround = mc.player.isOnGround();
-        sendOnGroundTruePacket = true;
-        super.onEnable();
-    }
+	private boolean bool = false;
 
-    @Override
-    public void onDisable() {
-        ignorePacket = false;
-        super.onDisable();
-    }
+	public AntiHunger() {
+		super("AntiHunger", "Minimizes the amount of hunger you use (Also makes you slide).", GLFW.GLFW_KEY_UNKNOWN, Category.PLAYER);
+		this.addSettings(relaxed);
+	}
 
-    @HaikuSubscribe
-    private void onSendPacket(PacketEvent.Send event) {
-        if(!(event.getPacket() instanceof PlayerMoveC2SPacket oldPacket))
-			return;
-		
-		if(!mc.player.isOnGround() || mc.player.fallDistance > 0.5)
-			return;
-		
-		if(mc.interactionManager.isBreakingBlock())
-			return;
-		
-		double x = oldPacket.getX(-1);
-		double y = oldPacket.getY(-1);
-		double z = oldPacket.getZ(-1);
-		float yaw = oldPacket.getYaw(-1);
-		float pitch = oldPacket.getPitch(-1);
-		
-		Packet<?> newPacket;
-		if(oldPacket.changesPosition())
-			if(oldPacket.changesLook())
-				newPacket =
-					new PlayerMoveC2SPacket.Full(x, y, z, yaw, pitch, false);
-			else
-				newPacket =
-					new PlayerMoveC2SPacket.PositionAndOnGround(x, y, z, false);
-		else if(oldPacket.changesLook())
-			newPacket =
-				new PlayerMoveC2SPacket.LookAndOnGround(yaw, pitch, false);
-		else
-			newPacket = new PlayerMoveC2SPacket.OnGroundOnly(false);
-		
-		event.setPacket(newPacket);
-    }
-
-    @HaikuSubscribe
-    private void onTick(TickEvent event) {
-        if (waterCheck.isEnabled() && mc.player.isTouchingWater()) {
-            ignorePacket = true;
-            return;
-        }
-        if (mc.player.isOnGround() && !lastOnGround && !sendOnGroundTruePacket) sendOnGroundTruePacket = true;
-
-        if (mc.player.isOnGround() && sendOnGroundTruePacket && onGround.isEnabled()) {
-            ignorePacket = true;
-            mc.getNetworkHandler().sendPacket(new PlayerMoveC2SPacket.OnGroundOnly(true));
-            ignorePacket = false;
-
-            sendOnGroundTruePacket = false;
-        }
-
-        lastOnGround = mc.player.isOnGround();
-    }
-}
+		@HaikuSubscribe
+		public void onSendPacket(EventPacket.Send event) {
+			if (event.getPacket() instanceof PlayerMoveC2SPacket) {
+				if (mc.player.getVelocity().y != 0 && !mc.options.jumpKey.isPressed() && (!bool || !relaxed.isEnabled())) {
+					boolean onGround = mc.player.fallDistance >= 0.1f;
+					mc.player.setOnGround(onGround);
+					try {
+						Field onGroundField = PlayerMoveC2SPacket.class.getDeclaredField("onGround");
+						onGroundField.setAccessible(true);
+						onGroundField.setBoolean(event.getPacket(), onGround);
+					} catch (NoSuchFieldException | IllegalAccessException e) {
+						e.printStackTrace();
+					}
+					bool = true;
+				} else {
+					bool = false;
+				}
+			}
+		}
+	}

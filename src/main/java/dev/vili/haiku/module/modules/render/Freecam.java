@@ -49,8 +49,6 @@ public class Freecam extends Module {
 
 	@Override
 	public void onEnable() {
-		super.onEnable();
-
 		mc.chunkCullingEnabled = false;
 
 		playerPos = new double[] { mc.player.getX(), mc.player.getY(), mc.player.getZ() };
@@ -71,6 +69,7 @@ public class Freecam extends Module {
 
 		prevFlying = mc.player.getAbilities().flying;
 		prevFlySpeed = mc.player.getAbilities().getFlySpeed();
+		super.onEnable();
 	}
 
 	@Override
@@ -113,6 +112,7 @@ public class Freecam extends Module {
 
 	@HaikuSubscribe
 	public void onTick(TickEvent event) {
+		if (mc.cameraEntity.isInsideWall()) mc.getCameraEntity().noClip = true;
 		mc.player.setOnGround(false);
 		mc.player.getAbilities().setFlySpeed((float) (speed.getValue() / 3));
 		mc.player.getAbilities().flying = true;

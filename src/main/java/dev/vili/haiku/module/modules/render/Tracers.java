@@ -11,7 +11,7 @@ package dev.vili.haiku.module.modules.render;
 import org.lwjgl.glfw.GLFW;
 
 import dev.vili.haiku.Haiku;
-import dev.vili.haiku.event.events.entity.player.EventWorldRender;
+import dev.vili.haiku.event.events.EventWorldRender;
 import dev.vili.haiku.eventbus.HaikuSubscribe;
 import dev.vili.haiku.module.Module;
 import dev.vili.haiku.setting.settings.ColorSetting;

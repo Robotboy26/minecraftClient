@@ -28,7 +28,7 @@ public final class NoFall extends Module {
             false);
 
     public NoFall() {
-        super("NoFall", "Doin't take fall damage.", GLFW.GLFW_KEY_UNKNOWN, Category.MOVEMENT);
+        super("NoFall", "Doin't take fall damage.", GLFW.GLFW_KEY_N, Category.MOVEMENT);
         this.addSettings(allowElytra);
     }
 
