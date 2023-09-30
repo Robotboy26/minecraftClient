@@ -30,6 +30,7 @@ public class ModuleManager {
 
         /* Add modules here */
         /* Combat */
+        modules.add(new ArrowJuke());
         modules.add(new AutoArmor());
         modules.add(new AutoEat());
         modules.add(new AutoLog());
@@ -42,6 +43,7 @@ public class ModuleManager {
         /* dev */
         
         /* misc */
+        modules.add(new AutoTool());
         modules.add(new BetterPortal());
 
         /* Movement */

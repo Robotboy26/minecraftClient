@@ -29,6 +29,7 @@ import net.minecraft.network.packet.c2s.play.ClientCommandC2SPacket;
 import net.minecraft.network.packet.c2s.play.ClientCommandC2SPacket.Mode;
 import net.minecraft.network.packet.c2s.play.PlayerMoveC2SPacket;
 import net.minecraft.util.math.Vec3d;
+import net.minecraft.world.GameMode;
 
 public class Freecam extends Module {
 	public final NumberSetting speed = new NumberSetting("Speed-Freecam", "Moving speed in freecam.", 2, 0, 20, 0.01);
@@ -116,6 +117,7 @@ public class Freecam extends Module {
 		mc.player.setOnGround(false);
 		mc.player.getAbilities().setFlySpeed((float) (speed.getValue() / 3));
 		mc.player.getAbilities().flying = true;
+		mc.player.noClip = true;
 		mc.player.setPose(EntityPose.STANDING);
 		mc.player.setVelocity(Vec3d.ZERO);
 	}

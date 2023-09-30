@@ -80,7 +80,6 @@ public class AutoLog extends Module {
 
 		if (health.isEnabled()) {
 			int healthInt = (int) healthValue.getValue();
-			HaikuLogger.info("Health: " + healthInt);
 
 			if ((ignoreTotems.isEnabled() || !hasTotem) && playerHealth <= healthInt) {
 				return Text.literal("[AutoLog] Your health (" + playerHealth + " HP) was lower than " + healthInt + " HP.");
@@ -108,6 +107,18 @@ public class AutoLog extends Module {
 					return Text.literal("[AutoLog] " + player.getDisplayName().getString() + " could kill you (dealing " + attackDamage + " damage).");
 				}
 			}
+		}
+		
+		boolean hasTotemB = false;
+		if (ignoreTotems.isEnabled()) {
+			hasTotemB = mc.player.getMainHandStack().getItem() == Items.TOTEM_OF_UNDYING;
+		}
+		if (health.isEnabled()) {
+			double playerHealthN = mc.player.getHealth() + mc.player.getAbsorptionAmount();
+			if (playerHealthN <= healthValue.getValue() && !hasTotemB) {
+				return Text.literal("[AutoLog] Low on Health");
+			}
+
 		}
 
 		if (crystal.isEnabled()) {
