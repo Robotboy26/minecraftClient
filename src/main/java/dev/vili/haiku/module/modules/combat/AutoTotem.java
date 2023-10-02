@@ -34,7 +34,7 @@ public class AutoTotem extends Module {
 	private double delayint;
 
 	public AutoTotem() {
-		super("AutoTotem", "Automatically equips totems.", GLFW.GLFW_KEY_UNKNOWN, Category.COMBAT);
+		super("AutoTotem", "Automatically equips totems.", GLFW.GLFW_KEY_RIGHT_BRACKET, Category.COMBAT);
 	}
 
 	@HaikuSubscribe

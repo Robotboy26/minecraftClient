@@ -10,8 +10,9 @@ package dev.vili.haiku.module;
 import dev.vili.haiku.Haiku;
 import dev.vili.haiku.event.events.KeyEvent;
 import dev.vili.haiku.eventbus.HaikuSubscribe;
+import dev.vili.haiku.module.modules.Build.MineEnderChest;
 import dev.vili.haiku.module.modules.combat.*;
-//import dev.vili.haiku.module.modules.dev.*;
+// import dev.vili.haiku.module.modules.dev.*;
 import dev.vili.haiku.module.modules.misc.*;
 import dev.vili.haiku.module.modules.movement.*;
 import dev.vili.haiku.module.modules.player.*;
@@ -29,6 +30,10 @@ public class ModuleManager {
         modules = new ArrayList<>();
 
         /* Add modules here */
+
+        /* Build */
+        modules.add(new MineEnderChest());
+
         /* Combat */
         modules.add(new ArrowJuke());
         modules.add(new AutoArmor());
@@ -41,12 +46,15 @@ public class ModuleManager {
         modules.add(new Killaura());
 
         /* dev */
+        ///modules.add(new Test());
         
         /* misc */
         modules.add(new AutoTool());
         modules.add(new BetterPortal());
+        modules.add(new FastBreak());
 
         /* Movement */
+        modules.add(new AntiLevitation());
         modules.add(new AutoSprint());
         modules.add(new AutoWalk());
         modules.add(new BoatFly());
@@ -85,7 +93,7 @@ public class ModuleManager {
         modules.add(new Hud());
         modules.add(new NoBackground());
         modules.add(new OneGui());
-        modules.add(new Tracers());
+        // modules.add(new Tracers());
         modules.add(new TrueSight());
     }
 

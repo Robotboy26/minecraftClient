@@ -80,7 +80,7 @@ public class AutoLog extends Module {
 
 		if (health.isEnabled()) {
 			int healthInt = (int) healthValue.getValue();
-			HaikuLogger.info("Health: " + healthInt);
+			// HaikuLogger.info("Health: " + healthInt);
 
 			if ((ignoreTotems.isEnabled() || !hasTotem) && playerHealth <= healthInt) {
 				return Text.literal("[AutoLog] Your health (" + playerHealth + " HP) was lower than " + healthInt + " HP.");
@@ -119,8 +119,6 @@ public class AutoLog extends Module {
 		}
 
 		if (playerNearby.isEnabled()) {
-			double range = playerRange.getValue();
-		}
 
 			for (PlayerEntity player: mc.world.getPlayers()) {
 				if (!EntityUtils.isOtherServerPlayer(player)
@@ -133,13 +131,15 @@ public class AutoLog extends Module {
 						if (!EntityUtils.isOtherServerPlayer(player) || !playerNearby.isEnabled()) {
 							continue;
 						}
-						if (player.distanceTo(mc.player) <= playerRange.getValue()) {
+						if (player.distanceTo(playerEntity) <= playerRange.getValue()) {
 							return Text.literal("[AutoLog] " + player.getDisplayName().getString() + " appeared " + (int) player.distanceTo(mc.player) + " blocks away.");
 						}
 					}
 				}
 					return Text.literal("[AutoLog] " + player.getDisplayName().getString() + " appeared " + (int) player.distanceTo(mc.player) + " blocks away.");
 				}
+		return null;
+	}
 		return null;
 	}
 

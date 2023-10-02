@@ -147,6 +147,8 @@ public abstract class Module {
         MOVEMENT,
         RENDER,
         PLAYER,
+        Blocks,
+        Build,
         MISC,
         DEV
     }

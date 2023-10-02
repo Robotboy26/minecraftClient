@@ -56,6 +56,10 @@ public class AutoEat extends Module {
 		if (eating && mc.options.useKey.isPressed() && !mc.player.isUsingItem()) {
 			eating = false;
 			mc.options.useKey.setPressed(false);
+		} else if (eating) {
+			return;
+		} else {
+			mc.options.useKey.setPressed(false);
 		}
 
 		if (hunger.isEnabled() && mc.player.getHungerManager().getFoodLevel() <= hungerAmount.getValue()) {

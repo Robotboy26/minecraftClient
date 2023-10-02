@@ -16,7 +16,7 @@ import org.lwjgl.glfw.GLFW;
 public class AutoSprint extends Module {
 
     public AutoSprint() {
-        super("Sprint", "Automatically sprints for you.", GLFW.GLFW_KEY_R, Category.MOVEMENT);
+        super("Sprint", "Automatically sprints for you.", GLFW.GLFW_KEY_UNKNOWN, Category.MOVEMENT);
     }
 
     @HaikuSubscribe

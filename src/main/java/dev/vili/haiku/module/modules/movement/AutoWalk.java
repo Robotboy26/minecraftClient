@@ -23,7 +23,7 @@ public class AutoWalk extends Module
 {
 	public AutoWalk()
 	{
-		super("AutoWalk", "Walk but auto?", GLFW.GLFW_KEY_UNKNOWN, Category.MOVEMENT);
+		super("AutoWalk", "Walk but auto?", GLFW.GLFW_KEY_R, Category.MOVEMENT);
 	}
 	
 	@Override
