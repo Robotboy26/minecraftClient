@@ -11,6 +11,9 @@ package dev.vili.haiku.module.modules.movement;
 import org.apache.commons.lang3.RandomUtils;
 import org.lwjgl.glfw.GLFW;
 import java.lang.reflect.Field;
+import java.util.Random;
+import java.util.ArrayList;
+import java.util.List;
 
 import dev.vili.haiku.event.events.entity.player.EventClientMove;
 import dev.vili.haiku.event.events.EventPacket;
@@ -18,27 +21,46 @@ import dev.vili.haiku.event.events.EventSendMovementPackets;
 import dev.vili.haiku.event.events.TickEvent;
 import dev.vili.haiku.eventbus.HaikuSubscribe;
 import dev.vili.haiku.module.Module;
+import dev.vili.haiku.setting.settings.BooleanSetting;
 import dev.vili.haiku.setting.settings.ModeSetting;
 import dev.vili.haiku.setting.settings.NumberSetting;
-
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.projectile.FireworkRocketEntity;
+import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.network.packet.c2s.play.ClientCommandC2SPacket;
 import net.minecraft.network.packet.c2s.play.ClientCommandC2SPacket.Mode;
 import net.minecraft.network.packet.s2c.play.PlayerPositionLookS2CPacket;
+import net.minecraft.sound.SoundCategory;
+import net.minecraft.sound.SoundEvents;
 import net.minecraft.network.packet.c2s.play.PlayerMoveC2SPacket;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 
 public class ElytraFly extends Module {
-	public final ModeSetting mode = new ModeSetting("Mode-ElytraFly", "ElytraFly mode.", "Boost", "AutoBoost", "Boost", "Control", "BruhFly", "PaketFly");
+	public final ModeSetting mode = new ModeSetting("Mode-ElytraFly", "ElytraFly mode (firework can be used with baritone nether elytra with some baritone tweaks).", "Boost", "AutoBoost", "Boost", "Control", "Firework", "BruhFly", "PaketFly");
 	public final NumberSetting boostValue = new NumberSetting("Boost-ElytraFly", "Boost speed.", 0.05, 0, 0.25, 0.01);
 	public final NumberSetting maxBoost = new NumberSetting("MaxBoost-ElytraFly", "Max boost speed.", 2.5, 0, 8, 0.1);
 	public final NumberSetting speed = new NumberSetting("Speed-ElytraFly", "Speed for all the other modes.", 1.2, 0, 10, 0.1);
-	public final NumberSetting packets = new NumberSetting("Packets-ElytraFly", "How many packets to send in packet mode.", 2, 1, 15, 1);
+	public final NumberSetting fireworkLevel = new NumberSetting("FireworkLevel-ElytraFly", "Firework level.", 1, 1, 255, 1);
+	public final BooleanSetting playSound = new BooleanSetting("PlaySound-ElytraFly", "Play sound when launching firework using the firework mode.", true);
+	public final NumberSetting packets = new NumberSetting("Packets-ElytraFly", "How many packets to send in packet mode.", 0, 0, 8, 0.01);
+
+	private final List<FireworkRocketEntity> fireworks = new ArrayList<>();
+	private long timer;
 
 	public ElytraFly() {
 		super("ElytraFly", "Improves the elytra", GLFW.GLFW_KEY_H, Category.MOVEMENT);
-		this.addSettings(mode, boostValue, maxBoost, speed, packets);
+		this.addSettings(mode, boostValue, maxBoost, fireworkLevel, playSound, speed, packets);
+	}
+
+	@Override
+	public void onDisable() {
+		for (FireworkRocketEntity entity : fireworks) {
+			entity.kill();
+		}
+		fireworks.clear();
+		super.onDisable();
 	}
 
 	@HaikuSubscribe
@@ -79,7 +101,7 @@ public class ElytraFly extends Module {
 			case "Boost":
 				if (mc.player.isFallFlying() && currentVel <= maxBoost.getValue()) {
 					if (mc.options.forwardKey.isPressed()) {
-						mc.player.addVelocity(MathHelper.sin(radianYaw) * -boost, 0, MathHelper.cos(radianYaw) * boost);
+						mc.player.addVelocity(MathHelper.sin(radianYaw) * -boost, 0, MathHelper.cos(radianYaw) * boost); // (double) getRandInt(0.1, 1)
 					} else if (mc.options.backKey.isPressed()) {
 						mc.player.addVelocity(MathHelper.sin(radianYaw) * boost, 0, MathHelper.cos(radianYaw) * -boost);
 					}
@@ -99,6 +121,25 @@ public class ElytraFly extends Module {
 
 					mc.player.setVelocity(vec3d.x, vec3d.y, vec3d.z);
 				}
+			
+			case "Firework":
+				if (mc.player.isFallFlying() && mc.currentScreen == null) {
+					ItemStack itemStack = Items.FIREWORK_ROCKET.getDefaultStack();
+					itemStack.getOrCreateSubNbt("Fireworks").putByte("Flight", (byte) fireworkLevel.getValue());
+
+					FireworkRocketEntity entity = new FireworkRocketEntity(mc.world, itemStack, mc.player);
+					fireworks.add(entity);
+					if (playSound.isEnabled()) mc.world.playSoundFromEntity(mc.player, entity, SoundEvents.ENTITY_FIREWORK_ROCKET_LAUNCH, SoundCategory.AMBIENT, 3.0F, 1.0F);
+					mc.world.addEntity(entity.getId(), entity);
+					timer += 1;
+					if (timer > 20) {
+						timer = 0;
+						for (FireworkRocketEntity fireworkEntity : fireworks) {
+							fireworkEntity.kill();
+						}
+					}
+        		}
+
 
 				break;
 			case "BruhFly":
@@ -188,5 +229,10 @@ public class ElytraFly extends Module {
 		return !mc.player.isOnGround()
 				&& !mc.options.sneakKey.isPressed()
 				&& mc.player.getInventory().getArmorStack(2).getItem() == Items.ELYTRA;
+	}
+
+	private double getRandInt(double d, double max) {
+		Random rand = new Random();
+		return (double) rand.nextInt((int) (max - d)) + d;
 	}
 }
