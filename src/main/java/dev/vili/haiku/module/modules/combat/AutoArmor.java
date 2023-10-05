@@ -36,20 +36,40 @@ import net.minecraft.screen.slot.SlotActionType;
 public class AutoArmor extends Module {
 	public final BooleanSetting antiBreak = new BooleanSetting("AntiBreak-AutoArmor", "Unequips your armor when its about to break.", false);
 	public final BooleanSetting preferElytra = new BooleanSetting("PreferElytra-AutoArmor", "Equips elytras instead of chestplates when possible.", false);
+	public final BooleanSetting elytraSwap = new BooleanSetting("SwapElytra", "This will swap to your elytra (if you have one) whenever you just so you can make a quick getaway", false);
+	public final NumberSetting elytraSwapDelay = new NumberSetting("ElytraSwapDelay", "how long to wait before swapping to elytra (this only applys when elytra swap is enabled and this only applys to when you are jumping)", 0, 0, 20, 1);
 	public final BooleanSetting delay = new BooleanSetting("Delay-AutoArmor", "Adds a delay between equipping armor pieces.", false);
 	public final NumberSetting delayAmount = new NumberSetting("DelayAmount-AutoArmor", "How many ticks between putting on armor pieces.", 0, 20, 1, 0);
 
 	private int tickDelay = 0;
+	private int elytraDelay = 0;
 
 	public AutoArmor() {
 		super("AutoArmor", "Automatically equips armor.", GLFW.GLFW_KEY_UNKNOWN, Category.COMBAT);
-		this.addSettings(antiBreak, preferElytra, delay, delayAmount);
+		this.addSettings(antiBreak, preferElytra, elytraSwap, elytraSwapDelay, delay, delayAmount);
 	}
 
 	@HaikuSubscribe
 	public void onTick(TickEvent event) {
+		boolean shouldWearElytra = preferElytra.isEnabled();
 		if (mc.player.playerScreenHandler != mc.player.currentScreenHandler || !BleachQueue.isEmpty("autoarmor_equip"))
 			return;
+
+		if (mc.player.isOnGround()) {
+			elytraDelay = (int) elytraSwapDelay.getValue();
+			shouldWearElytra = false;
+		}
+
+		if (elytraSwap.isEnabled() && elytraDelay > 0) {
+			elytraDelay--;
+			return;
+		}
+
+		if (elytraSwap.isEnabled() && elytraDelay ==0) {
+			if (!mc.player.isOnGround()) {
+				shouldWearElytra = true;
+			}
+		}
 
 		if (tickDelay > 0) {
 			tickDelay--;
@@ -60,10 +80,10 @@ public class AutoArmor extends Module {
 
 		/* [Slot type, [Armor slot, Armor prot, New armor slot, New armor prot]] */
 		Map<EquipmentSlot, int[]> armorMap = new HashMap<>(4);
-		armorMap.put(EquipmentSlot.FEET, new int[] { 36, getProtection(mc.player.getInventory().getStack(36)), -1, -1 });
-		armorMap.put(EquipmentSlot.LEGS, new int[] { 37, getProtection(mc.player.getInventory().getStack(37)), -1, -1 });
-		armorMap.put(EquipmentSlot.CHEST, new int[] { 38, getProtection(mc.player.getInventory().getStack(38)), -1, -1 });
-		armorMap.put(EquipmentSlot.HEAD, new int[] { 39, getProtection(mc.player.getInventory().getStack(39)), -1, -1 });
+		armorMap.put(EquipmentSlot.FEET, new int[] { 36, getProtection(mc.player.getInventory().getStack(36), shouldWearElytra), -1, -1 });
+		armorMap.put(EquipmentSlot.LEGS, new int[] { 37, getProtection(mc.player.getInventory().getStack(37), shouldWearElytra), -1, -1 });
+		armorMap.put(EquipmentSlot.CHEST, new int[] { 38, getProtection(mc.player.getInventory().getStack(38), shouldWearElytra), -1, -1 });
+		armorMap.put(EquipmentSlot.HEAD, new int[] { 39, getProtection(mc.player.getInventory().getStack(39), shouldWearElytra), -1, -1 });
 
 		/* Anti Break */
 		if (antiBreak.isEnabled()) {
@@ -103,7 +123,7 @@ public class AutoArmor extends Module {
 		}
 
 		for (int s = 0; s < 36; s++) {
-			int prot = getProtection(mc.player.getInventory().getStack(s));
+			int prot = getProtection(mc.player.getInventory().getStack(s), shouldWearElytra);
 
 			if (prot > 0) {
 				EquipmentSlot slot = (mc.player.getInventory().getStack(s).getItem() instanceof ElytraItem
@@ -146,7 +166,7 @@ public class AutoArmor extends Module {
 		}
 	}
 
-	private int getProtection(ItemStack is) {
+	private int getProtection(ItemStack is, boolean shouldWearElytra) {
 		if (is.getItem() instanceof ArmorItem || is.getItem() == Items.ELYTRA) {
 			int prot = 0;
 
@@ -154,7 +174,7 @@ public class AutoArmor extends Module {
 				if (!ElytraItem.isUsable(is))
 					return 0;
 
-				if (preferElytra.isEnabled()) {
+				if (shouldWearElytra) {
 					prot = 32767;
 				} else {
 					prot = 1;

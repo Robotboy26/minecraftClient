@@ -19,6 +19,7 @@ import dev.vili.haiku.utils.HaikuLogger;
 import dev.vili.haiku.utils.world.DamageUtils;
 import dev.vili.haiku.utils.world.EntityUtils;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.decoration.EndCrystalEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -36,13 +37,15 @@ public class AutoLog extends Module {
 	public final NumberSetting crystalDistance = new NumberSetting("CrystalDistance-AutoLog", "The maximum distance away from a crystal to disconnect.", 6, 1, 50, 1);
 	public final BooleanSetting playerNearby = new BooleanSetting("PlayerNearby-AutoLog", "Disconnects when a player is in render distance/nearby", false);
 	public final NumberSetting playerRange = new NumberSetting("PlayerRange-AutoLog", "The range to disconnect at.", 40, 1, 250, 1);
+	public final BooleanSetting elytraLog = new BooleanSetting("ElytraLog-AutoLog", "Log you out if your elytra is low on duribility.", true);
+	public final NumberSetting elytraDuribility = new NumberSetting("ElytraDuribility-AutoLog", "At what duribility to logout at.", 20, 1, 431, 1);
 	public final BooleanSetting smartToggle = new BooleanSetting("SmartToggle-AutoLog", "Shows in the chat when AutoLog re-enables.", true);
 
 	private boolean smartDisabled = false;
 
 	public AutoLog() {
 		super("AutoLog", "Automatically disconnects from servers.", GLFW.GLFW_KEY_UNKNOWN, Category.COMBAT);
-		this.addSettings(health, healthValue, ignoreTotems, vehicle, oneHit, crystal, crystalDistance, playerNearby, playerRange, smartToggle);
+		this.addSettings(health, healthValue, ignoreTotems, vehicle, oneHit, crystal, crystalDistance, playerNearby, playerRange, elytraLog, elytraDuribility, smartToggle);
 	}
 
 	@Override
@@ -112,7 +115,7 @@ public class AutoLog extends Module {
 
 		if (crystal.isEnabled()) {
 			for (Entity e: mc.world.getEntities()) {
-				if (e instanceof EndCrystalEntity && mc.player.distanceTo(e) <= crystalDistance.getValue()) {
+				if (e instanceof EndCrystalEntity && mc.player.distanceTo(e) <= (float) crystalDistance.getValue()) {
 					return Text.literal("[AutoLog] End crystal appeared within range.");
 				}
 			}
@@ -131,7 +134,7 @@ public class AutoLog extends Module {
 						if (!EntityUtils.isOtherServerPlayer(player) || !playerNearby.isEnabled()) {
 							continue;
 						}
-						if (player.distanceTo(playerEntity) <= playerRange.getValue()) {
+						if (player.distanceTo(playerEntity) <= (float) playerRange.getValue()) {
 							return Text.literal("[AutoLog] " + player.getDisplayName().getString() + " appeared " + (int) player.distanceTo(mc.player) + " blocks away.");
 						}
 					}
@@ -140,10 +143,23 @@ public class AutoLog extends Module {
 				}
 		return null;
 	}
+
+	if (elytraLog.isEnabled()) {
+		if (mc.player.getEquippedStack(EquipmentSlot.CHEST).getItem() == Items.ELYTRA) {
+			int elytraDuribilityInt = (int) elytraDuribility.getValue();
+			int elytraDuribility = mc.player.getEquippedStack(EquipmentSlot.CHEST).getDamage();
+
+			if (elytraDuribility <= elytraDuribilityInt) {
+				return Text.literal("[AutoLog] Your elytra is low on duribility (" + elytraDuribility + ").");
+			}
+		}
+	}
+
 		return null;
 	}
 
 	private void log(Text reason) {
+		super.onDisable();
 		mc.player.networkHandler.getConnection().disconnect(reason);
 
 		if (smartToggle.isEnabled()) {
