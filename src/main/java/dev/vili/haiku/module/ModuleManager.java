@@ -61,6 +61,7 @@ public class ModuleManager {
         modules.add(new BunnyHop());
         modules.add(new ClickTP());
         modules.add(new ElytraFly());
+        modules.add(new ElytraReplace());
         modules.add(new EntityControl());
         modules.add(new FallFly());
         modules.add(new Fly());
