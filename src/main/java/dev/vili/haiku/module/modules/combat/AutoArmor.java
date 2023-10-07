@@ -37,9 +37,9 @@ public class AutoArmor extends Module {
 	public final BooleanSetting antiBreak = new BooleanSetting("AntiBreak-AutoArmor", "Unequips your armor when its about to break.", false);
 	public final BooleanSetting preferElytra = new BooleanSetting("PreferElytra-AutoArmor", "Equips elytras instead of chestplates when possible.", false);
 	public final BooleanSetting elytraSwap = new BooleanSetting("SwapElytra", "This will swap to your elytra (if you have one) whenever you just so you can make a quick getaway", false);
-	public final NumberSetting elytraSwapDelay = new NumberSetting("ElytraSwapDelay", "how long to wait before swapping to elytra (this only applys when elytra swap is enabled and this only applys to when you are jumping)", 0, 0, 20, 1);
+	public final NumberSetting elytraSwapDelay = new NumberSetting("ElytraSwapDelay", "how long to wait before swapping to elytra (this only applys when elytra swap is enabled and this only applys to when you are jumping)", 0, 0, 15, 0.05);
 	public final BooleanSetting delay = new BooleanSetting("Delay-AutoArmor", "Adds a delay between equipping armor pieces.", false);
-	public final NumberSetting delayAmount = new NumberSetting("DelayAmount-AutoArmor", "How many ticks between putting on armor pieces.", 0, 20, 1, 0);
+	public final NumberSetting delayAmount = new NumberSetting("DelayAmount-AutoArmor", "How many ticks between putting on armor pieces.", 0, 0, 20, 0.05);
 
 	private int tickDelay = 0;
 	private int elytraDelay = 0;
@@ -55,20 +55,18 @@ public class AutoArmor extends Module {
 		if (mc.player.playerScreenHandler != mc.player.currentScreenHandler || !BleachQueue.isEmpty("autoarmor_equip"))
 			return;
 
-		if (mc.player.isOnGround()) {
-			elytraDelay = (int) elytraSwapDelay.getValue();
+		if (mc.player.isOnGround() && !preferElytra.isEnabled()) {
+			elytraDelay = (int) elytraSwapDelay.getValue() * 20;
 			shouldWearElytra = false;
 		}
 
-		if (elytraSwap.isEnabled() && elytraDelay > 0) {
+		if (elytraSwap.isEnabled() && elytraDelay > 0 && !mc.player.isOnGround() && !preferElytra.isEnabled()) {
 			elytraDelay--;
 			return;
 		}
 
-		if (elytraSwap.isEnabled() && elytraDelay ==0) {
-			if (!mc.player.isOnGround()) {
-				shouldWearElytra = true;
-			}
+		if (elytraSwap.isEnabled() && elytraDelay == 0 && !mc.player.isOnGround()) {
+			shouldWearElytra = true;
 		}
 
 		if (tickDelay > 0) {
@@ -76,7 +74,7 @@ public class AutoArmor extends Module {
 			return;
 		}
 
-		tickDelay = (delay.isEnabled() ? (int) delayAmount.getValue() : 0);
+		tickDelay = (delay.isEnabled() ? (int) delayAmount.getValue() * 20 : 0);
 
 		/* [Slot type, [Armor slot, Armor prot, New armor slot, New armor prot]] */
 		Map<EquipmentSlot, int[]> armorMap = new HashMap<>(4);
