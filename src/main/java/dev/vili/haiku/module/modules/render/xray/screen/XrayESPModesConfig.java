@@ -1,0 +1,121 @@
+package dev.vili.haiku.module.modules.render.xray.screen;
+
+import dev.vili.haiku.module.modules.render.xray.config.ESPConfig;
+import dev.vili.haiku.module.modules.render.xray.screen.page.AddPagedButton;
+import dev.vili.haiku.module.modules.render.xray.screen.page.AddPagedElement;
+import dev.vili.haiku.module.modules.render.xray.screen.page.PagedElement;
+import dev.vili.haiku.module.modules.render.xray.screen.page.PagedScreen;
+import dev.vili.haiku.module.modules.render.xray.screen.page.RemovePagedButton;
+import dev.vili.haiku.module.modules.render.xray.utils.KeyData;
+import dev.vili.haiku.module.modules.render.xray.utils.XrayUtils;
+import dev.vili.haiku.module.modules.render.xray.widget.EntityConfigWidget;
+import dev.vili.haiku.module.modules.render.xray.widget.XrayButton;
+import net.minecraft.client.gui.DrawContext;
+import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.text.Text;
+
+import java.util.Optional;
+import java.util.stream.Stream;
+
+
+public abstract class XrayESPModesConfig extends PagedScreen<ESPConfig> {
+    private class PagedESPMode extends PagedElement<ESPConfig> {
+        private final ESPConfig cfg;
+        private boolean textHover = false;
+        private EntityConfigWidget entities;
+
+        public PagedESPMode(ESPConfig cfg) {
+            super(XrayESPModesConfig.this);
+            this.cfg = cfg;
+        }
+
+        public PagedESPMode() {
+            this(new ESPConfig());
+        }
+
+        @Override
+        public void init() {
+            int x = width / 2 - 125;
+            entities = addSubWidget(new EntityConfigWidget(x, 0, 115, 20, cfg, XrayESPModesConfig.this));
+            x += 119;
+            addSubWidget(XrayButton.builder(KeyData.getName(cfg.getKey()), btn -> client.setScreen(new KeySelector(XrayESPModesConfig.this, cfg.getKey(), oKey -> {
+                cfg.setKey(oKey);
+                btn.setMessage(KeyData.getName(cfg.getKey()));
+            }))).dimensions(x, 0, 56, 20).build());
+            x += 60;
+            addSubWidget(XrayButton.builder(XrayUtils.getToggleable(cfg.hasTracer(), "x13.mod.esp.tracer"),
+                    btn -> {
+                        cfg.setTracer(!cfg.hasTracer());
+                        btn.setMessage(XrayUtils.getToggleable(cfg.hasTracer(), "x13.mod.esp.tracer"));
+                    }).dimensions(x, 0, 74, 20).build());
+            x += 78;
+            addSubWidget(XrayButton.builder(Text.translatable("x13.mod.template.little"), btn -> client.setScreen(new EnumSelector<>(
+                    Text.translatable("x13.mod.template"), XrayESPModesConfig.this,
+                    ESPConfig.Template.values()) {
+
+                @Override
+                protected void select(ESPConfig.Template template) {
+                    String oldName = cfg.getModeName();
+                    int color = cfg.getColor();
+                    Optional<KeyData> key = cfg.getKey();
+                    template.cloneInto(cfg);
+                    cfg.setName(oldName);
+                    cfg.setColor(color);
+                    cfg.setKey(key);
+                }
+
+            })).dimensions(x, 0, 20, 20).build());
+            x += 24;
+
+            addSubWidget(new AddPagedButton<>(XrayESPModesConfig.this,
+                    x, 0, 20, 20, PagedESPMode::new));
+            x += 24;
+            addSubWidget(new RemovePagedButton(XrayESPModesConfig.this,
+                    x, 0, 20, 20));
+            super.init();
+        }
+
+        @Override
+        public void updateDelta(int delta, int index) {
+            entities.setDeltaY(delta);
+        }
+
+        @Override
+        public void render(DrawContext context, int mouseX, int mouseY, float delta) {
+            textHover = XrayUtils.isHover(mouseX, mouseY, width / 2 - 200, 0, width / 2 - 125 - 4, 20);
+            context.fill(width / 2 - 200, 0, width / 2 - 125 - 4, 20, textHover ? 0x33ffaa00 : 0x33ffffff);
+            int w = textRenderer.getWidth(cfg.getModeName());
+            context.drawText(textRenderer, cfg.getModeName(), width / 2 - (200 - 125 - 4) / 2 - 125 - 4 - w / 2,
+                    10 - textRenderer.fontHeight / 2,
+                    cfg.getColor(), false);
+            super.render(context, mouseX, mouseY, delta);
+        }
+
+        @Override
+        public boolean mouseClicked(double mouseX, double mouseY, int button) {
+            if (textHover) {
+                playDownSound();
+                client.setScreen(new XrayAbstractModeConfig(XrayESPModesConfig.this, cfg));
+                return true;
+            }
+            return super.mouseClicked(mouseX, mouseY, button);
+        }
+
+        @Override
+        public ESPConfig save() {
+            return cfg;
+        }
+    }
+
+    public XrayESPModesConfig(Screen parent, Stream<ESPConfig> stream) {
+        super(Text.translatable("x13.mod.esp"), parent, 24, stream);
+    }
+
+    @Override
+    protected void initElements(Stream<ESPConfig> stream) {
+        stream.map(PagedESPMode::new).forEach(this::addElement);
+        addElement(new AddPagedElement<>(this, PagedESPMode::new));
+    }
+
+}

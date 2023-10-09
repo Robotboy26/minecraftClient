@@ -9,7 +9,6 @@
 package dev.vili.haiku.module.modules.render;
 
 import dev.vili.haiku.event.events.entity.player.EventClientMove;
-
 import org.lwjgl.glfw.GLFW;
 
 import dev.vili.haiku.event.events.EventOpenScreen;
@@ -20,7 +19,6 @@ import dev.vili.haiku.module.Module;
 import dev.vili.haiku.setting.settings.BooleanSetting;
 import dev.vili.haiku.setting.settings.NumberSetting;
 import dev.vili.haiku.utils.world.PlayerCopyEntity;
-
 import net.minecraft.client.gui.screen.ingame.InventoryScreen;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityPose;
@@ -70,22 +68,24 @@ public class Freecam extends Module {
 
 		prevFlying = mc.player.getAbilities().flying;
 		prevFlySpeed = mc.player.getAbilities().getFlySpeed();
+		mc.player.startFallFlying();
 		super.onEnable();
 	}
 
 	@Override
 	public void onDisable() {
-			dummy.despawn();
-			mc.player.noClip = false;
-			mc.player.getAbilities().flying = prevFlying;
-			mc.player.getAbilities().setFlySpeed(prevFlySpeed);
-	
-			mc.player.refreshPositionAndAngles(playerPos[0], playerPos[1], playerPos[2], playerRot[0], playerRot[1]);
-			mc.player.setVelocity(Vec3d.ZERO);
-	
-			if (riding != null && mc.world.getEntityById(riding.getId()) != null) {
-				mc.player.startRiding(riding);
-			}
+		dummy.despawn();
+		mc.player.noClip = false;
+		mc.player.getAbilities().flying = prevFlying;
+		mc.player.getAbilities().setFlySpeed(prevFlySpeed);
+
+		mc.player.refreshPositionAndAngles(playerPos[0], playerPos[1], playerPos[2], playerRot[0], playerRot[1]);
+		mc.player.setVelocity(Vec3d.ZERO);
+
+		if (riding != null && mc.world.getEntityById(riding.getId()) != null) {
+			mc.player.startRiding(riding);
+		}
+		mc.player.stopFallFlying();
 		super.onDisable();
 	}
 
@@ -113,6 +113,8 @@ public class Freecam extends Module {
 
 	@HaikuSubscribe
 	public void onTick(TickEvent event) {
+		mc.getCameraEntity().noClip = true;
+		mc.player.setOnGround(false);
 		if (mc.cameraEntity.isInsideWall()) mc.getCameraEntity().noClip = true;
 		mc.player.setOnGround(false);
 		mc.player.getAbilities().setFlySpeed((float) (speed.getValue() / 3));

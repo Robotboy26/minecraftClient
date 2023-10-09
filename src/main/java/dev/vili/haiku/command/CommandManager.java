@@ -23,6 +23,7 @@ public class CommandManager {
         commands = new ArrayList<>();
 
         /* Add commands here */
+        commands.add(new ChatCmd());
         commands.add(new HelpCmd());
     }
 

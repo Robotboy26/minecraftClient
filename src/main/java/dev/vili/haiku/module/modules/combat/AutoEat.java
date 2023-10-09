@@ -25,8 +25,8 @@ import net.minecraft.util.Hand;
 public class AutoEat extends Module {
 	public final BooleanSetting hunger = new BooleanSetting("Hunger-AutoEat", "Eats when you're bewlow a certain amount of hunger.", true);
 	public final NumberSetting hungerAmount = new NumberSetting("HungerAmount-AutoEat", "The maximum hunger to eat at.", 14, 0.5, 20, 0.5);
-	public final BooleanSetting health = new BooleanSetting("Health-AutoEat", "Eats when you're bewlow a certain amount of health.", false);
-	public final NumberSetting healthAmount = new NumberSetting("HealthAmount-AutoEat", "The maximum health to eat at.", 14, 0.5, 20, 0.5);
+	public final BooleanSetting health = new BooleanSetting("Health-AutoEat", "Eats when you're bewlow a certain amount of health.", true);
+	public final NumberSetting healthAmount = new NumberSetting("HealthAmount-AutoEat", "The maximum health to eat at.", 12, 0.5, 20, 0.5);
 	public final BooleanSetting gapples = new BooleanSetting("Gapples-AutoEat", "Eats golden apples.", true);
 	public final BooleanSetting preferGapples = new BooleanSetting("PreferGapples-AutoEat", "Prefers golden apples avobe regular food.", false);
 	public final BooleanSetting chorus = new BooleanSetting("Chorus-AutoEat", "Eats chorus fruit.", false);

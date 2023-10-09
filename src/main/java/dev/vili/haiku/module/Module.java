@@ -14,6 +14,8 @@ import dev.vili.haiku.utils.HaikuLogger;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.util.Formatting;
 
+import dev.vili.haiku.utils.render.RenderUtils;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
@@ -25,6 +27,7 @@ public abstract class Module {
     public KeybindSetting keyCode = new KeybindSetting(0);
     public Category category;
     public boolean enabled;
+    private RenderUtils renderUtils = new RenderUtils();
     public List<Setting> settings = new ArrayList<>();
 
     public Module(String name, String description, int key, Category category) {
@@ -49,6 +52,10 @@ public abstract class Module {
         this.settings.addAll(Arrays.asList(settings));
         this.settings.sort(Comparator.comparingInt(s -> s == keyCode ? 1 : 0));
     }
+
+    public RenderUtils getRenderUtils() {
+		return this.renderUtils;
+	}
 
     /**
      * Called when the module is enabled.

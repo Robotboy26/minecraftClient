@@ -5,21 +5,33 @@
 
 package dev.vili.haiku.module.modules.render;
 
+import dev.vili.haiku.Haiku;
+import dev.vili.haiku.event.events.RenderEvent;
+import dev.vili.haiku.event.events.RenderTickEvent;
 import dev.vili.haiku.event.events.TickEvent;
 import dev.vili.haiku.event.events.render.Render3DEvent;
+import dev.vili.haiku.event.events.render.RenderListener;
+import dev.vili.haiku.eventbus.HaikuEvent;
 import dev.vili.haiku.eventbus.HaikuSubscribe;
 import dev.vili.haiku.module.Module;
 import dev.vili.haiku.setting.settings.BooleanSetting;
 import dev.vili.haiku.setting.settings.NumberSetting;
+import dev.vili.haiku.utils.HaikuLogger;
 import dev.vili.haiku.utils.misc.Pool;
+import dev.vili.haiku.utils.render.color.Color;
+import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.dimension.DimensionType;
+import com.mojang.blaze3d.systems.RenderSystem;
+import net.minecraft.client.render.*;
 
 import org.lwjgl.glfw.GLFW;
 
 import java.util.ArrayDeque;
+import java.util.ArrayList;
 import java.util.Queue;
 
-public class Breadcrumbs extends Module 
+public class Breadcrumbs extends Module
 {
     public final NumberSetting colorRed = new NumberSetting("ColorRed-Breadcrumbs", "The colorRed of the Breadcrumbs trail.", 25, 0, 255, 1);
     public final NumberSetting colorBlue = new NumberSetting("ColordBlue-Breadcrumbs", "The colorBlue of the Breadcrumbs trail.", 25, 0, 255, 1);
@@ -41,6 +53,7 @@ public class Breadcrumbs extends Module
 
     @Override
     public void onEnable() {
+        HaikuLogger.info("Breadcrumbs constructor called");
         section = sectionPool.get();
         section.set1();
 
@@ -79,18 +92,12 @@ public class Breadcrumbs extends Module
     }
 
     @HaikuSubscribe
-    private void onRender(Render3DEvent event) {
-        int iLast = -1;
-
-        for (Section section : sections) {
-            if (iLast == -1) {
-                iLast = event.renderer.lines.vec3(section.x1, section.y1, section.z1).color(colorRed.getValue(), colorBlue.getValue(), colorGreen.getValue()).next();
-            }
-
-            int i = event.renderer.lines.vec3(section.x2, section.y2, section.z2).color(colorRed.getValue(), colorBlue.getValue(), colorGreen.getValue()).next();
-            event.renderer.lines.line(iLast, i);
-            iLast = i;
-        }
+    public void onRenderTick() {
+        HaikuLogger.info("onRenderTick");
+        MatrixStack matrixStack = RenderSystem.getModelViewStack();
+        matrixStack.push();
+        // Add things to the matrix stack here
+        matrixStack.pop();
     }
 
     private boolean isFarEnough(double x, double y, double z) {
@@ -111,10 +118,6 @@ public class Breadcrumbs extends Module
             x2 = (float) mc.player.getX();
             y2 = (float) mc.player.getY();
             z2 = (float) mc.player.getZ();
-        }
-
-        public void render(Render3DEvent event) {
-            event.renderer.line(x1, y1, z1, x2, y2, z2, colorRed.getValue(), colorBlue.getValue(), colorGreen.getValue());
         }
     }
 }
