@@ -92,8 +92,8 @@ public class Breadcrumbs extends Module
     }
 
     @HaikuSubscribe
-    public void onRenderTick() {
-        HaikuLogger.info("onRenderTick");
+    public void renderEvent() {
+        HaikuLogger.info("Render event called");
         MatrixStack matrixStack = RenderSystem.getModelViewStack();
         matrixStack.push();
         // Add things to the matrix stack here
