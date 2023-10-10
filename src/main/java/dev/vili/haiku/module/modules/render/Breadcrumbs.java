@@ -5,30 +5,20 @@
 
 package dev.vili.haiku.module.modules.render;
 
-import dev.vili.haiku.Haiku;
 import dev.vili.haiku.event.events.RenderEvent;
-import dev.vili.haiku.event.events.RenderTickEvent;
 import dev.vili.haiku.event.events.TickEvent;
-import dev.vili.haiku.event.events.render.Render3DEvent;
-import dev.vili.haiku.event.events.render.RenderListener;
 import dev.vili.haiku.eventbus.HaikuEvent;
 import dev.vili.haiku.eventbus.HaikuSubscribe;
 import dev.vili.haiku.module.Module;
-import dev.vili.haiku.setting.settings.BooleanSetting;
 import dev.vili.haiku.setting.settings.NumberSetting;
 import dev.vili.haiku.utils.HaikuLogger;
 import dev.vili.haiku.utils.misc.Pool;
-import dev.vili.haiku.utils.render.color.Color;
 import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.dimension.DimensionType;
 import com.mojang.blaze3d.systems.RenderSystem;
-import net.minecraft.client.render.*;
-
 import org.lwjgl.glfw.GLFW;
 
 import java.util.ArrayDeque;
-import java.util.ArrayList;
 import java.util.Queue;
 
 public class Breadcrumbs extends Module
@@ -53,7 +43,6 @@ public class Breadcrumbs extends Module
 
     @Override
     public void onEnable() {
-        HaikuLogger.info("Breadcrumbs constructor called");
         section = sectionPool.get();
         section.set1();
 
@@ -91,8 +80,17 @@ public class Breadcrumbs extends Module
         lastDimension = mc.world.getDimension();
     }
 
+    // @HaikuSubscribe
+    // public void onRender(RenderInGameHudEvent event) {
+    //     HaikuLogger.info("RenderInGameHudEvent called");
+    //     MatrixStack matrixStack = RenderSystem.getModelViewStack();
+    //     matrixStack.push();
+    //     // Add things to the matrix stack here
+    //     matrixStack.pop();
+    // }
+
     @HaikuSubscribe
-    public void renderEvent() {
+    public void OnRender(RenderEvent event) {
         HaikuLogger.info("Render event called");
         MatrixStack matrixStack = RenderSystem.getModelViewStack();
         matrixStack.push();
