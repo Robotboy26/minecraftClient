@@ -13,7 +13,6 @@ import static dev.vili.haiku.Haiku.mc;
 import org.joml.Vector3d;
 
 public class Utils {
-    public static double frameTime;
     public static void rightClick() {
         ((IMinecraftClient) mc).rightClick();
     }
