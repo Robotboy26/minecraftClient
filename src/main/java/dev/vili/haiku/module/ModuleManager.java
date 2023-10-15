@@ -12,6 +12,7 @@ import dev.vili.haiku.event.events.KeyEvent;
 import dev.vili.haiku.eventbus.HaikuSubscribe;
 import dev.vili.haiku.module.modules.Build.MineEnderChest;
 import dev.vili.haiku.module.modules.combat.*;
+import dev.vili.haiku.module.modules.dev.Test;
 // import dev.vili.haiku.module.modules.dev.*;
 import dev.vili.haiku.module.modules.misc.*;
 import dev.vili.haiku.module.modules.movement.*;
@@ -46,7 +47,7 @@ public class ModuleManager {
         modules.add(new Killaura());
 
         /* dev */
-        ///modules.add(new Test());
+        modules.add(new Test());
         
         /* misc */
         modules.add(new AutoTool());

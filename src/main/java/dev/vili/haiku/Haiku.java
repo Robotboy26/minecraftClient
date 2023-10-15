@@ -12,6 +12,7 @@ import dev.vili.haiku.config.ConfigManager;
 import dev.vili.haiku.eventbus.EventBus;
 import dev.vili.haiku.module.ModuleManager;
 import dev.vili.haiku.setting.SettingManager;
+import dev.vili.haiku.altmanager.AltManager;
 import dev.vili.haiku.utils.HaikuLogger;
 import dev.vili.haiku.utils.TPSUtil;
 import net.fabricmc.api.ModInitializer;
@@ -31,6 +32,7 @@ public class Haiku implements ModInitializer {
     private final CommandManager COMMAND_MANAGER = new CommandManager();
     private final SettingManager SETTING_MANAGER = new SettingManager();
     private final ConfigManager CONFIG_MANAGER = new ConfigManager();
+    public final AltManager altManager = new AltManager();
 
     public Haiku() {
         INSTANCE = this;
@@ -55,6 +57,7 @@ public class Haiku implements ModInitializer {
         // Save configs on shutdown
         ClientLifecycleEvents.CLIENT_STOPPING.register(client -> {
             CONFIG_MANAGER.save();
+            altManager.saveAlts();
             HaikuLogger.logger.info("Saved config!");
         });
     }
