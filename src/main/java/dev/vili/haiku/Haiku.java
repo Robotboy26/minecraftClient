@@ -15,6 +15,7 @@ import dev.vili.haiku.setting.SettingManager;
 import dev.vili.haiku.altmanager.AltManager;
 import dev.vili.haiku.utils.HaikuLogger;
 import dev.vili.haiku.utils.TPSUtil;
+import meteordevelopment.orbit.IEventBus;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientLifecycleEvents;
 import net.minecraft.client.MinecraftClient;
@@ -28,6 +29,7 @@ public class Haiku implements ModInitializer {
     public static final MinecraftClient mc = MinecraftClient.getInstance();
     private static Haiku INSTANCE;
     private final EventBus EVENT_BUS = new EventBus();
+    public static final IEventBus OEVENT_BUS = new meteordevelopment.orbit.EventBus();
     private final ModuleManager MODULE_MANAGER = new ModuleManager();
     private final CommandManager COMMAND_MANAGER = new CommandManager();
     private final SettingManager SETTING_MANAGER = new SettingManager();
@@ -60,6 +62,8 @@ public class Haiku implements ModInitializer {
             altManager.saveAlts();
             HaikuLogger.logger.info("Saved config!");
         });
+
+        OEVENT_BUS.subscribe(this);
     }
 
     /**
