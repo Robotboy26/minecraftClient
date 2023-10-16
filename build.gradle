@@ -13,10 +13,41 @@ repositories {
     // See https://docs.gradle.org/current/userguide/declaring_repositories.html
     // for more information about repositories.
     mavenCentral()
+    maven { url 'https://maven.fabricmc.net/' }
     maven {
         name = "jitpack.io"
         url = "https://jitpack.io"
     }
+    maven {
+        name = "Meteor Development Libraries"
+        url = "https://meteordev.org/repo/maven"
+    }
+    maven {
+        name = "meteor-maven"
+        url = "https://maven.meteordev.org/releases"
+    }
+    maven {
+        name = "modrinth"
+        url = "https://api.modrinth.com/maven"
+
+        content {
+            includeGroup "maven.modrinth"
+        }
+    }
+    maven {
+           name = "meteor"
+           url = "https://maven.meteordev.org/"
+       }
+}
+
+configurations {
+    // include mods
+    modImplementation.extendsFrom(modInclude)
+    include.extendsFrom(modInclude)
+
+    // include libraries
+    implementation.extendsFrom(library)
+    shadow.extendsFrom(library)
 }
 
 ext {
@@ -44,6 +75,14 @@ dependencies {
         implementation("io.github.spair:imgui-java-natives-$it:$imguiVersion")
         include("io.github.spair:imgui-java-natives-$it:$imguiVersion")
     }
+
+    // Baritone (https://github.com/MeteorDevelopment/baritone)
+    //implementation "baritone:fabric:${project.minecraft_version}-SNAPSHOT"
+    //include "baritone:fabric:${project.minecraft_version}-SNAPSHOT"
+
+    // Orbit from meteor development
+    implementation "meteordevelopment:orbit:${project.orbit_version}"
+    include "meteordevelopment:orbit:${project.orbit_version}"
 }
 
 processResources {
@@ -86,18 +125,18 @@ jar {
 }
 
 // configure the maven publication
-publishing {
-    publications {
-        mavenJava(MavenPublication) {
-            from components.java
-        }
-    }
+// publishing {
+//     publications {
+//         mavenJava(MavenPublication) {
+//             from components.java
+//         }
+//     }
 
-    // See https://docs.gradle.org/current/userguide/publishing_maven.html for information on how to set up publishing.
-    repositories {
-        // Add repositories to publish to here.
-        // Notice: This block does NOT have the same function as the block in the top level.
-        // The repositories here will be used for publishing your artifact, not for
-        // retrieving dependencies.
-    }
-}
+//     // See https://docs.gradle.org/current/userguide/publishing_maven.html for information on how to set up publishing.
+//     repositories {
+//         // Add repositories to publish to here.
+//         // Notice: This block does NOT have the same function as the block in the top level.
+//         // The repositories here will be used for publishing your artifact, not for
+//         // retrieving dependencies.
+//     }
+// }
