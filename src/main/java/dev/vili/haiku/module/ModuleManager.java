@@ -94,6 +94,8 @@ public class ModuleManager {
         modules.add(new Gui());
         modules.add(new Hud());
         modules.add(new NoBackground());
+        modules.add(new NoHurtCam());
+        modules.add(new NoWeather());
         modules.add(new OneGui());
         // modules.add(new Tracers());
         modules.add(new TrueSight());

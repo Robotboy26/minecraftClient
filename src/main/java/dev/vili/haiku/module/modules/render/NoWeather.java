@@ -6,23 +6,32 @@ import dev.vili.haiku.module.Module;
 import dev.vili.haiku.utils.HaikuLogger;
 import meteordevelopment.orbit.EventHandler;
 import meteordevelopment.orbit.EventBus;
+import dev.vili.haiku.Haiku;
 import java.util.Collections;
 
 public class NoWeather extends Module {
-    private final EventBus eventBus;
-
+    public boolean NoWeather = false;
     public NoWeather() {
-        super("Test", "Test", GLFW.GLFW_KEY_UNKNOWN, Module.Category.DEV);
-        this.eventBus = new EventBus();
+        super("NoWeather", "NoWeather", GLFW.GLFW_KEY_UNKNOWN, Module.Category.RENDER);
     }
 
     @Override
     public void onEnable() {
         super.onEnable();
-        mc.getInstance().worldRenderer.rende = false;
+        setNoWeather(true);
     }
 
     @Override
     public void onDisable() {
         super.onDisable();
+        setNoWeather(false);
     }
+
+    public boolean getNoWeather() {
+        return NoWeather;
+    }
+
+    public void setNoWeather(boolean NoWeather) {
+        this.NoWeather = NoWeather;
+    }
+}

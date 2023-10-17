@@ -6,11 +6,18 @@
   "mixins": [
   ],
   "client": [
+    "AccessorFrustum",
+    "AccessorMinecraftClient",
+    "AccessorWorldRenderer",
     "ClientConnectionMixin",
+    "ClientPlayerEntityAccessor",
     "ClientPlayerEntityMixin",
+    "ClientPlayNetworkHandlerMixin",
+    "ClientWorldMixin",
     "InGameHudMixin",
     "KeyboardMixin",
     "MinecraftClientMixin",
+    "MultiplayerScreenMixin",
     "TelemetryManagerMixin",
     "WorldRendererMixin"
   ],

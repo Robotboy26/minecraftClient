@@ -35,6 +35,7 @@ public class Haiku implements ModInitializer {
     private final SettingManager SETTING_MANAGER = new SettingManager();
     private final ConfigManager CONFIG_MANAGER = new ConfigManager();
     public final AltManager altManager = new AltManager();
+    public boolean NoWeather = false;
 
     public Haiku() {
         INSTANCE = this;
