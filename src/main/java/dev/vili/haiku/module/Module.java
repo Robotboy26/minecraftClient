@@ -53,6 +53,15 @@ public abstract class Module {
         this.settings.sort(Comparator.comparingInt(s -> s == keyCode ? 1 : 0));
     }
 
+    public Setting getSetting(String name) {
+        for (Setting setting : settings) {
+            if (setting.getName().equalsIgnoreCase(name)) {
+                return setting;
+            }
+        }
+        return null;
+    }
+
     public RenderUtils getRenderUtils() {
 		return this.renderUtils;
 	}

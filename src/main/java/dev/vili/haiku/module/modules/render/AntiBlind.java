@@ -9,20 +9,24 @@ package dev.vili.haiku.module.modules.render;
 
 import dev.vili.haiku.eventbus.HaikuSubscribe;
 import dev.vili.haiku.module.Module;
+import dev.vili.haiku.setting.settings.BooleanSetting;
 import net.minecraft.entity.effect.StatusEffects;
 
 import org.lwjgl.glfw.GLFW;
 
 public final class AntiBlind extends Module 
 {
+    public final BooleanSetting blindness = new BooleanSetting("AntiBlind-Blindness", "Do you want to be blind", true);
+    public final BooleanSetting darkness = new BooleanSetting("AntiBlind-Darkness", "Do you want to be in darkness", true);
+
     public AntiBlind() {
         super("AntiBlind", "No Blind.", GLFW.GLFW_KEY_UNKNOWN, Category.RENDER);
     }
 
     @Override
     public void onEnable() {
-        mc.player.removeStatusEffect(StatusEffects.BLINDNESS);
-        mc.player.removeStatusEffect(StatusEffects.DARKNESS);
+        // mc.player.removeStatusEffect(StatusEffects.BLINDNESS);
+        // mc.player.removeStatusEffect(StatusEffects.DARKNESS);
         super.onEnable();
     }
 
@@ -31,14 +35,14 @@ public final class AntiBlind extends Module
         super.onDisable();
     }
 
-    @HaikuSubscribe
-    public void onTick() {
-        if (mc.player.hasStatusEffect(StatusEffects.BLINDNESS)) {
-            mc.player.removeStatusEffect(StatusEffects.BLINDNESS);
-        }
-        if (mc.player.hasStatusEffect(StatusEffects.DARKNESS)) {
-            mc.player.removeStatusEffect(StatusEffects.DARKNESS);
-        }
+    // @HaikuSubscribe
+    // public void onTick() {
+    //     if (mc.player.hasStatusEffect(StatusEffects.BLINDNESS)) {
+    //         mc.player.removeStatusEffect(StatusEffects.BLINDNESS);
+    //     }
+    //     if (mc.player.hasStatusEffect(StatusEffects.DARKNESS)) {
+    //         mc.player.removeStatusEffect(StatusEffects.DARKNESS);
+    //     }
 
-    }
+    // }
 }

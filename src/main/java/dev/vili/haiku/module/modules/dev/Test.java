@@ -1,7 +1,8 @@
 package dev.vili.haiku.module.modules.dev;
 
 import org.lwjgl.glfw.GLFW;
-import dev.vili.haiku.event.events.render.Render3DEvent;
+
+import dev.vili.haiku.event.events.RenderEvent;
 import dev.vili.haiku.eventbus.HaikuSubscribe;
 import dev.vili.haiku.module.Module;
 import dev.vili.haiku.utils.HaikuLogger;
@@ -23,7 +24,7 @@ public class Test extends Module {
     }
 
     @HaikuSubscribe
-    public void render(Render3DEvent event) {
+    public void render_head(RenderEvent event) {
         HaikuLogger.info("Test module render world tick!");
     }
 }

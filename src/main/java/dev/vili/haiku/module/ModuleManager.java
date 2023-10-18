@@ -18,6 +18,9 @@ import dev.vili.haiku.module.modules.misc.*;
 import dev.vili.haiku.module.modules.movement.*;
 import dev.vili.haiku.module.modules.player.*;
 import dev.vili.haiku.module.modules.render.*;
+import dev.vili.haiku.setting.Setting;
+import dev.vili.haiku.setting.settings.BooleanSetting;
+import dev.vili.haiku.setting.settings.NumberSetting;
 import net.minecraft.client.util.InputUtil;
 import org.lwjgl.glfw.GLFW;
 
@@ -88,7 +91,7 @@ public class ModuleManager {
         modules.add(new AntiBlind());
         modules.add(new BetterTab());
         modules.add(new Breadcrumbs());
-        modules.add(new Bright());
+        //modules.add(new Bright()); // fullbright works now so this is not needed
         modules.add(new Freecam());
         modules.add(new FullBright());
         modules.add(new Gui());
@@ -139,6 +142,17 @@ public class ModuleManager {
         return mod.isEnabled();
     }
 
+    public boolean isModuleSettingEnabled(String moduleName, String settingName) {
+        Module module = getModule(moduleName);
+        if (module != null && module.isEnabled()) {
+            Setting setting = module.getSetting(settingName);
+            if (setting != null) {
+                if (setting instanceof BooleanSetting) return ((BooleanSetting) setting).isEnabled();
+            }
+        }
+        return false;
+    }
+
     /**
      * Gets the modules by category.
      *
@@ -156,5 +170,14 @@ public class ModuleManager {
     public void onKeyPress(KeyEvent event) {
         if (InputUtil.isKeyPressed(Haiku.mc.getWindow().getHandle(), GLFW.GLFW_KEY_F3)) return;
         modules.stream().filter(m -> m.getKey() == event.getKey()).forEach(Module::toggle);
+    }
+
+    public Module get(Class<? extends Module> clazz) {
+        for (Module module : modules) {
+            if (clazz.isInstance(module)) {
+                return module;
+            }
+        }
+        return null;
     }
 }

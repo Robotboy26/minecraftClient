@@ -22,6 +22,7 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(WorldRenderer.class)
 public class WorldRendererMixin {
@@ -42,4 +43,14 @@ public class WorldRendererMixin {
         RenderEvent.Pre event = new RenderEvent.Pre(tickDelta, matrixStack);
         Haiku.getInstance().getEventBus().post(event);
     }
+
+        @Inject(method = "renderWeather", at = @At("HEAD"), cancellable = true)
+        private void onRenderWeather(LightmapTextureManager manager, float f, double d, double e, double g, CallbackInfo info) {
+            if (Haiku.getInstance().getModuleManager().isModuleEnabled("NoWeather")) info.cancel();
+        }
+
+        @Inject(method = "hasBlindnessOrDarkness(Lnet/minecraft/client/render/Camera;)Z", at = @At("HEAD"), cancellable = true)
+        private void hasBlindnessOrDarkness(Camera camera, CallbackInfoReturnable<Boolean> info) {
+            if (Haiku.getInstance().getModuleManager().isModuleSettingEnabled("AntiBlind", "AntiBlind-Blindness")) info.setReturnValue(null);
+        }
 }

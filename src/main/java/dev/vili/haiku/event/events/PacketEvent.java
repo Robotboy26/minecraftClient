@@ -12,7 +12,7 @@ import net.minecraft.network.packet.Packet;
 
 @SuppressWarnings("rawtypes")
 public class PacketEvent extends Event {
-    private final Packet packet;
+    public final Packet packet;
     private final Type type;
 
     public PacketEvent(Packet packet, Type type) {

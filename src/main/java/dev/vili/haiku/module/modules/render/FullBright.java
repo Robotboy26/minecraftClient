@@ -12,30 +12,21 @@ import net.minecraft.world.tick.Tick;
 
 import org.lwjgl.glfw.GLFW;
 
-public final class FullBright extends Module 
-{
-    private static Double previousValue = null;
-    public final ModeSetting Mode = new ModeSetting("Mode", "The mode of FullBright.", "Lightning", "Night Vision", "Lightning");
+public class FullBright extends Module {
+    //public final ModeSetting mode = new ModeSetting("Mode", Mode.Gamma);
+
     public FullBright() {
-        super("FullBright", "See in the dark.", GLFW.GLFW_KEY_UNKNOWN, Category.RENDER);
-        this.addSettings(Mode);
+        super("FullBright", "FullBright", GLFW.GLFW_KEY_C, Module.Category.RENDER);
+    }
+
+    @Override
+    public void onEnable() {
+        super.onEnable();
     }
 
     @Override
     public void onDisable() {
-        @SuppressWarnings("unchecked")
-        ISimpleOption<Double> gamma =
-                (ISimpleOption<Double>)(Object)mc.options.getGamma();
-        gamma.forceSetValue(previousValue);
-    }
-
-    @Override
-	public void onEnable() {
-		previousValue = mc.options.getGamma().getValue();
-		@SuppressWarnings("unchecked")
-		ISimpleOption<Double> gamma =
-				(ISimpleOption<Double>)(Object)mc.options.getGamma();
-		gamma.forceSetValue(10000.0);
+        super.onDisable();
     }
 }
 

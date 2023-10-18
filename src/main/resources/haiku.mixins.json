@@ -19,7 +19,9 @@
     "MinecraftClientMixin",
     "MultiplayerScreenMixin",
     "TelemetryManagerMixin",
-    "WorldRendererMixin"
+    "WorldRendererMixin",
+    "LightmapTextureManagerMixin",
+    "MouseMixin"
   ],
   "injectors": {
     "defaultRequire": 1

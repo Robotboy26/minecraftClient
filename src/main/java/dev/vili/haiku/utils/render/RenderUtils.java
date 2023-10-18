@@ -27,9 +27,15 @@ import net.minecraft.client.render.BufferBuilder;
 import net.minecraft.client.render.GameRenderer;
 import net.minecraft.client.render.Tessellator;
 import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Box;
+import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.RotationAxis;
+
 import org.joml.Matrix4f;
+import org.joml.Vector3f;
 import org.lwjgl.opengl.GL11;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.client.render.VertexFormat;
@@ -39,6 +45,7 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import dev.vili.haiku.utils.render.color.Color;
 
 public class RenderUtils {
+	public static Vec3d center;
 
 	final float ROUND_QUALITY = 10;
 	
@@ -46,6 +53,39 @@ public class RenderUtils {
 		Color c = new Color(r,g, b);
 		drawBox(matrixStack, x, y,width, height, c, alpha);
 	}
+
+	private static void bobView(MatrixStack matrices) {
+        Entity cameraEntity = MinecraftClient.getInstance().getCameraEntity();
+
+        if (cameraEntity instanceof PlayerEntity playerEntity) {
+            float f = MinecraftClient.getInstance().getTickDelta();
+            float g = playerEntity.horizontalSpeed - playerEntity.prevHorizontalSpeed;
+            float h = -(playerEntity.horizontalSpeed + g * f);
+            float i = MathHelper.lerp(f, playerEntity.prevStrideDistance, playerEntity.strideDistance);
+
+            matrices.translate(-(MathHelper.sin(h * 3.1415927f) * i * 0.5), Math.abs(MathHelper.cos(h * 3.1415927f) * i), 0);
+            matrices.multiply(RotationAxis.POSITIVE_Z.rotationDegrees(MathHelper.sin(h * 3.1415927f) * i * 3));
+            matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees(Math.abs(MathHelper.cos(h * 3.1415927f - 0.2f) * i) * 5));
+        }
+    }
+
+	public static void updateScreenCenter() {
+        MinecraftClient mc = MinecraftClient.getInstance();
+
+        Vector3f pos = new Vector3f(0, 0, 1);
+
+        if (mc.options.getBobView().getValue()) {
+            MatrixStack bobViewMatrices = new MatrixStack();
+
+            bobView(bobViewMatrices);
+            pos.mulPosition(bobViewMatrices.peek().getPositionMatrix().invert());
+        }
+
+        center = new Vec3d(pos.x, -pos.y, pos.z)
+            .rotateX(-(float) Math.toRadians(mc.gameRenderer.getCamera().getPitch()))
+            .rotateY(-(float) Math.toRadians(mc.gameRenderer.getCamera().getYaw()))
+            .add(mc.gameRenderer.getCamera().getPos());
+    }
 	
 	public void drawBox(MatrixStack matrixStack, float x, float y, float width, float height, Color color, float alpha) {
 

@@ -5,10 +5,11 @@
 
 package dev.vili.haiku.event.events.render;
 
+import dev.vili.haiku.event.Event;
 import dev.vili.haiku.render.Renderer3D;
 import net.minecraft.client.util.math.MatrixStack;
 
-public class Render3DEvent {
+public class Render3DEvent extends Event{
     private static final Render3DEvent INSTANCE = new Render3DEvent();
 
     public MatrixStack matrices;

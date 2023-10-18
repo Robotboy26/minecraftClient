@@ -8,10 +8,13 @@
 package dev.vili.haiku.event.events;
 
 import dev.vili.haiku.event.Event;
+import dev.vili.haiku.utils.misc.input.KeyAction;
 
 public class KeyEvent extends Event {
-    private final int key;
-    private final int code;
+    private static final KeyEvent INSTANCE = new KeyEvent(0, 0, Status.RELEASED);
+    public int code;
+    public int key, modifiers;
+    public KeyAction action;
     private final Status status;
 
     public KeyEvent(int key, int code, Status status) {
@@ -36,6 +39,14 @@ public class KeyEvent extends Event {
      */
     public int getCode() {
         return code;
+    }
+
+    public static KeyEvent get(int key, int modifiers, KeyAction action) {
+        INSTANCE.setCancelled(false);
+        INSTANCE.key = key;
+        INSTANCE.modifiers = modifiers;
+        INSTANCE.action = action;
+        return INSTANCE;
     }
 
     /**
