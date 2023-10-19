@@ -61,6 +61,7 @@ public class ModuleManager {
         modules.add(new AntiLevitation());
         modules.add(new AutoSprint());
         modules.add(new AutoWalk());
+        modules.add(new BlockFly());
         modules.add(new BoatFly());
         modules.add(new BunnyHop());
         modules.add(new ClickTP());
