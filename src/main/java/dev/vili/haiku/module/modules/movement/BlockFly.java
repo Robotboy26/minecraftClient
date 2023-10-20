@@ -49,5 +49,6 @@ public class BlockFly extends Module {
         mc.world.setBlockState(pos, state);
         pos = null;
         BlockState state = null;
+        super.onDisable();
     }
 }

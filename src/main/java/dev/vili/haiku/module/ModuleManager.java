@@ -58,6 +58,7 @@ public class ModuleManager {
         modules.add(new FastBreak());
 
         /* Movement */
+        modules.add(new AirJump());
         modules.add(new AntiLevitation());
         modules.add(new AutoSprint());
         modules.add(new AutoWalk());

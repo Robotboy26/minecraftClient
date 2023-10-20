@@ -9,6 +9,7 @@ import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import dev.vili.haiku.utils.Utils;
 import dev.vili.haiku.utils.misc.CPSUtils;
+import dev.vili.haiku.utils.network.OnlinePlayers;
 import meteordevelopment.starscript.Script;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.Mouse;
@@ -33,6 +34,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 import dev.vili.haiku.Haiku;
+import dev.vili.haiku.event.events.TickEvent;
+import dev.vili.haiku.event.events.game.GameLeftEvent;
 import dev.vili.haiku.mixinterface.IMinecraftClient;
 import net.minecraft.client.RunArgs;
 import java.util.concurrent.CompletableFuture;
@@ -67,116 +70,109 @@ public abstract class MinecraftClientMixin implements IMinecraftClient {
         Haiku.getInstance().postInitialize();
     }
 
-    @Inject(at = @At("HEAD"), method = "tick")
-    private void onPreTick(CallbackInfo info) {
-        OnlinePlayers.update();
+    // @Inject(at = @At("HEAD"), method = "tick")
+    // private void onPreTick(CallbackInfo info) {
+    //     OnlinePlayers.update();
 
-        doItemUseCalled = false;
+    //     doItemUseCalled = false;
 
-        getProfiler().push(MeteorClient.MOD_ID + "_pre_update");
-        MeteorClient.EVENT_BUS.post(TickEvent.Pre.get());
-        getProfiler().pop();
+    //     if (rightClick && !doItemUseCalled && interactionManager != null) doItemUse();
+    //     rightClick = false;
+    // }
 
-        if (rightClick && !doItemUseCalled && interactionManager != null) doItemUse();
-        rightClick = false;
-    }
+    // @Inject(at = @At("TAIL"), method = "tick")
+    // private void onTick(CallbackInfo info) {
+    // }
 
-    @Inject(at = @At("TAIL"), method = "tick")
-    private void onTick(CallbackInfo info) {
-        getProfiler().push(MeteorClient.MOD_ID + "_post_update");
-        MeteorClient.EVENT_BUS.post(TickEvent.Post.get());
-        getProfiler().pop();
-    }
+    // @Inject(method = "doAttack", at = @At("HEAD"))
+    // private void onAttack(CallbackInfoReturnable<Boolean> cir) {
+    //     CPSUtils.onAttack();
+    // }
 
-    @Inject(method = "doAttack", at = @At("HEAD"))
-    private void onAttack(CallbackInfoReturnable<Boolean> cir) {
-        CPSUtils.onAttack();
-    }
+    // @Inject(method = "doItemUse", at = @At("HEAD"))
+    // private void onDoItemUse(CallbackInfo info) {
+    //     doItemUseCalled = true;
+    // }
 
-    @Inject(method = "doItemUse", at = @At("HEAD"))
-    private void onDoItemUse(CallbackInfo info) {
-        doItemUseCalled = true;
-    }
+    // @Inject(method = "disconnect(Lnet/minecraft/client/gui/screen/Screen;)V", at = @At("HEAD"))
+    // private void onDisconnect(Screen screen, CallbackInfo info) {
+    //     if (world != null) {
+    //         Haiku.getInstance().getEventBus().post(GameLeftEvent.get());
+    //     }
+    // }
 
-    @Inject(method = "disconnect(Lnet/minecraft/client/gui/screen/Screen;)V", at = @At("HEAD"))
-    private void onDisconnect(Screen screen, CallbackInfo info) {
-        if (world != null) {
-            MeteorClient.EVENT_BUS.post(GameLeftEvent.get());
-        }
-    }
+    // @Inject(method = "setScreen", at = @At("HEAD"), cancellable = true)
+    // private void onSetScreen(Screen screen, CallbackInfo info) {
+    //     if (screen instanceof WidgetScreen) screen.mouseMoved(mouse.getX() * window.getScaleFactor(), mouse.getY() * window.getScaleFactor());
 
-    @Inject(method = "setScreen", at = @At("HEAD"), cancellable = true)
-    private void onSetScreen(Screen screen, CallbackInfo info) {
-        if (screen instanceof WidgetScreen) screen.mouseMoved(mouse.getX() * window.getScaleFactor(), mouse.getY() * window.getScaleFactor());
+    //     OpenScreenEvent event = OpenScreenEvent.get(screen);
+    //     Haiku.getInstance().getEventBus().post(event);
 
-        OpenScreenEvent event = OpenScreenEvent.get(screen);
-        MeteorClient.EVENT_BUS.post(event);
+    //     if (event.isCancelled()) info.cancel();
+    // }
 
-        if (event.isCancelled()) info.cancel();
-    }
+    // @Inject(method = "doItemUse", at = @At(value = "INVOKE", target = "Lnet/minecraft/item/ItemStack;isItemEnabled(Lnet/minecraft/resource/featuretoggle/FeatureSet;)Z"), locals = LocalCapture.CAPTURE_FAILHARD)
+    // private void onDoItemUseHand(CallbackInfo ci, Hand[] var1, int var2, int var3, Hand hand, ItemStack itemStack) {
+    //     FastUse fastUse = Modules.get().get(FastUse.class);
+    //     if (fastUse.isActive()) {
+    //         itemUseCooldown = fastUse.getItemUseCooldown(itemStack);
+    //     }
+    // }
 
-    @Inject(method = "doItemUse", at = @At(value = "INVOKE", target = "Lnet/minecraft/item/ItemStack;isItemEnabled(Lnet/minecraft/resource/featuretoggle/FeatureSet;)Z"), locals = LocalCapture.CAPTURE_FAILHARD)
-    private void onDoItemUseHand(CallbackInfo ci, Hand[] var1, int var2, int var3, Hand hand, ItemStack itemStack) {
-        FastUse fastUse = Modules.get().get(FastUse.class);
-        if (fastUse.isActive()) {
-            itemUseCooldown = fastUse.getItemUseCooldown(itemStack);
-        }
-    }
+    // @ModifyExpressionValue(method = "doItemUse", at = @At(value = "FIELD", target = "Lnet/minecraft/client/MinecraftClient;crosshairTarget:Lnet/minecraft/util/hit/HitResult;", ordinal = 1))
+    // private HitResult doItemUseMinecraftClientCrosshairTargetProxy(HitResult original) {
+    //     return Haiku.getInstance().getEventBus().post(ItemUseCrosshairTargetEvent.get(original)).target;
+    // }
 
-    @ModifyExpressionValue(method = "doItemUse", at = @At(value = "FIELD", target = "Lnet/minecraft/client/MinecraftClient;crosshairTarget:Lnet/minecraft/util/hit/HitResult;", ordinal = 1))
-    private HitResult doItemUseMinecraftClientCrosshairTargetProxy(HitResult original) {
-        return MeteorClient.EVENT_BUS.post(ItemUseCrosshairTargetEvent.get(original)).target;
-    }
+    // @ModifyReturnValue(method = "reloadResources(Z)Ljava/util/concurrent/CompletableFuture;", at = @At("RETURN"))
+    // private CompletableFuture<Void> onReloadResourcesNewCompletableFuture(CompletableFuture<Void> original) {
+    //     return original.thenRun(() -> Haiku.getInstance().getEventBus().post(ResourcePacksReloadedEvent.get()));
+    // }
 
-    @ModifyReturnValue(method = "reloadResources(Z)Ljava/util/concurrent/CompletableFuture;", at = @At("RETURN"))
-    private CompletableFuture<Void> onReloadResourcesNewCompletableFuture(CompletableFuture<Void> original) {
-        return original.thenRun(() -> MeteorClient.EVENT_BUS.post(ResourcePacksReloadedEvent.get()));
-    }
+    // @ModifyArg(method = "updateWindowTitle", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/util/Window;setTitle(Ljava/lang/String;)V"))
+    // private String setTitle(String original) {
+    //     if (Config.get() == null || !Config.get().customWindowTitle.get()) return original;
 
-    @ModifyArg(method = "updateWindowTitle", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/util/Window;setTitle(Ljava/lang/String;)V"))
-    private String setTitle(String original) {
-        if (Config.get() == null || !Config.get().customWindowTitle.get()) return original;
+    //     String customTitle = Config.get().customWindowTitleText.get();
+    //     Script script = MeteorStarscript.compile(customTitle);
 
-        String customTitle = Config.get().customWindowTitleText.get();
-        Script script = MeteorStarscript.compile(customTitle);
+    //     if (script != null) {
+    //         String title = MeteorStarscript.run(script);
+    //         if (title != null) customTitle = title;
+    //     }
 
-        if (script != null) {
-            String title = MeteorStarscript.run(script);
-            if (title != null) customTitle = title;
-        }
+    //     return customTitle;
+    // }
 
-        return customTitle;
-    }
+    // @Inject(method = "onResolutionChanged", at = @At("TAIL"))
+    // private void onResolutionChanged(CallbackInfo info) {
+    //     Haiku.getInstance().getEventBus().post(WindowResizedEvent.get());
+    // }
 
-    @Inject(method = "onResolutionChanged", at = @At("TAIL"))
-    private void onResolutionChanged(CallbackInfo info) {
-        MeteorClient.EVENT_BUS.post(WindowResizedEvent.get());
-    }
-
-    @Inject(method = "getFramerateLimit", at = @At("HEAD"), cancellable = true)
-    private void onGetFramerateLimit(CallbackInfoReturnable<Integer> info) {
-        if (Modules.get().isActive(UnfocusedCPU.class) && !isWindowFocused()) info.setReturnValue(Math.min(Modules.get().get(UnfocusedCPU.class).fps.get(), this.options.getMaxFps().getValue()));
-    }
+    // @Inject(method = "getFramerateLimit", at = @At("HEAD"), cancellable = true)
+    // private void onGetFramerateLimit(CallbackInfoReturnable<Integer> info) {
+    //     if (Modules.get().isActive(UnfocusedCPU.class) && !isWindowFocused()) info.setReturnValue(Math.min(Modules.get().get(UnfocusedCPU.class).fps.get(), this.options.getMaxFps().getValue()));
+    // }
 
     // Time delta
 
-    @Inject(method = "render", at = @At("HEAD"))
-    private void onRender(CallbackInfo info) {
-        long time = System.currentTimeMillis();
+    // @Inject(method = "render", at = @At("HEAD"))
+    // private void onRender(CallbackInfo info) {
+    //     long time = System.currentTimeMillis();
 
-        if (firstFrame) {
-            lastTime = time;
-            firstFrame = false;
-        }
+    //     if (firstFrame) {
+    //         lastTime = time;
+    //         firstFrame = false;
+    //     }
 
-        Utils.frameTime = (time - lastTime) / 1000.0;
-        lastTime = time;
-    }
+    //     Utils.frameTime = (time - lastTime) / 1000.0;
+    //     lastTime = time;
+    // }
 
     // Interface
 
-    @Override
-    public void rightClick() {
-        rightClick = true;
-    }
+    // @Override
+    // public void rightClick() {
+    //     rightClick = true;
+    // }
 }
