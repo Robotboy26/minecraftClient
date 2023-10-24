@@ -59,13 +59,16 @@ public class ModuleManager {
 
         /* Movement */
         modules.add(new AirJump());
+        modules.add(new Anchor());
         modules.add(new AntiLevitation());
         modules.add(new AutoSprint());
         modules.add(new AutoWalk());
+        modules.add(new Blink());
         modules.add(new BlockFly());
         modules.add(new BoatFly());
         modules.add(new BunnyHop());
         modules.add(new ClickTP());
+        modules.add(new DamageFly());
         modules.add(new ElytraFly());
         modules.add(new ElytraReplace());
         modules.add(new EntityControl());
@@ -85,6 +88,7 @@ public class ModuleManager {
         modules.add(new FastRegen());
         modules.add(new Invisability());
         modules.add(new Invulnerable());
+        modules.add(new LogoutTimer());
         modules.add(new NoDrag());
         modules.add(new QuickDisconnect());
         modules.add(new Reach());

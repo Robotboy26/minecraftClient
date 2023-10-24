@@ -9,6 +9,8 @@ package dev.vili.haiku.mixin;
 
 import dev.vili.haiku.Haiku;
 import dev.vili.haiku.event.events.TickEvent;
+import dev.vili.haiku.module.ModuleManager;
+import dev.vili.haiku.module.modules.render.Freecam;
 import net.minecraft.client.network.ClientPlayerEntity;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -25,4 +27,11 @@ public class ClientPlayerEntityMixin {
             Haiku.getInstance().getEventBus().post(event);
         }
     }
+
+    @Inject(method = "pushOutOfBlocks", at = @At("HEAD"), cancellable = true)
+	private void pushOutOfBlocks(double x, double d, CallbackInfo ci) {
+		if (Haiku.getInstance().getModuleManager().isModuleEnabled("Freecam")) {
+			ci.cancel();
+		}
+	}
 }

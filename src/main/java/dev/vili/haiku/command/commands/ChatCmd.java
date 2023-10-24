@@ -3,6 +3,7 @@ package dev.vili.haiku.command.commands;
 import dev.vili.haiku.command.Command;
 import dev.vili.haiku.utils.HaikuLogger;
 
+import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 
 public class ChatCmd extends Command {
@@ -20,68 +21,60 @@ public class ChatCmd extends Command {
 
         String mode = args[0];
         String[] messageArgs = Arrays.copyOfRange(args, 1, args.length);
-        StringBuilder message = new StringBuilder();
-        for (int i = 0; i < messageArgs.length; i++) {
-            message.append(messageArgs[i]);
-            if (i != messageArgs.length - 1) {
-                message.append(" ");
-            }
-        }
+        String message = String.join(" ", messageArgs);
 
         String outputMessage;
         switch (mode) {
             case "bin":
-                outputMessage = toBinaryString(message.toString());
+                outputMessage = getByteString(message);
                 break;
             case "hex":
-                outputMessage = toHexString(message.toString());
+                outputMessage = toHexString(message);
                 break;
             case "dec":
-                outputMessage = toDecimalString(message.toString());
+                outputMessage = toDecimalString(message);
                 break;
             default:
                 HaikuLogger.error("Invalid mode. Use bin, hex, or dec.");
                 return;
         }
 
-        if (outputMessage.length() > 256) {
-            int numMessages = (int) Math.ceil((double) outputMessage.length() / 256);
-
-            for (int i = 0; i < numMessages; i++) {
-                int startIndex = i * 256;
-                int endIndex = Math.min(startIndex + 256, outputMessage.length());
-                String subMessage = outputMessage.substring(startIndex, endIndex);
-
-                mc.player.networkHandler.sendChatMessage(subMessage);
+        if (outputMessage != null) {
+            // Split the message into chunks of 256 characters and send each chunk as a separate message
+            int chunkSize = 256;
+            int numChunks = (int) Math.ceil((double) outputMessage.length() / chunkSize);
+            for (int i = 0; i < numChunks; i++) {
+                int startIndex = i * chunkSize;
+                int endIndex = Math.min((i + 1) * chunkSize, outputMessage.length());
+                String chunk = outputMessage.substring(startIndex, endIndex);
+                mc.getNetworkHandler().sendChatMessage(chunk);
             }
-        } else {
-            // mc.player.networkHandler.sendChatMessage(outputMessage);
-            HaikuLogger.info(outputMessage + " copied to clipboard.");
-            mc.keyboard.setClipboard(outputMessage);
         }
-    }
-
-    private String toBinaryString(String message) {
-        StringBuilder binaryMessage = new StringBuilder();
-        for (char c : message.toCharArray()) {
-            binaryMessage.append(Integer.toBinaryString(c)).append(" ");
-        }
-        return binaryMessage.toString();
     }
 
     private String toHexString(String message) {
+        byte[] bytes = message.getBytes(StandardCharsets.UTF_8);
         StringBuilder hexMessage = new StringBuilder();
-        for (char c : message.toCharArray()) {
-            hexMessage.append(Integer.toHexString(c)).append(" ");
+        for (byte b : bytes) {
+            hexMessage.append(String.format("%02X", b & 0xFF)).append(" ");
         }
         return hexMessage.toString();
     }
 
     private String toDecimalString(String message) {
+        byte[] bytes = message.getBytes(StandardCharsets.UTF_8);
         StringBuilder decimalMessage = new StringBuilder();
-        for (char c : message.toCharArray()) {
-            decimalMessage.append((int) c).append(" ");
+        for (byte b : bytes) {
+            decimalMessage.append((int) (b & 0xFF)).append(" ");
         }
         return decimalMessage.toString();
+    }
+    private String getByteString(String message) {
+        byte[] bytes = message.getBytes(StandardCharsets.UTF_8);
+        StringBuilder binaryMessage = new StringBuilder();
+        for (byte b : bytes) {
+            binaryMessage.append(Integer.toBinaryString(b & 0xFF)).append(" ");
+        }
+        return binaryMessage.toString();
     }
 }

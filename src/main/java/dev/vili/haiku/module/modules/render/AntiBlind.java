@@ -21,6 +21,7 @@ public final class AntiBlind extends Module
 
     public AntiBlind() {
         super("AntiBlind", "No Blind.", GLFW.GLFW_KEY_UNKNOWN, Category.RENDER);
+        this.addSettings(blindness, darkness);
     }
 
     @Override

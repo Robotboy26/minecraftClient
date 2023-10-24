@@ -103,58 +103,55 @@ public abstract class GameRendererMixin {
     }
 
     // Freecam
+    // @Inject(method = "updateTargetedEntity", at = @At("HEAD"), cancellable = true)
+    // private void updateTargetedEntityInvoke(float tickDelta, CallbackInfo info) {
+    //     Freecam freecam = (Freecam) Haiku.getInstance().getModuleManager().get(Freecam.class);
+    //     boolean highwayBuilder = Haiku.getInstance().getModuleManager().isModuleEnabled("HighwayBuilder");
 
-    private boolean freecamSet = false;
+    //     if ((freecam.enabled || highwayBuilder) && client.getCameraEntity() != null && !freecamSet) {
+    //         info.cancel();
+    //         Entity cameraE = client.getCameraEntity();
 
-    @Inject(method = "updateTargetedEntity", at = @At("HEAD"), cancellable = true)
-    private void updateTargetedEntityInvoke(float tickDelta, CallbackInfo info) {
-        Freecam freecam = (Freecam) Haiku.getInstance().getModuleManager().get(Freecam.class);
-        boolean highwayBuilder = Haiku.getInstance().getModuleManager().isModuleEnabled("HighwayBuilder");
+    //         double x = cameraE.getX();
+    //         double y = cameraE.getY();
+    //         double z = cameraE.getZ();
+    //         double prevX = cameraE.prevX;
+    //         double prevY = cameraE.prevY;
+    //         double prevZ = cameraE.prevZ;
+    //         float yaw = cameraE.getYaw();
+    //         float pitch = cameraE.getPitch();
+    //         float prevYaw = cameraE.prevYaw;
+    //         float prevPitch = cameraE.prevPitch;
 
-        if ((freecam.enabled || highwayBuilder) && client.getCameraEntity() != null && !freecamSet) {
-            info.cancel();
-            Entity cameraE = client.getCameraEntity();
+    //         // if (highwayBuilder) {
+    //         //     cameraE.setYaw(camera.getYaw());
+    //         //     cameraE.setPitch(camera.getPitch());
+    //         // }
+    //         // else {
+    //         //     ((IVec3d) cameraE.getPos()).set(freecam.pos.x, freecam.pos.y - cameraE.getEyeHeight(cameraE.getPose()), freecam.pos.z);
+    //         //     cameraE.prevX = freecam.prevPos.x;
+    //         //     cameraE.prevY = freecam.prevPos.y - cameraE.getEyeHeight(cameraE.getPose());
+    //         //     cameraE.prevZ = freecam.prevPos.z;
+    //         //     cameraE.setYaw(freecam.yaw);
+    //         //     cameraE.setPitch(freecam.pitch);
+    //         //     cameraE.prevYaw = freecam.prevYaw;
+    //         //     cameraE.prevPitch = freecam.prevPitch;
+    //         // }
 
-            double x = cameraE.getX();
-            double y = cameraE.getY();
-            double z = cameraE.getZ();
-            double prevX = cameraE.prevX;
-            double prevY = cameraE.prevY;
-            double prevZ = cameraE.prevZ;
-            float yaw = cameraE.getYaw();
-            float pitch = cameraE.getPitch();
-            float prevYaw = cameraE.prevYaw;
-            float prevPitch = cameraE.prevPitch;
+    //         freecamSet = true;
+    //         updateTargetedEntity(tickDelta);
+    //         freecamSet = false;
 
-            if (highwayBuilder) {
-                cameraE.setYaw(camera.getYaw());
-                cameraE.setPitch(camera.getPitch());
-            }
-            else {
-                ((IVec3d) cameraE.getPos()).set(freecam.pos.x, freecam.pos.y - cameraE.getEyeHeight(cameraE.getPose()), freecam.pos.z);
-                cameraE.prevX = freecam.prevPos.x;
-                cameraE.prevY = freecam.prevPos.y - cameraE.getEyeHeight(cameraE.getPose());
-                cameraE.prevZ = freecam.prevPos.z;
-                cameraE.setYaw(freecam.yaw);
-                cameraE.setPitch(freecam.pitch);
-                cameraE.prevYaw = freecam.prevYaw;
-                cameraE.prevPitch = freecam.prevPitch;
-            }
-
-            freecamSet = true;
-            updateTargetedEntity(tickDelta);
-            freecamSet = false;
-
-            ((IVec3d) cameraE.getPos()).set(x, y, z);
-            cameraE.prevX = prevX;
-            cameraE.prevY = prevY;
-            cameraE.prevZ = prevZ;
-            cameraE.setYaw(yaw);
-            cameraE.setPitch(pitch);
-            cameraE.prevYaw = prevYaw;
-            cameraE.prevPitch = prevPitch;
-        }
-    }
+    //         ((IVec3d) cameraE.getPos()).set(x, y, z);
+    //         cameraE.prevX = prevX;
+    //         cameraE.prevY = prevY;
+    //         cameraE.prevZ = prevZ;
+    //         cameraE.setYaw(yaw);
+    //         cameraE.setPitch(pitch);
+    //         cameraE.prevYaw = prevYaw;
+    //         cameraE.prevPitch = prevPitch;
+    //    }
+    // }
 
     // @Inject(method = "renderHand", at = @At("HEAD"), cancellable = true)
     // private void renderHand(MatrixStack matrices, Camera camera, float tickDelta, CallbackInfo info) {

@@ -10,10 +10,12 @@ package dev.vili.haiku.module.modules.combat;
 
 import org.lwjgl.glfw.GLFW;
 
+import dev.vili.haiku.Haiku;
 import dev.vili.haiku.event.events.EventPacket;
 import dev.vili.haiku.eventbus.HaikuSubscribe;
 import dev.vili.haiku.module.Module;
 import dev.vili.haiku.setting.settings.ModeSetting;
+import dev.vili.haiku.utils.HaikuLogger;
 import dev.vili.haiku.utils.PlayerInteractEntityC2SUtils;
 import dev.vili.haiku.utils.PlayerInteractEntityC2SUtils.InteractType;
 
@@ -37,7 +39,9 @@ public class Criticals extends Module {
 
 	@HaikuSubscribe
 	public void sendPacket(EventPacket.Send event) {
+		HaikuLogger.info("1");
 		if (event.getPacket() instanceof PlayerInteractEntityC2SPacket) {
+			HaikuLogger.info("2");
 			PlayerInteractEntityC2SPacket packet = (PlayerInteractEntityC2SPacket) event.getPacket();
 			if (PlayerInteractEntityC2SUtils.getInteractType(packet) == InteractType.ATTACK
 					&& PlayerInteractEntityC2SUtils.getEntity(packet) instanceof LivingEntity) {

@@ -67,7 +67,7 @@ public abstract class MinecraftClientMixin implements IMinecraftClient {
     @Inject(method = "<init>", at = @At(value = "INVOKE",
             target = "Lnet/minecraft/client/MinecraftClient;setOverlay(Lnet/minecraft/client/gui/screen/Overlay;)V", shift = At.Shift.BEFORE))
     private void init(RunArgs args, CallbackInfo ci) {
-        Haiku.getInstance().postInitialize();
+        Haiku.getInstance().onInitialize();
     }
 
     // @Inject(at = @At("HEAD"), method = "tick")
@@ -94,12 +94,11 @@ public abstract class MinecraftClientMixin implements IMinecraftClient {
     //     doItemUseCalled = true;
     // }
 
-    // @Inject(method = "disconnect(Lnet/minecraft/client/gui/screen/Screen;)V", at = @At("HEAD"))
-    // private void onDisconnect(Screen screen, CallbackInfo info) {
-    //     if (world != null) {
-    //         Haiku.getInstance().getEventBus().post(GameLeftEvent.get());
-    //     }
-    // }
+    @Inject(method = "disconnect(Lnet/minecraft/client/gui/screen/Screen;)V", at = @At("HEAD"))
+    private void onDisconnect(Screen screen, CallbackInfo info) {
+        Haiku.getInstance().getModuleManager().getModule("Freecam").setEnabled(false);
+        Haiku.getInstance().getModuleManager().getModule("LogoutTimer").setEnabled(false);
+    }
 
     // @Inject(method = "setScreen", at = @At("HEAD"), cancellable = true)
     // private void onSetScreen(Screen screen, CallbackInfo info) {

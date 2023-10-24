@@ -12,6 +12,7 @@ import dev.vili.haiku.setting.Setting;
 import dev.vili.haiku.setting.settings.KeybindSetting;
 import dev.vili.haiku.utils.HaikuLogger;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.network.packet.Packet;
 import net.minecraft.util.Formatting;
 
 import dev.vili.haiku.utils.render.RenderUtils;
@@ -84,6 +85,16 @@ public abstract class Module {
         Haiku.getInstance().getConfigManager().save();
 
         HaikuLogger.info(Formatting.RED + "Disabled " + this.getName() + "!");
+    }
+
+    protected void sendPacket(Packet<?> packet) {
+        if (mc.getNetworkHandler() == null) return;
+
+        mc.getNetworkHandler().sendPacket(packet);
+    }
+
+    public static boolean fullNullCheck() {
+        return mc.player == null || mc.world == null;
     }
 
     /**

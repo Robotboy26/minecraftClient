@@ -3,63 +3,29 @@
  * Copyright (c) Meteor Development.
  */
 
-package meteordevelopment.meteorclient.systems.modules.movement;
+package dev.vili.haiku.module.modules.movement;
 
-import meteordevelopment.meteorclient.events.world.TickEvent;
-import meteordevelopment.meteorclient.mixin.AbstractBlockAccessor;
-import meteordevelopment.meteorclient.mixininterface.IVec3d;
-import meteordevelopment.meteorclient.settings.*;
-import meteordevelopment.meteorclient.systems.modules.Categories;
-import meteordevelopment.meteorclient.systems.modules.Module;
-import meteordevelopment.orbit.EventHandler;
+import dev.vili.haiku.setting.settings.BooleanSetting;
+import dev.vili.haiku.setting.settings.NumberSetting;
+
+import org.lwjgl.glfw.GLFW;
+
+import dev.vili.haiku.event.events.TickEvent;
+import dev.vili.haiku.eventbus.HaikuSubscribe;
+import dev.vili.haiku.mixinterface.IVec3d;
+import dev.vili.haiku.module.Module;
+import dev.vili.haiku.mixin.AbstractBlockAccessor;
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 
 public class Anchor extends Module {
-    private final SettingGroup sgGeneral = settings.getDefaultGroup();
-
-    private final Setting<Integer> maxHeight = sgGeneral.add(new IntSetting.Builder()
-        .name("max-height")
-        .description("The maximum height Anchor will work at.")
-        .defaultValue(10)
-        .range(0, 255)
-        .sliderMax(20)
-        .build()
-    );
-
-    private final Setting<Integer> minPitch = sgGeneral.add(new IntSetting.Builder()
-        .name("min-pitch")
-        .description("The minimum pitch at which anchor will work.")
-        .defaultValue(0)
-        .range(-90, 90)
-        .sliderRange(-90, 90)
-        .build()
-    );
-
-    private final Setting<Boolean> cancelMove = sgGeneral.add(new BoolSetting.Builder()
-        .name("cancel-jump-in-hole")
-        .description("Prevents you from jumping when Anchor is active and Min Pitch is met.")
-        .defaultValue(false)
-        .build()
-    );
-
-    private final Setting<Boolean> pull = sgGeneral.add(new BoolSetting.Builder()
-        .name("pull")
-        .description("The pull strength of Anchor.")
-        .defaultValue(false)
-        .build()
-    );
-
-    private final Setting<Double> pullSpeed = sgGeneral.add(new DoubleSetting.Builder()
-        .name("pull-speed")
-        .description("How fast to pull towards the hole in blocks per second.")
-        .defaultValue(0.3)
-        .min(0)
-        .sliderMax(5)
-        .build()
-    );
+    private final NumberSetting MaxHeight = new NumberSetting("MaxHeight-Anchor", "The maximum height Anchor will work at.", 20, 0,  255, 0.01);
+    private final NumberSetting MinPitch = new NumberSetting("MinPitch-Anchor", "The minimum pitch at which anchor will work.", 0, -90, 90, 0.01);
+    private final BooleanSetting CancelJumpInHole = new BooleanSetting("CancelJumpInHole-Anchor", "Prevents you from jumping when Anchor is active and Min Pitch is met.", false);
+    private final BooleanSetting Pull = new BooleanSetting("Pull-Anchor", "The pull strength of Anchor.", false);
+    private final NumberSetting PullSpeed = new NumberSetting("PullSpeed-Anchor", "How fast to pull towards the hole in blocks per second.", 5, 0, 5, 0.01);
 
     private final BlockPos.Mutable blockPos = new BlockPos.Mutable();
     private boolean wasInHole;
@@ -72,22 +38,19 @@ public class Anchor extends Module {
     public double deltaX, deltaZ;
 
     public Anchor() {
-        super(Categories.Movement, "anchor", "Helps you get into holes by stopping your movement completely over a hole.");
+        super("Anchor", "Helps you get into holes by stopping your movement completely over a hole.", GLFW.GLFW_KEY_UNKNOWN, Category.MOVEMENT);
+        this.addSettings(MaxHeight, MinPitch, CancelJumpInHole, Pull, PullSpeed);
     }
 
     @Override
-    public void onActivate() {
+    public void onEnable() {
         wasInHole = false;
         holeX = holeZ = 0;
     }
 
-    @EventHandler
-    private void onPreTick(TickEvent.Pre event) {
-        cancelJump = foundHole && cancelMove.get() && mc.player.getPitch() >= minPitch.get();
-    }
-
-    @EventHandler
-    private void onPostTick(TickEvent.Post event) {
+    @HaikuSubscribe
+    private void onTick(TickEvent event) {
+        cancelJump = foundHole && CancelJumpInHole.isEnabled() && mc.player.getPitch() >= MinPitch.getValue();
         controlMovement = false;
 
         int x = MathHelper.floor(mc.player.getX());
@@ -104,13 +67,13 @@ public class Anchor extends Module {
         if (wasInHole && holeX == x && holeZ == z) return;
         else if (wasInHole) wasInHole = false;
 
-        if (mc.player.getPitch() < minPitch.get()) return;
+        if (mc.player.getPitch() < MinPitch.getValue()) return;
 
         foundHole = false;
         double holeX = 0;
         double holeZ = 0;
 
-        for (int i = 0; i < maxHeight.get(); i++) {
+        for (int i = 0; i < MaxHeight.getValue(); i++) {
             y--;
             if (y <= mc.world.getBottomY() || !isAir(x, y, z)) break;
 
@@ -127,7 +90,7 @@ public class Anchor extends Module {
             deltaX = MathHelper.clamp(holeX - mc.player.getX(), -0.05, 0.05);
             deltaZ = MathHelper.clamp(holeZ - mc.player.getZ(), -0.05, 0.05);
 
-            ((IVec3d) mc.player.getVelocity()).set(deltaX, mc.player.getVelocity().y - (pull.get() ? pullSpeed.get() : 0), deltaZ);
+            ((IVec3d) mc.player.getVelocity()).set(deltaX, mc.player.getVelocity().y - (Pull.isEnabled() ? PullSpeed.getValue() : 0), deltaZ);
         }
     }
 

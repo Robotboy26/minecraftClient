@@ -42,11 +42,11 @@ public class MouseMixin {
     //     if (MeteorClient.EVENT_BUS.post(MouseScrollEvent.get(vertical)).isCancelled()) info.cancel();
     // }
 
-    @Redirect(method = "updateMouse", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/network/ClientPlayerEntity;changeLookDirection(DD)V"))
-    private void updateMouseChangeLookDirection(ClientPlayerEntity player, double cursorDeltaX, double cursorDeltaY) {
-        Freecam freecam = (Freecam) Haiku.getInstance().getModuleManager().get(Freecam.class);
+    // @Redirect(method = "updateMouse", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/network/ClientPlayerEntity;changeLookDirection(DD)V"))
+    // private void updateMouseChangeLookDirection(ClientPlayerEntity player, double cursorDeltaX, double cursorDeltaY) {
+    //     Freecam freecam = (Freecam) Haiku.getInstance().getModuleManager().get(Freecam.class);
 
-        if (freecam.isEnabled()) freecam.changeLookDirection(cursorDeltaX * 0.15, cursorDeltaY * 0.15);
-        else player.changeLookDirection(cursorDeltaX, cursorDeltaY);
-    }
+    //     if (freecam.isEnabled()) freecam.changeLookDirection(cursorDeltaX * 0.15, cursorDeltaY * 0.15);
+    //     else player.changeLookDirection(cursorDeltaX, cursorDeltaY);
+    // }
 }

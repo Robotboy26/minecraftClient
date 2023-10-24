@@ -11,6 +11,7 @@ package dev.vili.haiku.utils.world;
 import java.util.UUID;
 
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.network.OtherClientPlayerEntity;
 import net.minecraft.entity.player.PlayerEntity;
 
