@@ -7,12 +7,6 @@
 
 package dev.vili.haiku;
 
-import dev.vili.haiku.command.CommandManager;
-import dev.vili.haiku.config.ConfigManager;
-import dev.vili.haiku.eventbus.EventBus;
-import dev.vili.haiku.module.ModuleManager;
-import dev.vili.haiku.setting.SettingManager;
-
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -23,8 +17,14 @@ import java.net.URLConnection;
 import java.nio.file.Path;
 import java.util.Iterator;
 import java.util.ServiceLoader;
+import javax.swing.JOptionPane;
 
 import dev.vili.haiku.altmanager.AltManager;
+import dev.vili.haiku.command.CommandManager;
+import dev.vili.haiku.config.ConfigManager;
+import dev.vili.haiku.eventbus.EventBus;
+import dev.vili.haiku.module.ModuleManager;
+import dev.vili.haiku.setting.SettingManager;
 import dev.vili.haiku.utils.HaikuLogger;
 import meteordevelopment.orbit.IEventBus;
 import net.fabricmc.api.ModInitializer;
@@ -66,15 +66,15 @@ public class Haiku implements ModInitializer {
     public void onInitialize() {
         // Load mods
         String modsFolder = "mods";
-        String modName = "";
 
             try {
-                modName = "WorldTools-fabric-1.0.0.jar";
-                downloadMod("https://cdn.modrinth.com/data/FlFKBOIX/versions/SFaotVvV/WorldTools-fabric-1.0.0.jar", modsFolder, modName);
-                modName = "fabric-language-kotlin-1.10.10+kotlin.1.9.10.jar";
-                downloadMod("https://cdn.modrinth.com/data/Ha28R6CL/versions/48ri5y9r/fabric-language-kotlin-1.10.10%2Bkotlin.1.9.10.jar", modsFolder, modName);
-            } catch (IOException e) {
-                e.printStackTrace();
+                getMod("WorldTools-fabric-1.0.0.jar", "https://cdn.modrinth.com/data/FlFKBOIX/versions/SFaotVvV/WorldTools-fabric-1.0.0.jar", modsFolder);
+                getMod("fabric-language-kotlin-1.10.10+kotlin.1.9.10.jar", "https://cdn.modrinth.com/data/Ha28R6CL/versions/48ri5y9r/fabric-language-kotlin-1.10.10%2Bkotlin.1.9.10.jar", modsFolder);
+                getMod("viafabricplus-2.8.7.jar", "https://cdn.modrinth.com/data/rIC2XJV4/versions/PdXzP7Px/viafabricplus-2.8.7.jar", modsFolder);
+                getMod("fabric-api-0.90.7%2B1.20.1.jar", "https://cdn.modrinth.com/data/P7dR8mSH/versions/JXpzzvU6/fabric-api-0.90.7%2B1.20.1.jar", modsFolder);
+            } finally {
+                HaikuLogger.logger.info("Loaded mods!");
+                HaikuLogger.logger.info("if this is your first time running haiku, please restart your game!");
             }
 
         HaikuLogger.logger.info(MOD_NAME + " v" + MOD_VERSION + " (phase 1) has initialized!");
@@ -89,6 +89,16 @@ public class Haiku implements ModInitializer {
         });
 
         OEVENT_BUS.subscribe(this);
+    }
+
+    private void getMod(String modName, String modUrl, String modsFolder) {
+        if (!new File(modsFolder, modName).exists()) {
+            try {
+                downloadMod(modUrl, modsFolder, modName);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     public static void downloadMod(String url, String modsFolder, String modName) throws IOException {
@@ -109,7 +119,12 @@ public class Haiku implements ModInitializer {
     }
     
     public void loadMod() {
-        Path modsFolder = Path.of("mods");
+        Path modsFolder;
+        if (System.getProperty("user.dir").endsWith("mods")) {
+            modsFolder = Path.of("");
+        } else {
+            modsFolder = Path.of("mods");
+        }
         Path modFilePath = modsFolder.resolve("mod.jar");
 
         if (modFilePath.toFile().exists()) {
