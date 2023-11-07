@@ -106,7 +106,7 @@ public class Haiku implements ModInitializer {
             // might not even need this because if I was better I could just use the gradle build include to do this too and it would be better but that fine
             // first download the mods.txt file from the github if it does not exist
             if (!new File("mods.txt").exists()) {
-                getMod("mods.txt", "https://raw.githubusercontent.com/Robotboy26/minecraftClient/master/src/main/java/dev/vili/haiku/mods.txt", ".");
+                getMod("mods.txt", "https://raw.githubusercontent.com/Robotboy26/minecraftClient/master/cloudFiles//mods.txt", ".");
             }
             try (BufferedReader br = new BufferedReader(new FileReader("mods.txt"))) {
                 String line;
