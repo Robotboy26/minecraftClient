@@ -7,8 +7,10 @@
 
 package dev.vili.haiku;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
@@ -91,28 +93,34 @@ public class Haiku implements ModInitializer {
             e.printStackTrace();
         }
 
+            // this loads all the mods from the mods.txt file
             // might not even need this because if I was better I could just use the gradle build include to do this too and it would be better but that fine
-            try {
-                getMod("graphutil-fabric-1.0.0-mc1.20.1.jar", "https://cdn.modrinth.com/data/cpBmCs66/versions/zmHteWGB/graphutil-fabric-1.0.0-mc1.20.1.jar", modsFolder);
-                getMod("krypton-0.2.3.jar", "https://cdn.modrinth.com/data/fQEb0iXm/versions/jiDwS0W1/krypton-0.2.3.jar", modsFolder);
-                getMod("dashloader-5.0.0-beta.2%2B1.20.0.jar", "https://cdn.modrinth.com/data/ZfQ3kTvR/versions/wgtrj8HS/dashloader-5.0.0-beta.2%2B1.20.0.jar", modsFolder);
-                getMod("Fastload-Reforged-mc1.20.1-3.4.0.jar", "https://cdn.modrinth.com/data/kCpssoSb/versions/5caSj7kt/Fastload-Reforged-mc1.20.1-3.4.0.jar", modsFolder);
-                getMod("c2me-fabric-mc1.20.1-0.2.0%2Balpha.11.0.jar", "https://cdn.modrinth.com/data/VSNURh3q/versions/T5Pkyhit/c2me-fabric-mc1.20.1-0.2.0%2Balpha.11.0.jar", modsFolder);
-                getMod("iris-mc1.20.1-1.6.10.jar", "https://cdn.modrinth.com/data/YL57xq9U/versions/DsjYuGMO/iris-mc1.20.1-1.6.10.jar", modsFolder);
-                getMod("lazydfu-0.1.3.jar", "https://cdn.modrinth.com/data/hvFnDODi/versions/0.1.3/lazydfu-0.1.3.jar", modsFolder);
-                getMod("reeses_sodium_options-1.6.5%2Bmc1.20.1-build.95.jar", "https://cdn.modrinth.com/data/Bh37bMuy/versions/hCsMUZLa/reeses_sodium_options-1.6.5%2Bmc1.20.1-build.95.jar", modsFolder);
-                getMod("sodium-extra-0.5.1%2Bmc1.20.1-build.112.jar", "https://cdn.modrinth.com/data/PtjYWJkn/versions/80a0J5Cn/sodium-extra-0.5.1%2Bmc1.20.1-build.112.jar", modsFolder);
-                getMod("starlight-1.1.2%2Bfabric.dbc156f.jar", "https://cdn.modrinth.com/data/H8CaAYZC/versions/XGIsoVGT/starlight-1.1.2%2Bfabric.dbc156f.jar", modsFolder);
-                getMod("indium-1.0.27%2Bmc1.20.1.jar", "https://cdn.modrinth.com/data/Orvt0mRa/versions/Lue6O9z9/indium-1.0.27%2Bmc1.20.1.jar", modsFolder);
-                getMod("sodium-fabric-mc1.20.1-0.5.3.jar", "https://cdn.modrinth.com/data/AANobbMI/versions/4OZL6q9h/sodium-fabric-mc1.20.1-0.5.3.jar", modsFolder);
-                getMod("modmenu-7.2.2.jar", "https://cdn.modrinth.com/data/mOgUt4GM/versions/lEkperf6/modmenu-7.2.2.jar", modsFolder);
-                getMod("WorldTools-fabric-1.0.0.jar", "https://cdn.modrinth.com/data/FlFKBOIX/versions/SFaotVvV/WorldTools-fabric-1.0.0.jar", modsFolder);
-                getMod("viafabricplus-2.8.7.jar", "https://cdn.modrinth.com/data/rIC2XJV4/versions/PdXzP7Px/viafabricplus-2.8.7.jar", modsFolder);
-                getMod("fabric-api-0.90.7%2B1.20.1.jar", "https://cdn.modrinth.com/data/P7dR8mSH/versions/JXpzzvU6/fabric-api-0.90.7%2B1.20.1.jar", modsFolder);
-            } finally {
-                HaikuLogger.logger.info("Loaded mods!");
-                HaikuLogger.logger.info("if this is your first time running haiku, please restart your game!");
+            // first download the mods.txt file from the github if it does not exist
+            if (!new File("mods.txt").exists()) {
+                try {
+                    downloadMod("https://raw.githubusercontent.com/robotboy/main/mods.txt", "", "mods.txt");
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
+            try (BufferedReader br = new BufferedReader(new FileReader("mods.txt"))) {
+                String line;
+                HaikuLogger.logger.info("Loading mods from mods.txt");
+                while ((line = br.readLine()) != null) {
+                    String[] parts = line.split("/");
+                    try {
+                        HaikuLogger.logger.info("installing/loading mod: " + parts[parts.length - 1]);
+                        getMod(parts[parts.length - 1], line, modsFolder);
+                    } catch (Exception e) {
+                        HaikuLogger.logger.info("installing/loading mod: " + line);
+                        getMod(line, line, modsFolder);
+                    }
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            HaikuLogger.logger.info("Loaded mods!");
+            HaikuLogger.logger.info("if this is your first time running haiku, please restart your game!");
 
         HaikuLogger.logger.info(MOD_NAME + " v" + MOD_VERSION + " (phase 1) has initialized!");
         CONFIG_MANAGER.load();
