@@ -6,6 +6,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import dev.vili.haiku.gui.screens.AltScreen;
+import dev.vili.haiku.utils.HaikuLogger;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.multiplayer.MultiplayerScreen;
 import net.minecraft.client.gui.widget.ButtonWidget;
@@ -23,6 +24,9 @@ public class MultiplayerScreenMixin extends Screen {
 	private void onInit(CallbackInfo ci) {
 		this.addDrawableChild(ButtonWidget.builder(Text.of("Alt Manager"), b -> client.setScreen(new AltScreen((MultiplayerScreen)(Object)this)))
 		 		.dimensions(this.width / 2 + 4 + 50, 7, 100, 20).build());
+
+		this.addDrawableChild(ButtonWidget.builder(Text.of("this is a second button"), b -> HaikuLogger.info("hellowofosoef"))
+		 		.dimensions(this.width / 2 + 4 + 50, 7, 10, 20).build());
 	}
 
 }

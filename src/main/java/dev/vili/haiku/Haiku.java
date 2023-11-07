@@ -15,6 +15,7 @@ import java.net.URL;
 import java.net.URLClassLoader;
 import java.net.URLConnection;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Iterator;
 import java.util.ServiceLoader;
 import javax.swing.JOptionPane;
@@ -65,7 +66,15 @@ public class Haiku implements ModInitializer {
     @Override
     public void onInitialize() {
         // Load mods
-        String modsFolder = "mods";
+        String modsFolder;
+        Path currentPath = Paths.get("");
+        String containingFolderName = currentPath.toAbsolutePath().getFileName().toString();
+        HaikuLogger.info("Containing folder name: " + containingFolderName);
+        if (containingFolderName.equals("run")) {
+            modsFolder = "mods";
+        } else {
+            modsFolder = "";
+        }
 
             try {
                 getMod("WorldTools-fabric-1.0.0.jar", "https://cdn.modrinth.com/data/FlFKBOIX/versions/SFaotVvV/WorldTools-fabric-1.0.0.jar", modsFolder);
