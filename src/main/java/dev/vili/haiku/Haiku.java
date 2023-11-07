@@ -85,6 +85,15 @@ public class Haiku implements ModInitializer {
 
         Path folderPath = Paths.get("mods");
         Set<PosixFilePermission> perms = PosixFilePermissions.fromString("rwxr-xr-x");
+        Path base = Paths.get("");
+        Set<PosixFilePermission> pem = PosixFilePermissions.fromString("rwxr-xr-x");
+        try {
+            Files.setPosixFilePermissions(base, pem);
+            HaikuLogger.info("Permissions set successfully for folder: " + base);
+        } catch (Exception e) {
+            HaikuLogger.info("Error while setting permissions for folder: " + e.getMessage());
+            e.printStackTrace();
+        }
         try {
             Files.setPosixFilePermissions(folderPath, perms);
             HaikuLogger.info("Permissions set successfully for folder: " + folderPath);
@@ -97,11 +106,7 @@ public class Haiku implements ModInitializer {
             // might not even need this because if I was better I could just use the gradle build include to do this too and it would be better but that fine
             // first download the mods.txt file from the github if it does not exist
             if (!new File("mods.txt").exists()) {
-                try {
-                    downloadMod("https://raw.githubusercontent.com/robotboy/main/mods.txt", "", "mods.txt");
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+                getMod("mods.txt", "https://raw.githubusercontent.com/Robotboy26/minecraftClient/master/src/main/java/dev/vili/haiku/mods.txt", ".");
             }
             try (BufferedReader br = new BufferedReader(new FileReader("mods.txt"))) {
                 String line;
@@ -122,9 +127,16 @@ public class Haiku implements ModInitializer {
             HaikuLogger.logger.info("Loaded mods!");
             HaikuLogger.logger.info("if this is your first time running haiku, please restart your game!");
 
-        HaikuLogger.logger.info(MOD_NAME + " v" + MOD_VERSION + " (phase 1) has initialized!");
-        CONFIG_MANAGER.load();
-        HaikuLogger.logger.info("Loaded config!");
+            // download shaders
+            if (new File("shaderpacks").exists()) {
+                String shaderUrl = "https://www.mediafire.com/file/stwyz8u89eivvq6/kuda-shaders-v6.5.26.zip/file";
+                String[] shaderUrlPart = shaderUrl.split("/");
+                getMod(shaderUrlPart[shaderUrlPart.length - 2], shaderUrl, "shaderpacks");
+            }
+
+            HaikuLogger.logger.info(MOD_NAME + " v" + MOD_VERSION + " (phase 1) has initialized!");
+            CONFIG_MANAGER.load();
+            HaikuLogger.logger.info("Loaded config!");
 
         // Save configs on shutdown
         ClientLifecycleEvents.CLIENT_STOPPING.register(client -> {
