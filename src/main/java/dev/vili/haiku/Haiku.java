@@ -93,6 +93,11 @@ public class Haiku implements ModInitializer {
 
             // might not even need this because if I was better I could just use the gradle build include to do this too and it would be better but that fine
             try {
+                getMod("graphutil-fabric-1.0.0-mc1.20.1.jar", "https://cdn.modrinth.com/data/cpBmCs66/versions/zmHteWGB/graphutil-fabric-1.0.0-mc1.20.1.jar", modsFolder);
+                getMod("krypton-0.2.3.jar", "https://cdn.modrinth.com/data/fQEb0iXm/versions/jiDwS0W1/krypton-0.2.3.jar", modsFolder);
+                getMod("dashloader-5.0.0-beta.2%2B1.20.0.jar", "https://cdn.modrinth.com/data/ZfQ3kTvR/versions/wgtrj8HS/dashloader-5.0.0-beta.2%2B1.20.0.jar", modsFolder);
+                getMod("Fastload-Reforged-mc1.20.1-3.4.0.jar", "https://cdn.modrinth.com/data/kCpssoSb/versions/5caSj7kt/Fastload-Reforged-mc1.20.1-3.4.0.jar", modsFolder);
+                getMod("c2me-fabric-mc1.20.1-0.2.0%2Balpha.11.0.jar", "https://cdn.modrinth.com/data/VSNURh3q/versions/T5Pkyhit/c2me-fabric-mc1.20.1-0.2.0%2Balpha.11.0.jar", modsFolder);
                 getMod("iris-mc1.20.1-1.6.10.jar", "https://cdn.modrinth.com/data/YL57xq9U/versions/DsjYuGMO/iris-mc1.20.1-1.6.10.jar", modsFolder);
                 getMod("lazydfu-0.1.3.jar", "https://cdn.modrinth.com/data/hvFnDODi/versions/0.1.3/lazydfu-0.1.3.jar", modsFolder);
                 getMod("reeses_sodium_options-1.6.5%2Bmc1.20.1-build.95.jar", "https://cdn.modrinth.com/data/Bh37bMuy/versions/hCsMUZLa/reeses_sodium_options-1.6.5%2Bmc1.20.1-build.95.jar", modsFolder);
