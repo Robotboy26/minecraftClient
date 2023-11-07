@@ -14,10 +14,15 @@ import java.io.InputStream;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.net.URLConnection;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.nio.file.attribute.PosixFilePermission;
+import java.nio.file.attribute.PosixFilePermissions;
 import java.util.Iterator;
 import java.util.ServiceLoader;
+import java.util.Set;
+
 import javax.swing.JOptionPane;
 
 import dev.vili.haiku.altmanager.AltManager;
@@ -66,19 +71,37 @@ public class Haiku implements ModInitializer {
     @Override
     public void onInitialize() {
         // Load mods
-        String modsFolder;
+        String modsFolder = "mods";
         Path currentPath = Paths.get("");
         String containingFolderName = currentPath.toAbsolutePath().getFileName().toString();
         HaikuLogger.info("Containing folder name: " + containingFolderName);
         if (containingFolderName.equals("run")) {
             modsFolder = "mods";
-        } else {
-            modsFolder = "";
+        } else if (containingFolderName.equals("minecraft")) {
+            modsFolder = "mods";
         }
 
+        Path folderPath = Paths.get("mods");
+        Set<PosixFilePermission> perms = PosixFilePermissions.fromString("rwxr-xr-x");
+        try {
+            Files.setPosixFilePermissions(folderPath, perms);
+            HaikuLogger.info("Permissions set successfully for folder: " + folderPath);
+        } catch (Exception e) {
+            HaikuLogger.info("Error while setting permissions for folder: " + e.getMessage());
+            e.printStackTrace();
+        }
+
+            // might not even need this because if I was better I could just use the gradle build include to do this too and it would be better but that fine
             try {
+                getMod("iris-mc1.20.1-1.6.10.jar", "https://cdn.modrinth.com/data/YL57xq9U/versions/DsjYuGMO/iris-mc1.20.1-1.6.10.jar", modsFolder);
+                getMod("lazydfu-0.1.3.jar", "https://cdn.modrinth.com/data/hvFnDODi/versions/0.1.3/lazydfu-0.1.3.jar", modsFolder);
+                getMod("reeses_sodium_options-1.6.5%2Bmc1.20.1-build.95.jar", "https://cdn.modrinth.com/data/Bh37bMuy/versions/hCsMUZLa/reeses_sodium_options-1.6.5%2Bmc1.20.1-build.95.jar", modsFolder);
+                getMod("sodium-extra-0.5.1%2Bmc1.20.1-build.112.jar", "https://cdn.modrinth.com/data/PtjYWJkn/versions/80a0J5Cn/sodium-extra-0.5.1%2Bmc1.20.1-build.112.jar", modsFolder);
+                getMod("starlight-1.1.2%2Bfabric.dbc156f.jar", "https://cdn.modrinth.com/data/H8CaAYZC/versions/XGIsoVGT/starlight-1.1.2%2Bfabric.dbc156f.jar", modsFolder);
+                getMod("indium-1.0.27%2Bmc1.20.1.jar", "https://cdn.modrinth.com/data/Orvt0mRa/versions/Lue6O9z9/indium-1.0.27%2Bmc1.20.1.jar", modsFolder);
+                getMod("sodium-fabric-mc1.20.1-0.5.3.jar", "https://cdn.modrinth.com/data/AANobbMI/versions/4OZL6q9h/sodium-fabric-mc1.20.1-0.5.3.jar", modsFolder);
+                getMod("modmenu-7.2.2.jar", "https://cdn.modrinth.com/data/mOgUt4GM/versions/lEkperf6/modmenu-7.2.2.jar", modsFolder);
                 getMod("WorldTools-fabric-1.0.0.jar", "https://cdn.modrinth.com/data/FlFKBOIX/versions/SFaotVvV/WorldTools-fabric-1.0.0.jar", modsFolder);
-                getMod("fabric-language-kotlin-1.10.10+kotlin.1.9.10.jar", "https://cdn.modrinth.com/data/Ha28R6CL/versions/48ri5y9r/fabric-language-kotlin-1.10.10%2Bkotlin.1.9.10.jar", modsFolder);
                 getMod("viafabricplus-2.8.7.jar", "https://cdn.modrinth.com/data/rIC2XJV4/versions/PdXzP7Px/viafabricplus-2.8.7.jar", modsFolder);
                 getMod("fabric-api-0.90.7%2B1.20.1.jar", "https://cdn.modrinth.com/data/P7dR8mSH/versions/JXpzzvU6/fabric-api-0.90.7%2B1.20.1.jar", modsFolder);
             } finally {
