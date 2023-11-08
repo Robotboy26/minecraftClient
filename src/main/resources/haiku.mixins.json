@@ -20,6 +20,7 @@
     "MultiplayerScreenMixin",
     "WorldRendererMixin",
     "LightmapTextureManagerMixin",
+    "TitleScreenMixin",
     "MouseMixin"
   ],
   "injectors": {

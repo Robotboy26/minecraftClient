@@ -142,6 +142,12 @@ jar {
     }
 }
 
+afterEvaluate {
+   downloadAssets {
+      downloadThreads = 8
+   }
+}
+
 // configure the maven publication
 // publishing {
 //     publications {

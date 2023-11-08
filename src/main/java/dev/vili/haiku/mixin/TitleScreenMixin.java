@@ -23,6 +23,7 @@ import net.minecraft.text.Text;
 
 import dev.vili.haiku.Haiku;
 //import dev.vili.haiku.MixinResources.altmanager.screens.AltManagerScreen;
+import dev.vili.haiku.MixinResources.altmanager.screens.AltManagerScreen;
 
 @Mixin(TitleScreen.class)
 public abstract class TitleScreenMixin extends Screen
@@ -55,11 +56,11 @@ public abstract class TitleScreenMixin extends Screen
 		realmsButton.setWidth(98);
 		
 		// add AltManager button
-		//addDrawableChild(altsButton = ButtonWidget
-		//	.builder(Text.literal("Alt Manager"),
-		//		b -> client.setScreen(new AltManagerScreen(this,
-		//			Haiku.getInstance().getAltManager())))
-		//	.dimensions(width / 2 + 2, realmsButton.getY(), 98, 20).build());
+		addDrawableChild(altsButton = ButtonWidget
+			.builder(Text.literal("Alt Manager"),
+				b -> client.setScreen(new AltManagerScreen(this,
+					Haiku.getInstance().getAltManager())))
+			.dimensions(width / 2 + 2, realmsButton.getY(), 98, 20).build());
 	}
 	
 	@Inject(at = @At("RETURN"), method = "tick()V")
@@ -67,16 +68,15 @@ public abstract class TitleScreenMixin extends Screen
 	{
 		if(realmsButton == null || altsButton == null)
 			return;
-			
+
 		// adjust AltManager button if Realms button has been moved
 		// happens when ModMenu is installed
 		altsButton.setY(realmsButton.getY());
 	}
 	
-	/**
-	 * Stops the multiplayer button being grayed out if the user's Microsoft
-	 * account is parental-control'd or banned from online play.
-	 */
+	
+	//Stops the multiplayer button being grayed out if the user's Microsoft
+	//account is parental-control'd or banned from online play.
 	@Inject(at = @At("HEAD"),
 		method = "getMultiplayerDisabledText()Lnet/minecraft/text/Text;",
 		cancellable = true)

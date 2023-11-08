@@ -28,6 +28,7 @@ import java.util.Set;
 import javax.swing.JOptionPane;
 
 import dev.vili.haiku.MixinResources.altmanager.AltManager;
+import dev.vili.haiku.MixinResources.altmanager.Encryption;
 import dev.vili.haiku.MixinResources.mixinterface.IMinecraftClient;
 import dev.vili.haiku.command.CommandManager;
 import dev.vili.haiku.config.ConfigManager;
@@ -156,6 +157,10 @@ public class Haiku implements ModInitializer {
                 }
             }
 
+            Path altsFile = haikuFolder.resolve("alts.encrypted_json");
+            Path encFolder = Encryption.chooseEncryptionFolder();
+            altManager = new AltManager(altsFile, encFolder);
+
             HaikuLogger.logger.info(MOD_NAME + " v" + MOD_VERSION + " (phase 1) has initialized!");
             CONFIG_MANAGER.load();
             HaikuLogger.logger.info("Loaded config!");
@@ -248,6 +253,11 @@ public class Haiku implements ModInitializer {
     public Path getHaikuFolder()
 	{
 		return haikuFolder;
+	}
+
+    public AltManager getAltManager()
+	{
+		return altManager;
 	}
 
     /**
