@@ -5,7 +5,6 @@
 
 package dev.vili.haiku.utils;
 
-import dev.vili.haiku.mixinterface.IMinecraftClient;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
@@ -13,6 +12,8 @@ import net.minecraft.util.math.Vec3d;
 import static dev.vili.haiku.Haiku.mc;
 
 import org.joml.Vector3d;
+
+import dev.vili.haiku.MixinResources.mixinterface.IMinecraftClient;
 
 public class Utils {
     public static double frameTime;

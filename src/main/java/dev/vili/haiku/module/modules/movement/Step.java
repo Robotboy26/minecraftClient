@@ -7,6 +7,7 @@
  */
 package dev.vili.haiku.module.modules.movement;
 
+import dev.vili.haiku.MixinResources.mixinterface.IMinecraftClient;
 import dev.vili.haiku.event.events.TickEvent;
 import dev.vili.haiku.eventbus.HaikuSubscribe;
 import dev.vili.haiku.module.Module;
@@ -17,7 +18,6 @@ import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.network.packet.c2s.play.PlayerMoveC2SPacket;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.util.math.Box;
-import dev.vili.haiku.mixinterface.IMinecraftClient;
 
 import java.util.ArrayList;
 import java.util.stream.Collectors;

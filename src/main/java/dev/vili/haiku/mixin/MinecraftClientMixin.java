@@ -34,9 +34,9 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 import dev.vili.haiku.Haiku;
+import dev.vili.haiku.MixinResources.mixinterface.IMinecraftClient;
 import dev.vili.haiku.event.events.TickEvent;
 import dev.vili.haiku.event.events.game.GameLeftEvent;
-import dev.vili.haiku.mixinterface.IMinecraftClient;
 import net.minecraft.client.RunArgs;
 import java.util.concurrent.CompletableFuture;
 

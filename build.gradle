@@ -99,6 +99,10 @@ dependencies {
     annotationProcessor "com.github.LlamaLad7.MixinExtras:mixinextras-fabric:${project.mixin_extras_version}"
 }
 
+//loom {
+//	accessWidenerPath = file("src/main/resources/haiku.accesswidener")
+//}
+
 processResources {
     inputs.property "version", project.version
     filteringCharset "UTF-8"

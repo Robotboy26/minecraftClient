@@ -6,9 +6,9 @@
 package dev.vili.haiku.mixin;
 
 import dev.vili.haiku.Haiku;
+import dev.vili.haiku.MixinResources.mixinterface.ICamera;
 import dev.vili.haiku.event.events.meteor.MouseButtonEvent;
 import dev.vili.haiku.event.events.meteor.MouseScrollEvent;
-import dev.vili.haiku.mixinterface.ICamera;
 import dev.vili.haiku.module.modules.render.Freecam;
 import dev.vili.haiku.utils.misc.input.Input;
 import dev.vili.haiku.utils.misc.input.KeyAction;

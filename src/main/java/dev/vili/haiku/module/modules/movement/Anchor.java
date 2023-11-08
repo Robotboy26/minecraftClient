@@ -10,9 +10,9 @@ import dev.vili.haiku.setting.settings.NumberSetting;
 
 import org.lwjgl.glfw.GLFW;
 
+import dev.vili.haiku.MixinResources.mixinterface.IVec3d;
 import dev.vili.haiku.event.events.TickEvent;
 import dev.vili.haiku.eventbus.HaikuSubscribe;
-import dev.vili.haiku.mixinterface.IVec3d;
 import dev.vili.haiku.module.Module;
 import dev.vili.haiku.mixin.AbstractBlockAccessor;
 import net.minecraft.block.Block;

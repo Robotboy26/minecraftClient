@@ -6,7 +6,7 @@
 package dev.vili.haiku.mixin;
 
 import dev.vili.haiku.Haiku;
-import dev.vili.haiku.mixinterface.ICamera;
+import dev.vili.haiku.MixinResources.mixinterface.ICamera;
 import dev.vili.haiku.module.modules.render.Freecam;
 import net.minecraft.client.render.Camera;
 import net.minecraft.client.render.CameraSubmersionType;

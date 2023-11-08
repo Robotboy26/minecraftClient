@@ -1,8 +1,8 @@
 package dev.vili.haiku.module.modules.render;
 
+import dev.vili.haiku.MixinResources.mixinterface.ISimpleOption;
 import dev.vili.haiku.event.events.TickEvent;
 import dev.vili.haiku.eventbus.HaikuSubscribe;
-import dev.vili.haiku.mixinterface.ISimpleOption;
 import dev.vili.haiku.module.Module;
 import dev.vili.haiku.setting.settings.ModeSetting;
 import dev.vili.haiku.utils.HaikuLogger;

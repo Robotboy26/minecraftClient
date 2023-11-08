@@ -27,7 +27,7 @@ import java.util.Set;
 
 import javax.swing.JOptionPane;
 
-import dev.vili.haiku.altmanager.AltManager;
+import dev.vili.haiku.MixinResources.altmanager.AltManager;
 import dev.vili.haiku.command.CommandManager;
 import dev.vili.haiku.config.ConfigManager;
 import dev.vili.haiku.eventbus.EventBus;
@@ -72,18 +72,24 @@ public class Haiku implements ModInitializer {
      */
     @Override
     public void onInitialize() {
+        // loading mods "settings"
+        String modfolder = "mods";
+
         // Load mods
-        String modsFolder = "mods";
+        String modsFolder = modfolder;
         Path currentPath = Paths.get("");
         String containingFolderName = currentPath.toAbsolutePath().getFileName().toString();
         HaikuLogger.info("Containing folder name: " + containingFolderName);
         if (containingFolderName.equals("run")) {
-            modsFolder = "mods";
+            modsFolder = modfolder;
         } else if (containingFolderName.equals("minecraft")) {
-            modsFolder = "mods";
+            modsFolder = modfolder;
         }
 
-        Path folderPath = Paths.get("mods");
+        if (!new File(modsFolder).exists()) {
+            new File(modsFolder).mkdir();
+        }
+        Path folderPath = Paths.get(modfolder);
         Set<PosixFilePermission> perms = PosixFilePermissions.fromString("rwxr-xr-x");
         Path base = Paths.get("");
         Set<PosixFilePermission> pem = PosixFilePermissions.fromString("rwxr-xr-x");
@@ -112,22 +118,28 @@ public class Haiku implements ModInitializer {
                 String line;
                 HaikuLogger.logger.info("Loading mods from mods.txt");
                 while ((line = br.readLine()) != null) {
-                    String[] parts = line.split("/");
-                    try {
-                        HaikuLogger.logger.info("installing/loading mod: " + parts[parts.length - 1]);
-                        getMod(parts[parts.length - 1], line, modsFolder);
-                    } catch (Exception e) {
-                        HaikuLogger.logger.info("installing/loading mod: " + line);
-                        getMod(line, line, modsFolder);
+                    String url = line.split("|")[0];
+                    String group = line.split("|")[1];
+                    String[] parts = url.split("/");
+                    if (group == "performance") {
+                        try {
+                            HaikuLogger.logger.info("installing/loading mod: " + parts[parts.length - 1]);
+                            getMod(parts[parts.length - 1], line, modsFolder);
+                        } catch (Exception e) {
+                            HaikuLogger.logger.info("installing/loading mod: " + line);
+                            getMod(line, line, modsFolder);
+                        }
+                    } else {
+                        HaikuLogger.logger.info("not installing mod becuase it is not in the wanted group '" + group + "' : " + line);
                     }
                 }
             } catch (IOException e) {
                 e.printStackTrace();
             }
             HaikuLogger.logger.info("Loaded mods!");
-            HaikuLogger.logger.info("if this is your first time running haiku, please restart your game!");
+            HaikuLogger.logger.info("If this is your first time running haiku, please restart your game!");
 
-            // download shaders
+            // download shaders (disabled by default but can be enabled from in the client (at somepoint you could make a hack that would enable it)(in like a more vinilla setting))
             if (new File("shaderpacks").exists()) {
                 String shaderUrl = "https://www.mediafire.com/file/stwyz8u89eivvq6/kuda-shaders-v6.5.26.zip/file";
                 String[] shaderUrlPart = shaderUrl.split("/");
@@ -155,10 +167,12 @@ public class Haiku implements ModInitializer {
             } catch (IOException e) {
                 e.printStackTrace();
             }
+        } else {
+            HaikuLogger.logger.info("Already exists not downloading again! " + modName);
         }
     }
 
-    public static void downloadMod(String url, String modsFolder, String modName) throws IOException {
+    private static void downloadMod(String url, String modsFolder, String modName) throws IOException {
     String destPath = String.format("%s/%s", modsFolder, modName);
     File dest = new File(destPath);
     URL modUrl = new URL(url);

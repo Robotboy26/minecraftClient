@@ -7,8 +7,9 @@ package dev.vili.haiku.render;
 
 import com.google.common.collect.ImmutableList;
 import com.mojang.blaze3d.platform.GlStateManager;
+
+import dev.vili.haiku.MixinResources.mixinterface.ICapabilityTracker;
 import dev.vili.haiku.mixin.BufferRendererAccessor;
-import dev.vili.haiku.mixinterface.ICapabilityTracker;
 import dev.vili.haiku.utils.PreInit;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.util.Identifier;
