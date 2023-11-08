@@ -130,7 +130,7 @@ public class ElytraFly extends Module {
 					FireworkRocketEntity entity = new FireworkRocketEntity(mc.world, itemStack, mc.player);
 					fireworks.add(entity);
 					if (playSound.isEnabled()) mc.world.playSoundFromEntity(mc.player, entity, SoundEvents.ENTITY_FIREWORK_ROCKET_LAUNCH, SoundCategory.AMBIENT, 3.0F, 1.0F);
-					mc.world.addEntity(entity.getId(), entity);
+					mc.world.spawnEntity(entity);
 					timer += 1;
 					if (timer > 20) {
 						timer = 0;

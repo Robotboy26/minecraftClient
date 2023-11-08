@@ -22,8 +22,7 @@ import net.minecraft.client.resource.language.I18n;
 import net.minecraft.text.Text;
 
 import dev.vili.haiku.Haiku;
-import dev.vili.haiku.MixinResources.altmanager.screens.AltManagerScreen;
-import dev.vili.haiku.MixinResources.altmanager.screens.AltManagerScreen;
+//import dev.vili.haiku.MixinResources.altmanager.screens.AltManagerScreen;
 
 @Mixin(TitleScreen.class)
 public abstract class TitleScreenMixin extends Screen
@@ -31,17 +30,14 @@ public abstract class TitleScreenMixin extends Screen
 	private ClickableWidget realmsButton = null;
 	private ButtonWidget altsButton;
 	
-	private TitleScreenMixin(WurstClient wurst, Text title)
+	private TitleScreenMixin(Haiku wurst, Text title)
 	{
 		super(title);
 	}
 	
 	@Inject(at = @At("RETURN"), method = "init()V")
 	private void onInitWidgetsNormal(CallbackInfo ci)
-	{
-		if(!WurstClient.INSTANCE.isEnabled())
-			return;
-		
+	{	
 		for(ClickableWidget button : Screens.getButtons(this))
 		{
 			if(!button.getMessage().getString()
@@ -59,11 +55,11 @@ public abstract class TitleScreenMixin extends Screen
 		realmsButton.setWidth(98);
 		
 		// add AltManager button
-		addDrawableChild(altsButton = ButtonWidget
-			.builder(Text.literal("Alt Manager"),
-				b -> client.setScreen(new AltManagerScreen(this,
-					WurstClient.INSTANCE.getAltManager())))
-			.dimensions(width / 2 + 2, realmsButton.getY(), 98, 20).build());
+		//addDrawableChild(altsButton = ButtonWidget
+		//	.builder(Text.literal("Alt Manager"),
+		//		b -> client.setScreen(new AltManagerScreen(this,
+		//			Haiku.getInstance().getAltManager())))
+		//	.dimensions(width / 2 + 2, realmsButton.getY(), 98, 20).build());
 	}
 	
 	@Inject(at = @At("RETURN"), method = "tick()V")

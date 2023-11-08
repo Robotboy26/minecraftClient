@@ -5,12 +5,6 @@
 
 package dev.vili.haiku.mixin;
 
-import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
-import com.llamalad7.mixinextras.injector.ModifyReturnValue;
-import dev.vili.haiku.utils.Utils;
-import dev.vili.haiku.utils.misc.CPSUtils;
-import dev.vili.haiku.utils.network.OnlinePlayers;
-import meteordevelopment.starscript.Script;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.Mouse;
 import net.minecraft.client.gui.screen.Screen;
@@ -18,9 +12,6 @@ import net.minecraft.client.network.ClientPlayerInteractionManager;
 import net.minecraft.client.option.GameOptions;
 import net.minecraft.client.util.Window;
 import net.minecraft.client.world.ClientWorld;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.Hand;
-import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.profiler.Profiler;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Final;
@@ -29,16 +20,10 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.ModifyArg;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
-import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 import dev.vili.haiku.Haiku;
 import dev.vili.haiku.MixinResources.mixinterface.IMinecraftClient;
-import dev.vili.haiku.event.events.TickEvent;
-import dev.vili.haiku.event.events.game.GameLeftEvent;
 import net.minecraft.client.RunArgs;
-import java.util.concurrent.CompletableFuture;
 
 @Mixin(value = MinecraftClient.class, priority = 1001)
 public abstract class MinecraftClientMixin implements IMinecraftClient {

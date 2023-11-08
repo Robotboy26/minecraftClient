@@ -59,11 +59,12 @@ public class FakePlayerEntity extends OtherClientPlayerEntity
 		capeZ = getZ();
 	}
 	
+
 	private void spawn()
 	{
-		world.addEntity(getId(), this);
+		world.spawnEntity(this);
 	}
-	
+
 	public void despawn()
 	{
 		discard();

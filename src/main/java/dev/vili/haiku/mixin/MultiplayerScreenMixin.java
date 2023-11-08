@@ -15,7 +15,6 @@ import net.minecraft.client.network.ServerInfo;
 import net.minecraft.text.Text;
 
 import dev.vili.haiku.Haiku;
-import dev.vili.haiku.MixinResources.altmanager.screens.AltScreen;
 import dev.vili.haiku.MixinResources.mixinterface.IMultiplayerScreen;
 import dev.vili.haiku.MixinResources.serverfinder.CleanUpScreen;
 import dev.vili.haiku.MixinResources.serverfinder.ServerFinderScreen;
@@ -30,11 +29,8 @@ public class MultiplayerScreenMixin extends Screen implements IMultiplayerScreen
 
 	@Inject(at = {@At("TAIL")}, method = {"init()V"})
 	private void onInit(CallbackInfo ci) {
-		this.addDrawableChild(ButtonWidget.builder(Text.of("Alt Manager"), b -> client.setScreen(new AltScreen((MultiplayerScreen)(Object)this)))
+		this.addDrawableChild(ButtonWidget.builder(Text.of("this is a button"), b -> HaikuLogger.info("hellowofosoef"))
 		 		.dimensions(this.width / 2 + 4 + 50, 7, 100, 20).build());
-
-		this.addDrawableChild(ButtonWidget.builder(Text.of("this is a second button"), b -> HaikuLogger.info("hellowofosoef"))
-		 		.dimensions(this.width / 2 + 4 + 50, 7, 10, 20).build());
 			
 		lastServerButton = addDrawableChild(ButtonWidget
 			.builder(Text.literal("Last Server"),

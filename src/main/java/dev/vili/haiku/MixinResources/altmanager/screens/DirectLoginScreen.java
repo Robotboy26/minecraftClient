@@ -5,14 +5,14 @@
  * License, version 3. If a copy of the GPL was not distributed with this
  * file, You can obtain one at: https://www.gnu.org/licenses/gpl-3.0.txt
  */
-package net.wurstclient.altmanager.screens;
+package dev.vili.haiku.MixinResources.altmanager.screens;
 
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.TitleScreen;
 import net.minecraft.text.Text;
-import net.wurstclient.altmanager.LoginException;
-import net.wurstclient.altmanager.LoginManager;
-import net.wurstclient.altmanager.MicrosoftLoginManager;
+import dev.vili.haiku.MixinResources.altmanager.LoginException;
+import dev.vili.haiku.MixinResources.altmanager.LoginManager;
+import dev.vili.haiku.MixinResources.altmanager.MicrosoftLoginManager;
 
 public final class DirectLoginScreen extends AltEditorScreen
 {

@@ -5,7 +5,7 @@
  * License, version 3. If a copy of the GPL was not distributed with this
  * file, You can obtain one at: https://www.gnu.org/licenses/gpl-3.0.txt
  */
-package net.wurstclient.altmanager.screens;
+package dev.vili.haiku.MixinResources.altmanager.screens;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -31,7 +31,7 @@ import it.unimi.dsi.fastutil.booleans.BooleanConsumer;
 import net.fabricmc.fabric.api.client.screen.v1.Screens;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
-import net.minecraft.client.gui.Drawable;
+//import net.minecraft.client.gui.Drawable;
 import net.minecraft.client.gui.screen.ConfirmScreen;
 import net.minecraft.client.gui.screen.NoticeScreen;
 import net.minecraft.client.gui.screen.Screen;
@@ -48,13 +48,13 @@ import net.minecraft.text.Style;
 import net.minecraft.text.Text;
 import net.minecraft.util.Util;
 import net.minecraft.util.math.MathHelper;
-import net.wurstclient.WurstClient;
-import net.wurstclient.altmanager.*;
-import net.wurstclient.util.ListWidget;
-import net.wurstclient.util.MultiProcessingUtils;
-import net.wurstclient.util.json.JsonException;
-import net.wurstclient.util.json.JsonUtils;
-import net.wurstclient.util.json.WsonObject;
+import dev.vili.haiku.Haiku;
+import dev.vili.haiku.MixinResources.altmanager.*;
+import dev.vili.haiku.utils.ListWidget;
+import dev.vili.haiku.utils.MultiProcessingUtils;
+import dev.vili.haiku.utils.json.JsonException;
+import dev.vili.haiku.utils.json.JsonUtils;
+import dev.vili.haiku.utils.json.WsonObject;
 
 public final class AltManagerScreen extends Screen
 {
@@ -181,20 +181,16 @@ public final class AltManagerScreen extends Screen
 	}
 	
 	@Override
-	public boolean mouseScrolled(double mouseX, double mouseY,
-		double horizontalAmount, double verticalAmount)
-	{
-		listGui.mouseScrolled(mouseX, mouseY, horizontalAmount, verticalAmount);
-		return super.mouseScrolled(mouseX, mouseY, horizontalAmount,
-			verticalAmount);
+	public boolean mouseScrolled(double mouseX, double mouseY, double verticalAmount, double horizontalAmount) {
+		listGui.mouseScrolled(mouseX, mouseY, verticalAmount, 0.0D);
+		return super.mouseScrolled(mouseX, mouseY, verticalAmount, horizontalAmount);
 	}
-	
+
 	@Override
-	public boolean keyPressed(int keyCode, int scanCode, int modifiers)
-	{
-		if(keyCode == GLFW.GLFW_KEY_ENTER)
+	public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
+		if (keyCode == GLFW.GLFW_KEY_ENTER)
 			useButton.onPress();
-		
+
 		return super.keyPressed(keyCode, scanCode, modifiers);
 	}
 	
@@ -275,7 +271,7 @@ public final class AltManagerScreen extends Screen
 		{
 			Process process = MultiProcessingUtils.startProcessWithIO(
 				ImportAltsFileChooser.class,
-				WurstClient.INSTANCE.getWurstFolder().toString());
+				Haiku.getInstance().getHaikuFolder().toString());
 			
 			Path path = getFileChooserPath(process);
 			process.waitFor();
@@ -328,7 +324,7 @@ public final class AltManagerScreen extends Screen
 		{
 			Process process = MultiProcessingUtils.startProcessWithIO(
 				ExportAltsFileChooser.class,
-				WurstClient.INSTANCE.getWurstFolder().toString());
+				Haiku.getInstance().getHaikuFolder().toString());
 			
 			Path path = getFileChooserPath(process);
 			
@@ -470,8 +466,8 @@ public final class AltManagerScreen extends Screen
 			errorTimer--;
 		}
 		
-		for(Drawable drawable : drawables)
-			drawable.render(context, mouseX, mouseY, partialTicks);
+		//for(Drawable drawable : drawables)
+		//	drawable.render(context, mouseX, mouseY, partialTicks);
 		
 		renderButtonTooltip(context, mouseX, mouseY);
 		renderAltTooltip(context, mouseX, mouseY);
@@ -549,8 +545,7 @@ public final class AltManagerScreen extends Screen
 	private void addTooltip(ArrayList<Text> tooltip, String trKey)
 	{
 		// translate
-		String translated = WurstClient.INSTANCE
-			.translate("description.wurst.altmanager." + trKey);
+		String translated = "description.wurst.altmanager." + trKey;
 		
 		// line-wrap
 		StringJoiner joiner = new StringJoiner("\n");

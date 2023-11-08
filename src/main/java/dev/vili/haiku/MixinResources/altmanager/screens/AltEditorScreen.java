@@ -29,7 +29,7 @@ import com.google.gson.JsonObject;
 import com.mojang.blaze3d.systems.RenderSystem;
 
 import net.minecraft.client.gui.DrawContext;
-import net.minecraft.client.gui.Drawable;
+//import net.minecraft.client.gui.Drawable;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.gui.widget.TextFieldWidget;
@@ -50,7 +50,7 @@ import dev.vili.haiku.MixinResources.altmanager.NameGenerator;
 public abstract class AltEditorScreen extends Screen
 {
 	private final Path skinFolder =
-		Haiku.getInstance().getWurstFolder().resolve("skins");
+		Haiku.getInstance().getHaikuFolder().resolve("skins");
 	
 	protected final Screen prevScreen;
 	
@@ -397,8 +397,8 @@ public abstract class AltEditorScreen extends Screen
 			errorTimer--;
 		}
 		
-		for(Drawable drawable : drawables)
-			drawable.render(context, mouseX, mouseY, partialTicks);
+		//for(Drawable drawable : drawables)
+		//	drawable.render(context, mouseX, mouseY, partialTicks);
 	}
 	
 	@Override

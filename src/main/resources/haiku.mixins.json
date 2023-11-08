@@ -15,12 +15,9 @@
     "ClientPlayerEntityMixin",
     "ClientPlayNetworkHandlerMixin",
     "ClientPlayNetworkHandlerAccessor",
-    "ClientWorldMixin",
     "InGameHudMixin",
-    "KeyboardMixin",
     "MinecraftClientMixin",
     "MultiplayerScreenMixin",
-    "TelemetryManagerMixin",
     "WorldRendererMixin",
     "LightmapTextureManagerMixin",
     "MouseMixin"

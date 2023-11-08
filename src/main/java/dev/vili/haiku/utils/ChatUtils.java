@@ -12,9 +12,9 @@ import java.util.StringJoiner;
 
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.hud.ChatHud;
-import net.minecraft.client.gui.hud.ChatHudLine;
+//import net.minecraft.client.gui.hud.ChatHudLine;
 import net.minecraft.text.MutableText;
-import net.minecraft.text.OrderedText;
+//import net.minecraft.text.OrderedText;
 import net.minecraft.text.StringVisitable;
 import net.minecraft.text.Style;
 import net.minecraft.text.Text;

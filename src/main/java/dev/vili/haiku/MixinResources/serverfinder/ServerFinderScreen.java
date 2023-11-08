@@ -20,9 +20,9 @@ import net.minecraft.client.gui.screen.multiplayer.MultiplayerScreen;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.network.ServerInfo;
+import net.minecraft.client.network.ServerInfo.ServerType;
 import net.minecraft.text.Text;
 import net.minecraft.util.Util;
-
 import dev.vili.haiku.MixinResources.mixinterface.IMultiplayerScreen;
 import dev.vili.haiku.utils.MathUtils;
 
@@ -190,7 +190,7 @@ public class ServerFinderScreen extends Screen
 					{
 						prevScreen.getServerList()
 							.add(new ServerInfo("Grief me #" + working,
-								pingers.get(i).getServerIP(), false),
+								pingers.get(i).getServerIP(), ServerType.OTHER),
 								false);
 						prevScreen.getServerList().saveFile();
 						((IMultiplayerScreen)prevScreen).getServerListSelector()
@@ -216,7 +216,7 @@ public class ServerFinderScreen extends Screen
 	public void render(DrawContext context, int mouseX, int mouseY,
 		float partialTicks)
 	{
-		super.render(context, mouseX, mouseY, partialTicks);
+		renderBackground(context, mouseX, mouseY, partialTicks);
 		
 		context.drawCenteredTextWithShadow(textRenderer, "Server Finder",
 			width / 2, 20, 16777215);

@@ -24,7 +24,6 @@ import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.gui.widget.ClickableWidget;
 import net.minecraft.client.network.ServerInfo;
 import net.minecraft.text.Text;
-
 import dev.vili.haiku.MixinResources.mixinterface.IMultiplayerScreen;
 
 public class CleanUpScreen extends Screen
@@ -205,7 +204,7 @@ public class CleanUpScreen extends Screen
 	public void render(DrawContext context, int mouseX, int mouseY,
 		float partialTicks)
 	{
-		super.render(context, mouseX, mouseY, partialTicks);
+		renderBackground(context, mouseX, mouseY, partialTicks);
 		context.drawCenteredTextWithShadow(textRenderer, "Clean Up", width / 2,
 			20, 16777215);
 		context.drawCenteredTextWithShadow(textRenderer,
