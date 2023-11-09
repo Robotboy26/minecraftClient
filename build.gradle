@@ -68,7 +68,7 @@ configurations {
 
 ext {
     lwjglVersion = '3.3.1'
-    imguiVersion = '1.86.10'
+    imguiVersion = '1.86.11'
 }
 
 dependencies {
