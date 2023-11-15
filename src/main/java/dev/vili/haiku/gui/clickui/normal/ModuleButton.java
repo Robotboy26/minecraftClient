@@ -5,27 +5,22 @@ import net.minecraft.client.resource.language.I18n;
 import net.minecraft.client.util.InputUtil;
 import net.minecraft.util.Formatting;
 import org.lwjgl.glfw.GLFW;
-import thunder.hack.ThunderHack;
-import thunder.hack.cmd.Command;
-import thunder.hack.core.impl.ModuleManager;
-import thunder.hack.gui.clickui.AbstractButton;
-import thunder.hack.gui.clickui.AbstractElement;
-import thunder.hack.gui.clickui.impl.*;
-import thunder.hack.gui.font.FontRenderers;
-import thunder.hack.gui.hud.impl.TargetHud;
-import thunder.hack.modules.Module;
-import thunder.hack.modules.client.ClickGui;
-import thunder.hack.modules.client.MainSettings;
-import thunder.hack.setting.Setting;
-import thunder.hack.setting.impl.*;
-import thunder.hack.utility.render.Render2DEngine;
+
+import dev.vili.haiku.gui.clickui.AbstractButton;
+import dev.vili.haiku.gui.clickui.AbstractElement;
+import dev.vili.haiku.gui.clickui.impl.BooleanElement;
+import dev.vili.haiku.gui.clickui.impl.ColorPickerElement;
+import dev.vili.haiku.gui.clickui.impl.ModeElement;
+import dev.vili.haiku.gui.clickui.impl.SliderElement;
+import dev.vili.haiku.module.ModuleManager;
+import dev.vili.haiku.module.modules.client.ClickGui;
+import dev.vili.haiku.utils.thunderClient.utility.render.Render2DEngine;
 
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 
-import static thunder.hack.modules.Module.mc;
-import static thunder.hack.modules.client.MainSettings.isRu;
+import static dev.vili.haiku.Haiku.mc;
 
 public class ModuleButton extends AbstractButton {
     private final List<AbstractElement> elements;
@@ -70,8 +65,8 @@ public class ModuleButton extends AbstractButton {
 
         if(hovered) {
             if(!prevHovered)
-                ModuleManager.soundFX.playScroll();
-            ClickUI.currentDescription = I18n.translate(module.getDescription());
+                // ModuleManager.soundFX.playScroll();
+            ClickUI.currentDescription = I18n.translate(module.getDescriptor().toString());
         }
 
         prevHovered = hovered;
