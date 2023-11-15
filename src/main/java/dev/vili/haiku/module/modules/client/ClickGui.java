@@ -1,35 +1,28 @@
 package dev.vili.haiku.module.modules.client;
 
 import meteordevelopment.orbit.EventHandler;
-import thunder.hack.events.impl.SettingEvent;
-import thunder.hack.gui.clickui.normal.ClickUI;
-import thunder.hack.gui.clickui.small.SmallClickUI;
-import thunder.hack.modules.Module;
-import thunder.hack.setting.impl.ColorSetting;
-import thunder.hack.setting.Setting;
-import thunder.hack.utility.render.Render2DEngine;
+import dev.babbaj.pathfinder.xz.p;
+import dev.vili.haiku.module.Module;
+import dev.vili.haiku.setting.settings.*;
 
 import java.awt.*;
 
 public class ClickGui extends Module {
     private static ClickGui INSTANCE = new ClickGui();
 
-    public Setting<Mode> mode = new Setting<>("Mode", Mode.Default);
+    public final ModeSetting mode = new ModeSetting("Mode", "what mode to use", "default", "small");
+    public final ModeSetting colorMode = new ModeSetting("colorMode", "what color mode to use", "default", "default", "static", "sky", "lightRainbow", "rainbow", "fade", "doubleColor", "analogous");
+    public final ModeSetting scrollMode = new ModeSetting("scrollMode", "what scroll mode to use", "default", "new", "old");
+    public final NumberSetting colorSpeed = new NumberSetting("colorSpeed", "how fast the color changes", 100, 1, 1000, 1);
+    public final NumberSetting scrollSpeed = new NumberSetting("scrollSpeed", "how fast the scroll changes", 100, 1, 1000, 1);
+    public final ColorSetting hcolor1 = new ColorSetting("hcolor1", "color 1", new Color(0, 0, 0, 255));
+    public final ColorSetting acolor = new ColorSetting("acolor", "color 2", new Color(0, 0, 0, 255));
+    public final BooleanSetting rainbow = new BooleanSetting("rainbow", "rainbow", false);
+    public final BooleanSetting blur = new BooleanSetting("blur", "blur", false);
+    public final BooleanSetting blurBackground = new BooleanSetting("blurBackground", "blurBackground", false);
+    public final BooleanSetting blurSlots = new BooleanSetting("blurSlots", "blurSlots", false);
+    public final BooleanSetting blurFont = new BooleanSetting("blurFont", "blurFont", false);
 
-    public Setting<scrollModeEn> scrollMode = new Setting<>("ScrollMode", scrollModeEn.Old);
-    public Setting<Integer> catHeight = new Setting<>("CategoryHeight", 300, 100, 720);
-
-    private final Setting<colorModeEn> colorMode = new Setting<>("ColorMode", colorModeEn.Static);
-    public final Setting<ColorSetting> hcolor1 = new Setting<>("Main", new ColorSetting(-6974059));
-    public final Setting<ColorSetting> acolor = new Setting<>("Main2", new ColorSetting(-8365735));
-    public final Setting<ColorSetting> plateColor = new Setting<>("Plate", new ColorSetting(-14474718));
-    public final Setting<ColorSetting> disabled = new Setting<>("Disabled", new ColorSetting(new Color(24, 24, 27)));
-    public final Setting<ColorSetting> catColor = new Setting<>("Category", new ColorSetting(-15395563));
-    public Setting<Integer> colorSpeed = new Setting<>("ColorSpeed", 18, 2, 54);
-    public Setting<Boolean> showBinds = new Setting<>("ShowBinds", true);
-    public Setting<Boolean> outline = new Setting<>("Outline", false);
-    public Setting<Boolean> descriptions = new Setting<>("Descriptions", true);
-    public Setting<Boolean> msaa = new Setting<>("MSAA", true);
 
 /*
     я хотел, а потом опять забил

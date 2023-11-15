@@ -185,6 +185,7 @@ public abstract class Module {
         Blocks,
         Build,
         MISC,
-        DEV
+        DEV,
+        CLIENT
     }
 }
