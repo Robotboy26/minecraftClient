@@ -1,12 +1,14 @@
 package dev.vili.haiku.module.modules.client;
 
-import thunder.hack.modules.Module;
+import org.lwjgl.glfw.GLFW;
+
+import dev.vili.haiku.module.Module;
 
 public final class Notifications extends Module {
     private static Notifications instance;
 
     public Notifications() {
-        super("Notifications", Category.CLIENT);
+        super("Notifications", "Notifications", GLFW.GLFW_KEY_UNKNOWN, Category.CLIENT);
         instance = this;
     }
 

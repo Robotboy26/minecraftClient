@@ -1,16 +1,18 @@
 package dev.vili.haiku.module.modules.client;
 
-import thunder.hack.modules.Module;
-import thunder.hack.setting.Setting;
+import org.lwjgl.glfw.GLFW;
+
+import dev.vili.haiku.module.Module;
+import dev.vili.haiku.setting.settings.*;
 
 public final class MainSettings extends Module {
-    public static Setting<Boolean> futureCompatibility = new Setting<>("FutureCompatibility", false);
-    public static Setting<Boolean> customMainMenu = new Setting<>("CustomMainMenu", true);
-    public static Setting<Boolean> renderRotations = new Setting<>("RenderRotations", true);
-    public static Setting<Boolean> skullEmoji = new Setting<>("SkullEmoji", true);
-    public static Setting<Boolean> debug = new Setting<>("Debug", false);
-    public static Setting<Language> language = new Setting<>("Language", Language.ENG);
-    public static Setting<String> prefix = new Setting<>("Prefix", "@");
+    public static BooleanSetting futureCompatibility = new BooleanSetting("FutureCompatibility", "FutureCompatibility", false);
+    public static BooleanSetting customMainMenu = new BooleanSetting("CustomMainMenu", "CustomMainMenu", false);
+    public static BooleanSetting renderRotations = new BooleanSetting("RenderRotations", "RenderRotations", false);
+    public static BooleanSetting skullEmoji = new BooleanSetting("SkullEmoji", "SkullEmoji", false);
+    public static BooleanSetting debug = new BooleanSetting("Debug", "Debug", false);
+    // public static Setting<Language> language = new Setting<>("Language", Language.ENG);
+    // public static Setting<String> prefix = new Setting<>("Prefix", "@");
 
     private static MainSettings instance;
 
@@ -20,13 +22,13 @@ public final class MainSettings extends Module {
     }
 
     public MainSettings() {
-        super("ClientSettings", Category.CLIENT);
+        super("MainSettings", "MainSettings", GLFW.GLFW_KEY_UNKNOWN, Category.CLIENT);
         instance = this;
     }
 
-    public static boolean isRu() {
-        return language.getValue() == Language.RU;
-    }
+    // public static boolean isRu() {
+    //     return language.getValue() == Language.RU;
+    // }
 
     public static MainSettings getInstance() {
         return instance;

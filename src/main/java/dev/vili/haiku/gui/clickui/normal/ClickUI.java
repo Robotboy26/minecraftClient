@@ -7,24 +7,12 @@ import net.minecraft.client.util.InputUtil;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import org.lwjgl.glfw.GLFW;
-import thunder.hack.ThunderHack;
-import thunder.hack.core.impl.ConfigManager;
-import thunder.hack.core.impl.ModuleManager;
-import thunder.hack.gui.clickui.AbstractWindow;
-import thunder.hack.gui.font.FontRenderers;
-import thunder.hack.modules.Module;
-import thunder.hack.modules.client.ClickGui;
-import thunder.hack.modules.client.HudEditor;
-import thunder.hack.modules.client.MainSettings;
-import thunder.hack.utility.render.MSAAFramebuffer;
-import thunder.hack.utility.render.Render2DEngine;
 
 import java.awt.*;
 import java.util.List;
 import java.util.Objects;
 
-import static thunder.hack.modules.Module.mc;
-import static thunder.hack.modules.client.MainSettings.isRu;
+import static dev.vili.haiku.Haiku.mc;
 
 public class ClickUI extends Screen {
     public static List<AbstractWindow> windows;

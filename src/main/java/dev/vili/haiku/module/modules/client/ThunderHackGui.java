@@ -1,28 +1,29 @@
 package dev.vili.haiku.module.modules.client;
 
-import thunder.hack.gui.thundergui.ThunderGui;
-import thunder.hack.modules.Module;
-import thunder.hack.setting.Setting;
-import thunder.hack.setting.impl.ColorSetting;
+import dev.vili.haiku.gui.thundergui.ThunderGui;
+import dev.vili.haiku.module.Module;
+import dev.vili.haiku.setting.settings.*;
 
 import java.awt.*;
 
+import org.lwjgl.glfw.GLFW;
+
 public final class ThunderHackGui extends Module {
-    public static final Setting<ColorSetting> onColor1 = new Setting<>("OnColor1", new ColorSetting(new Color(71, 0, 117, 255).getRGB()));
-    public static final Setting<ColorSetting> onColor2 = new Setting<>("OnColor2", new ColorSetting(new Color(32, 1, 96, 255).getRGB()));
-    public static final Setting<Float> scrollSpeed = new Setting<>("ScrollSpeed", 1f, 0.1F, 2.0F);
+    public static final ColorSetting onColor1 = new ColorSetting("OnColor1", "", 71, 0, 117);
+    public static final ColorSetting onColor2 = new ColorSetting("OnColor2", "", 32, 1, 96);
+    public static final NumberSetting scrollSpeed = new NumberSetting("ScrollSpeed", "", 1, 0.1, 2.0, 0.01);
 
     private static ThunderHackGui instance;
 
     public ThunderHackGui() {
-        super("ThunderGui", Category.CLIENT);
+        super("ThunderGui", "ThunderGui", GLFW.GLFW_KEY_P, Category.CLIENT);
         instance = this;
     }
 
     @Override
     public void onEnable() {
         mc.setScreen(ThunderGui.getThunderGui());
-        disable();
+        onDisable();
     }
 
     public static Color getColorByTheme(int id) {

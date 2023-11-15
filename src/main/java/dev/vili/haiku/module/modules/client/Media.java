@@ -5,33 +5,35 @@ import net.minecraft.client.network.PlayerListEntry;
 import net.minecraft.network.packet.s2c.play.GameMessageS2CPacket;
 import net.minecraft.text.Text;
 import org.jetbrains.annotations.NotNull;
-import thunder.hack.events.impl.PacketEvent;
-import thunder.hack.injection.accesors.IGameMessageS2CPacket;
-import thunder.hack.modules.Module;
-import thunder.hack.setting.Setting;
+import org.lwjgl.glfw.GLFW;
+
+import baritone.api.event.events.PacketEvent;
+import dev.vili.haiku.eventbus.HaikuSubscribe;
+import dev.vili.haiku.module.Module;
+import dev.vili.haiku.setting.settings.*;
 
 public final class Media extends Module {
-    public static final Setting<Boolean> skinProtect = new Setting<>("Skin Protect", true);
-    public static final Setting<Boolean> nickProtect = new Setting<>("Nick Protect", true);
+    public static final BooleanSetting skinProtect = new BooleanSetting("Skin Protect", "Skin Protect", false);
+    public static final BooleanSetting nickProtect = new BooleanSetting("Nick Protect", "Nick Protect", false);
 
     private static Media instance;
 
     public Media() {
-        super("Media", Category.CLIENT);
+        super("Media", "Media", GLFW.GLFW_KEY_UNKNOWN, Category.CLIENT);
         instance = this;
     }
 
-    @EventHandler
-    public void onPacketReceive(PacketEvent.@NotNull Receive e) {
-        if (e.getPacket() instanceof GameMessageS2CPacket pac && nickProtect.getValue()) {
-            for (PlayerListEntry ple : mc.player.networkHandler.getPlayerList()) {
-                if (pac.content().getString().contains(ple.getProfile().getName())) {
-                    IGameMessageS2CPacket packet = e.getPacket();
-                    packet.setContent(Text.of(pac.content().getString().replace(ple.getProfile().getName(), "Protected")));
-                }
-            }
-        }
-    }
+    // @HaikuSubscribe
+    // public void onPacketReceive(PacketEvent e) {
+    //     if (e instanceof GameMessageS2CPacket pac && nickProtect.getValue()) {
+    //         for (PlayerListEntry ple : mc.player.networkHandler.getPlayerList()) {
+    //             if (pac.content().getString().contains(ple.getProfile().getName())) {
+    //                 IGameMessageS2CPacket packet = e.getPacket();
+    //                 packet.setContent(Text.of(pac.content().getString().replace(ple.getProfile().getName(), "Protected")));
+    //             }
+    //         }
+    //     }
+    // }
 
     public static Media getInstance() {
         return instance;
