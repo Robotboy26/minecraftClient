@@ -9,23 +9,14 @@ package dev.vili.haiku;
 
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
-import java.io.InputStream;
-import java.net.URL;
-import java.net.URLClassLoader;
-import java.net.URLConnection;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.attribute.PosixFilePermission;
 import java.nio.file.attribute.PosixFilePermissions;
-import java.util.Iterator;
-import java.util.ServiceLoader;
 import java.util.Set;
-
-import javax.swing.JOptionPane;
 
 import dev.vili.haiku.MixinResources.altmanager.AltManager;
 import dev.vili.haiku.MixinResources.altmanager.Encryption;
@@ -36,6 +27,7 @@ import dev.vili.haiku.eventbus.EventBus;
 import dev.vili.haiku.module.ModuleManager;
 import dev.vili.haiku.setting.SettingManager;
 import dev.vili.haiku.utils.HaikuLogger;
+import dev.vili.haiku.utils.DownloadUtils;
 import meteordevelopment.orbit.IEventBus;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientLifecycleEvents;
@@ -179,58 +171,12 @@ public class Haiku implements ModInitializer {
     private void getMod(String modName, String modUrl, String modsFolder) {
         if (!new File(modsFolder, modName).exists()) {
             try {
-                downloadMod(modUrl, modsFolder, modName);
+                DownloadUtils.downloadMod(modUrl, modsFolder, modName);
             } catch (IOException e) {
                 e.printStackTrace();
             }
         } else {
             HaikuLogger.logger.info("Already exists not downloading again! " + modName);
-        }
-    }
-
-    private static void downloadMod(String url, String modsFolder, String modName) throws IOException {
-    String destPath = String.format("%s/%s", modsFolder, modName);
-    File dest = new File(destPath);
-    URL modUrl = new URL(url);
-    URLConnection conn = modUrl.openConnection();
-    try (InputStream in = conn.getInputStream();
-         FileOutputStream out = new FileOutputStream(dest)) {
-
-        byte[] buffer = new byte[1024];
-        int len;
-        while ((len = in.read(buffer)) > 0) {
-            out.write(buffer, 0, len);
-            }   
-        }
-    HaikuLogger.logger.info("Downloaded mod!" + modName);
-    }
-    
-    public void loadMod() {
-        Path modsFolder;
-        if (System.getProperty("user.dir").endsWith("mods")) {
-            modsFolder = Path.of("");
-        } else {
-            modsFolder = Path.of("mods");
-        }
-        Path modFilePath = modsFolder.resolve("mod.jar");
-
-        if (modFilePath.toFile().exists()) {
-            try {
-                URLClassLoader classLoader = new URLClassLoader(new URL[] { modFilePath.toUri().toURL() }, getClass().getClassLoader());
-
-                ServiceLoader<ModInitializer> initializerLoader = ServiceLoader.load(ModInitializer.class, classLoader);
-                Iterator<ModInitializer> iterator = initializerLoader.iterator();
-                if (iterator.hasNext()) {
-                    ModInitializer modInitializer = iterator.next();
-                    modInitializer.onInitialize();
-                } else {
-                    throw new RuntimeException("Failed to find mod initializer");
-                }
-
-                classLoader.close();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
         }
     }
 
