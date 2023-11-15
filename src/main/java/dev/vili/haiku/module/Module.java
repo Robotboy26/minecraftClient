@@ -107,6 +107,14 @@ public abstract class Module {
         else onDisable();
     }
 
+    public void toggleFromCommand(boolean enable) {
+        if (enable && !this.enabled) {
+            this.toggle(); // Enables the module
+        } else if (!enable && this.enabled) {
+            this.toggle(); // Disables the module
+        }
+    }
+
     /**
      * Gets the enabled state of the module.
      */

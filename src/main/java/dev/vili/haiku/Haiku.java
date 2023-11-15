@@ -58,6 +58,7 @@ public class Haiku implements ModInitializer {
     private final SettingManager SETTING_MANAGER = new SettingManager();
     private final ConfigManager CONFIG_MANAGER = new ConfigManager();
     private Path haikuFolder;
+    public static long initTime;
     public boolean NoWeather = false;
 
     public Haiku() {
@@ -76,6 +77,7 @@ public class Haiku implements ModInitializer {
      */
     @Override
     public void onInitialize() {
+        initTime = System.currentTimeMillis();
 
         IMC = (IMinecraftClient)mc;
 		haikuFolder = createHaikuFolder();

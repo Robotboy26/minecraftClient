@@ -100,12 +100,10 @@ public class ModuleManager {
         //modules.add(new Bright()); // fullbright works now so this is not needed
         modules.add(new Freecam());
         modules.add(new FullBright());
-        modules.add(new Gui());
         modules.add(new Hud());
         modules.add(new NoBackground());
         modules.add(new NoHurtCam());
         modules.add(new NoWeather());
-        modules.add(new OneGui());
         // modules.add(new Tracers());
         modules.add(new TrueSight());
     }

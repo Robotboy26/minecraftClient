@@ -14,6 +14,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import com.mojang.brigadier.arguments.StringArgumentType;
+
 public class CommandManager {
     public String prefix = "!";
     public List<Command> commands;
@@ -25,6 +27,8 @@ public class CommandManager {
         /* Add commands here */
         commands.add(new ChatCmd());
         commands.add(new HelpCmd());
+        commands.add(new ModuleCommand());
+        commands.add(new ModulesCommand());
     }
 
     /**
@@ -61,6 +65,14 @@ public class CommandManager {
         for (Command command : commands) {
             if (command.name.equalsIgnoreCase(name)) return command;
         }
+        return null;
+    }
+
+    public static Object literal(String string) {
+        return null;
+    }
+
+    public static Object argument(String string, StringArgumentType greedyString) {
         return null;
     }
 }
