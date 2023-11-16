@@ -3,6 +3,7 @@ package dev.vili.haiku.gui.font;
 import com.google.common.base.Preconditions;
 import com.mojang.blaze3d.systems.RenderSystem;
 
+import dev.vili.haiku.module.modules.client.ClickGui;
 import dev.vili.haiku.module.modules.client.HudEditor;
 import it.unimi.dsi.fastutil.chars.Char2IntArrayMap;
 import it.unimi.dsi.fastutil.chars.Char2ObjectArrayMap;
@@ -240,7 +241,7 @@ public class FontRenderer implements Closeable {
             char c = chars[i];
 
             Color color = HudEditor.getColor(num * offset);
-            if (!hud) color = ClickGui.getInstance().getColor(num * offset);
+            // if (!hud) color = ClickGui.getInstance().getColor(num * offset);
 
             a = color.getAlpha() / 255f;
 

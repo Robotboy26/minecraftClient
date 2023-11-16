@@ -5,6 +5,18 @@ import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.text.Text;
 import org.lwjgl.glfw.GLFW;
 
+import dev.vili.haiku.Haiku;
+import dev.vili.haiku.gui.font.FontRenderers;
+import dev.vili.haiku.gui.thundergui.components.CategoryPlate;
+import dev.vili.haiku.gui.thundergui.components.ConfigComponent;
+import dev.vili.haiku.gui.thundergui.components.FriendComponent;
+import dev.vili.haiku.gui.thundergui.components.ModulePlate;
+import dev.vili.haiku.gui.thundergui.components.SettingElement;
+import dev.vili.haiku.utils.thunderClient.utility.math.MathUtility;
+import dev.vili.haiku.utils.thunderClient.utility.render.Render2DEngine;
+import dev.vili.haiku.utils.thunderClient.utility.render.animation.BetterAnimation;
+import dev.vili.haiku.module.Module;
+import dev.vili.haiku.module.modules.client.ThunderHackGui;
 
 import java.awt.*;
 import java.io.File;
@@ -72,7 +84,7 @@ public class ThunderGui extends Screen {
         super(Text.of("ThunderGui2"));
         this.setInstance();
         this.load();
-        CategoryY = getCategoryY(new_category);
+        // CategoryY = getCategoryY(new_category);
     }
 
     @Override
@@ -120,17 +132,17 @@ public class ThunderGui extends Screen {
         configs.clear();
         friends.clear();
 
-        int module_y = 0;
-        for (Module module : ThunderHack.moduleManager.getModulesByCategory(current_category)) {
-            components.add(new ModulePlate(module, main_posX + 100, main_posY + 40 + module_y, module_y / 35));
-            module_y += 35;
-        }
+        // int module_y = 0;
+        // for (Module module : Haiku.moduleManager.getModulesByCategory(current_category)) {
+        //     components.add(new ModulePlate(module, main_posX + 100, main_posY + 40 + module_y, module_y / 35));
+        //     module_y += 35;
+        // }
 
-        int category_y = 0;
-        for (final Module.Category category : ThunderHack.moduleManager.getCategories()) {
-            categories.add(new CategoryPlate(category, main_posX + 8, main_posY + 43 + category_y));
-            category_y += 17;
-        }
+        // int category_y = 0;
+        // for (final Module.Category category : Haiku.moduleManager.getCategories()) {
+        //     categories.add(new CategoryPlate(category, main_posX + 8, main_posY + 43 + category_y));
+        //     category_y += 17;
+        // }
     }
 
     public void loadConfigs() {
@@ -138,10 +150,10 @@ public class ThunderGui extends Screen {
         configs.clear();
         (new Thread(() -> {
             int config_y = 3;
-            for (String file1 : Objects.requireNonNull(ThunderHack.configManager.getConfigList())) {
-                configs.add(new ConfigComponent(file1, ConfigManager.getConfigDate(file1), main_posX + 100, main_posY + 40 + config_y, config_y / 35));
-                config_y += 35;
-            }
+            // for (String file1 : Objects.requireNonNull(Haiku.configManager.getConfigList())) {
+            //     configs.add(new ConfigComponent(file1, ConfigManager.getConfigDate(file1), main_posX + 100, main_posY + 40 + config_y, config_y / 35));
+            //     config_y += 35;
+            // }
         })).start();
     }
 
@@ -149,10 +161,10 @@ public class ThunderGui extends Screen {
         configs.clear();
         friends.clear();
         int friend_y = 3;
-        for (String friend : ThunderHack.friendManager.getFriends()) {
-            friends.add(new FriendComponent(friend, main_posX + 100, main_posY + 40 + friend_y, friend_y / 35));
-            friend_y += 35;
-        }
+        // for (String friend : Haiku.friendManager.getFriends()) {
+        //     friends.add(new FriendComponent(friend, main_posX + 100, main_posY + 40 + friend_y, friend_y / 35));
+        //     friend_y += 35;
+        // }
     }
 
     @Override
@@ -163,15 +175,15 @@ public class ThunderGui extends Screen {
         mouse_x = mouseX;
         mouse_y = mouseY;
         //TargetHud.sizeAnimation(context.getMatrices(),main_posX + main_width / 2f, main_posY + main_height / 2f, open_animation.getAnimationd());
-        if (open_animation.getAnimationd() > 0) {
-            if (!MSAAFramebuffer.framebufferInUse()) {
-                MSAAFramebuffer.use(() -> {
-                    renderGui(context, mouseX, mouseY, delta);
-                });
-            } else {
-                renderGui(context, mouseX, mouseY, delta);
-            }
-        }
+        // if (open_animation.getAnimationd() > 0) {
+        //     if (!MSAAFramebuffer.framebufferInUse()) {
+        //         MSAAFramebuffer.use(() -> {
+        //             renderGui(context, mouseX, mouseY, delta);
+        //         });
+        //     } else {
+        //         renderGui(context, mouseX, mouseY, delta);
+        //     }
+        // }
         if (open_animation.getAnimationd() <= 0.01 && !open_direction) {
             open_animation = new BetterAnimation();
             mc.currentScreen = null;
@@ -204,8 +216,8 @@ public class ThunderGui extends Screen {
         }
 
         if (current_category != null && current_category != new_category) {
-            prevCategoryY = getCategoryY(current_category);
-            CategoryY = getCategoryY(new_category);
+            // prevCategoryY = getCategoryY(current_category);
+            // CategoryY = getCategoryY(new_category);
             current_category = new_category;
             category_animation = 1;
             slider_y = 0;
@@ -275,28 +287,28 @@ public class ThunderGui extends Screen {
             settings.clear();
             scroll = 0;
 
-            if (selected_plate != null) {
-                for (Setting<?> setting : selected_plate.getModule().getSettings()) {
-                    if (setting.getValue() instanceof Parent) {
-                        settings.add(new ParentComponent(setting));
-                    }
-                    if (setting.getValue() instanceof Boolean && !setting.getName().equals("Enabled") && !setting.getName().equals("Drawn")) {
-                        settings.add(new BooleanComponent(setting));
-                    }
-                    if (setting.isBooleanParent()) {
-                        settings.add(new BooleanParentComponent(setting));
-                    }
-                    if (setting.isEnumSetting()) {
-                        settings.add(new ModeComponent(setting));
-                    }
-                    if (setting.isColorSetting()) {
-                        settings.add(new ColorPickerComponent(setting));
-                    }
-                    if (setting.isNumberSetting() && setting.hasRestriction()) {
-                        settings.add(new SliderComponent(setting));
-                    }
-                }
-            }
+            // if (selected_plate != null) {
+            //     for (Setting<?> setting : selected_plate.getModule().getSettings()) {
+            //         if (setting.getValue() instanceof Parent) {
+            //             settings.add(new ParentComponent(setting));
+            //         }
+            //         if (setting.getValue() instanceof Boolean && !setting.getName().equals("Enabled") && !setting.getName().equals("Drawn")) {
+            //             settings.add(new BooleanComponent(setting));
+            //         }
+            //         if (setting.isBooleanParent()) {
+            //             settings.add(new BooleanParentComponent(setting));
+            //         }
+            //         if (setting.isEnumSetting()) {
+            //             settings.add(new ModeComponent(setting));
+            //         }
+            //         if (setting.isColorSetting()) {
+            //             settings.add(new ColorPickerComponent(setting));
+            //         }
+            //         if (setting.isNumberSetting() && setting.hasRestriction()) {
+            //             settings.add(new SliderComponent(setting));
+            //         }
+            //     }
+            // }
         }
 
         settings_animation = fast(settings_animation, 0, 15f);
@@ -358,7 +370,7 @@ public class ThunderGui extends Screen {
         } else {
             Render2DEngine.drawRound(context.getMatrices(), main_posX + 105, main_posY + 14, 11, 11, 3f, new Color(52, 38, 58, 250));
         }
-        FontRenderers.modules.drawString(context.getMatrices(), "current cfg: " + ThunderHack.configManager.currentConfig.getName(), main_posX + 120, main_posY + 18, new Color(0xCDFFFFFF, true).getRGB(), false);
+        // FontRenderers.modules.drawString(context.getMatrices(), "current cfg: " + ThunderHack.configManager.currentConfig.getName(), main_posX + 120, main_posY + 18, new Color(0xCDFFFFFF, true).getRGB(), false);
         FontRenderers.icons.drawString(context.getMatrices(), "t", main_posX + 106, main_posY + 17, new Color(0xC2FFFFFF, true).getRGB());
 
         // Поиск
@@ -408,30 +420,30 @@ public class ThunderGui extends Screen {
         if (!settings.isEmpty()) {
             double offsetY = 0;
             for (SettingElement element : settings) {
-                if (!element.isVisible()) {
-                    continue;
-                }
+                // if (!element.isVisible()) {
+                //     continue;
+                // }
                 element.setOffsetY(offsetY);
                 element.setX(main_posX + 215);
                 element.setY(main_posY + 45 + scroll);
                 element.setWidth(175);
                 element.setHeight(15);
 
-                if (element instanceof ColorPickerComponent)
-                    if (((ColorPickerComponent) element).isOpen())
-                        element.setHeight(56);
+                // if (element instanceof ColorPickerComponent)
+                //     if (((ColorPickerComponent) element).isOpen())
+                //         element.setHeight(56);
 
-                if (element instanceof ModeComponent) {
-                    ModeComponent component = (ModeComponent) element;
-                    component.setWHeight(15);
+                // if (element instanceof ModeComponent) {
+                //     ModeComponent component = (ModeComponent) element;
+                //     component.setWHeight(15);
 
-                    if (component.isOpen()) {
-                        offsetY += (component.getSetting().getModes().length * 6);
-                        element.setHeight(element.getHeight() + (component.getSetting().getModes().length * 6) + 3);
-                    } else {
-                        element.setHeight(15);
-                    }
-                }
+                //     if (component.isOpen()) {
+                //         offsetY += (component.getSetting().getModes().length * 6);
+                //         element.setHeight(element.getHeight() + (component.getSetting().getModes().length * 6) + 3);
+                //     } else {
+                //         element.setHeight(15);
+                //     }
+                // }
                 element.render(context.getMatrices(), mouseX, mouseY, partialTicks);
                 offsetY += element.getHeight() + 3;
             }
@@ -442,14 +454,14 @@ public class ThunderGui extends Screen {
         Render2DEngine.popWindow();
     }
 
-    private int getCategoryY(Module.Category category) {
-        for (CategoryPlate categoryPlate : categories) {
-            if (categoryPlate.getCategory() == category) {
-                return categoryPlate.getPosY();
-            }
-        }
-        return 0;
-    }
+    // private int getCategoryY(Module.Category category) {
+    //     for (CategoryPlate categoryPlate : categories) {
+    //         if (categoryPlate.getCategory() == category) {
+    //             return categoryPlate.getPosY();
+    //         }
+    //     }
+    //     return 0;
+    // }
 
     public void onTick() {
         open_animation.update(open_direction);
@@ -464,14 +476,14 @@ public class ThunderGui extends Screen {
         mouse_state = true;
         if (isHoveringItem(main_posX + 368, main_posY + 17, 20, 6, (float) mouseX, (float) mouseY)) {
             if (listening_config) {
-                ThunderHack.configManager.save(config_string);
+                // ThunderHack.configManager.save(config_string);
                 config_string = "Save config";
                 listening_config = false;
                 loadConfigs();
                 return super.mouseClicked(mouseX, mouseY, clickedButton);
             }
             if (listening_friend) {
-                ThunderHack.friendManager.addFriend(friend_string);
+                // ThunderHack.friendManager.addFriend(friend_string);
                 friend_string = "Add friend";
                 listening_friend = false;
                 loadFriends();
@@ -483,7 +495,7 @@ public class ThunderGui extends Screen {
                 //   Desktop.getDesktop().browse(new File("ThunderHack/configs/").toURI());
                 net.minecraft.util.Util.getOperatingSystem().open(new File("ThunderHackRecode/configs/").toURI());
             } catch (Exception e) {
-                Command.sendMessage("Не удалось открыть проводник!");
+                // Command.sendMessage("Не удалось открыть проводник!");
             }
         }
 
@@ -507,17 +519,17 @@ public class ThunderGui extends Screen {
 
         if (isHoveringItem(main_posX + 250, main_posY + 15, 140, 10, (float) mouseX, (float) mouseY) && currentMode == CurrentMode.Modules) {
             searching = true;
-            ThunderHack.currentKeyListener = ThunderHack.KeyListening.ThunderGui;
+            // ThunderHack.currentKeyListener = ThunderHack.KeyListening.ThunderGui;
         }
 
         if (isHoveringItem(main_posX + 250, main_posY + 15, 110, 10, (float) mouseX, (float) mouseY) && currentMode == CurrentMode.CfgManager) {
             listening_config = true;
-            ThunderHack.currentKeyListener = ThunderHack.KeyListening.ThunderGui;
+            // ThunderHack.currentKeyListener = ThunderHack.KeyListening.ThunderGui;
         }
 
         if (isHoveringItem(main_posX + 250, main_posY + 15, 110, 10, (float) mouseX, (float) mouseY) && currentMode == CurrentMode.FriendManager) {
             listening_friend = true;
-            ThunderHack.currentKeyListener = ThunderHack.KeyListening.ThunderGui;
+            // ThunderHack.currentKeyListener = ThunderHack.KeyListening.ThunderGui;
         }
 
         if (isHoveringItem(main_posX, main_posY + main_height - 6, main_width, 12, (float) mouseX, (float) mouseY)) {
@@ -557,8 +569,8 @@ public class ThunderGui extends Screen {
 
     public void keyTyped(String typedChar, int keyCode) throws IOException {
 
-        if (ThunderHack.currentKeyListener != ThunderHack.KeyListening.Sliders && ThunderHack.currentKeyListener != ThunderHack.KeyListening.ThunderGui)
-            return;
+        // if (ThunderHack.currentKeyListener != ThunderHack.KeyListening.Sliders && ThunderHack.currentKeyListener != ThunderHack.KeyListening.ThunderGui)
+        //     return;
 
         if (keyCode == 1) {
             open_direction = false;
@@ -574,10 +586,10 @@ public class ThunderGui extends Screen {
                 search_string = "";
             }
             int module_y = 0;
-            for (Module module : ThunderHack.moduleManager.getModulesSearch(search_string)) {
-                components.add(new ModulePlate(module, main_posX + 100, main_posY + 40 + module_y, module_y / 35));
-                module_y += 35;
-            }
+            // for (Module module : ThunderHack.moduleManager.getModulesSearch(search_string)) {
+            //     components.add(new ModulePlate(module, main_posX + 100, main_posY + 40 + module_y, module_y / 35));
+            //     module_y += 35;
+            // }
 
             if (keyCode == GLFW.GLFW_KEY_ENTER) {
                 search_string = "Search";
@@ -608,7 +620,7 @@ public class ThunderGui extends Screen {
                 }
                 case GLFW.GLFW_KEY_ENTER -> {
                     if (!config_string.equals("Save config") && !config_string.equals("")) {
-                        ThunderHack.configManager.save(config_string);
+                        // ThunderHack.configManager.save(config_string);
                         config_string = "Save config";
                         listening_config = false;
                         loadConfigs();
@@ -635,7 +647,7 @@ public class ThunderGui extends Screen {
                 }
                 case GLFW.GLFW_KEY_ENTER -> {
                     if (!friend_string.equals("Add friend") && !config_string.equals("")) {
-                        ThunderHack.friendManager.addFriend(friend_string);
+                        // ThunderHack.friendManager.addFriend(friend_string);
                         friend_string = "Add friend";
                         listening_friend = false;
                         loadFriends();
@@ -662,10 +674,10 @@ public class ThunderGui extends Screen {
             if (isHoveringItem(main_posX + 200, main_posY + 40, main_posX + 395, main_posY - 5 + main_height, (float) mouseX, (float) mouseY))
                 scroll += dWheel * ThunderHackGui.scrollSpeed.getValue();
             else {
-                components.forEach(component -> component.scrollElement(dWheel * ThunderHackGui.scrollSpeed.getValue()));
+                // components.forEach(component -> component.scrollElement(dWheel * ThunderHackGui.scrollSpeed.getValue()));
             }
-            configs.forEach(component -> component.scrollElement(dWheel * ThunderHackGui.scrollSpeed.getValue()));
-            friends.forEach(component -> component.scrollElement(dWheel * ThunderHackGui.scrollSpeed.getValue()));
+            // configs.forEach(component -> component.scrollElement(dWheel * ThunderHackGui.scrollSpeed.getValue()));
+            // friends.forEach(component -> component.scrollElement(dWheel * ThunderHackGui.scrollSpeed.getValue()));
         }
 
         return super.mouseScrolled(mouseX, mouseY, horizontalAmount, verticalAmount);

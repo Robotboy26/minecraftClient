@@ -33,7 +33,7 @@ public abstract class AbstractElement {
 
     public void mouseClicked(int mouseX, int mouseY, int button) {
         if (InputUtil.isKeyPressed(MinecraftClient.getInstance().getWindow().getHandle(), GLFW.GLFW_KEY_DELETE) && button == 2 && hovered) {
-            setting.setValue(setting.getDefaultValue());
+            // setting.setValue(setting.getDefaultValue());
         }
     }
 
@@ -86,7 +86,7 @@ public abstract class AbstractElement {
         this.offsetY = offsetY;
     }
 
-    public boolean isVisible() {
-        return setting.isVisible();
-    }
+    // public boolean isVisible() {
+    //     return setting.isVisible();
+    // }
 }

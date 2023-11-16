@@ -1,12 +1,6 @@
 package dev.vili.haiku.gui.thundergui.components;
 
 import org.lwjgl.glfw.GLFW;
-import thunder.hack.ThunderHack;
-import thunder.hack.gui.font.FontRenderers;
-import thunder.hack.gui.thundergui.ThunderGui;
-import thunder.hack.setting.Setting;
-import thunder.hack.utility.math.MathUtility;
-import thunder.hack.utility.render.Render2DEngine;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.math.MathHelper;
 

@@ -29,4 +29,8 @@ public class Setting {
     public String getDescription() {
         return description;
     }
+
+    // public T getDefaultValue() {
+    //     return this.defaultValue;
+    // }
 }

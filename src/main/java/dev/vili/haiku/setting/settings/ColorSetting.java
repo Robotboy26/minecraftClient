@@ -7,12 +7,19 @@
 
 package dev.vili.haiku.setting.settings;
 
+import java.awt.Color;
+
+import org.jetbrains.annotations.NotNull;
+
 import dev.vili.haiku.setting.Setting;
 
 public class ColorSetting extends Setting {
     public float red;
     public float green;
     public float blue;
+    private int color;
+    private boolean rainbow;
+    private int globalOffset = 0;
 
     public ColorSetting(String name, String description, float red, float green, float blue) {
         super(name, description);
@@ -61,5 +68,32 @@ public class ColorSetting extends Setting {
         rgb[1] = (int) (this.green * 255);
         rgb[2] = (int) (this.blue * 255);
         return rgb;
+    }
+
+    public @NotNull Color getColorObject() {
+        int color = getColor();
+        int alpha = (color >> 24) & 0xff;
+        int red = (color >> 16) & 0xFF;
+        int green = (color >> 8) & 0xFF;
+        int blue = (color) & 0xFF;
+        return new Color(red, green, blue, alpha);
+    }
+
+    public int getColor() {
+        if (rainbow) {
+            float[] hsb = Color.RGBtoHSB((color >> 16) & 0xFF, (color >> 8) & 0xFF, color & 0xFF, null);
+            double rainbowState = Math.ceil((System.currentTimeMillis() + 300 + globalOffset) / 20.0);
+            rainbowState %= 360;
+            int rgb = Color.getHSBColor((float) (rainbowState / 360.0f), hsb[1], hsb[2]).getRGB();
+            int alpha = (color >> 24) & 0xff;
+            int red = (rgb >> 16) & 0xFF;
+            int green = (rgb >> 8) & 0xFF;
+            int blue = (rgb) & 0xFF;
+            return ((alpha & 0xFF) << 24) |
+                    ((red & 0xFF) << 16) |
+                    ((green & 0xFF) << 8) |
+                    ((blue & 0xFF));
+        }
+        return color;
     }
 }

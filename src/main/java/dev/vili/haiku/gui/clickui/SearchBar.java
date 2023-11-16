@@ -3,6 +3,11 @@ package dev.vili.haiku.gui.clickui;
 import net.minecraft.client.gui.DrawContext;
 import org.lwjgl.glfw.GLFW;
 
+import dev.vili.haiku.Haiku;
+import dev.vili.haiku.gui.clickui.impl.SliderElement;
+import dev.vili.haiku.gui.font.FontRenderers;
+import dev.vili.haiku.module.ModuleManager;
+import dev.vili.haiku.module.modules.client.ClickGui;
 import dev.vili.haiku.utils.thunderClient.utility.render.Render2DEngine;
 
 import java.awt.*;
@@ -20,12 +25,12 @@ public class SearchBar extends AbstractButton {
 
         boolean isHovered = Render2DEngine.isHovered(mouseX, mouseY, x, y, width, height);
 
-        float sc = ModuleManager.clickGui.mode.getValue() == ClickGui.Mode.Small ? 5f : 7f;
+        // float sc = Haiku.getInstance().getModuleManager().isModuleEnabled("ClickGui") == ClickGui.Mode.Small ? 5f : 7f;
 
-        Render2DEngine.drawRoundDoubleColor(context.getMatrices(), x + 4, y + 1f, width - 8, height - 2, 3f, ClickGui.getInstance().getColor(200), ClickGui.getInstance().getColor(0));
-        Render2DEngine.drawRound(context.getMatrices(), (float) (x + 4.5f), (float) (y + 1.5f), (float) (width - 9), (float) (height - 3), 3f, Render2DEngine.injectAlpha(ClickGui.getInstance().plateColor.getValue().getColorObject(), isHovered ? 220 : 255));
-        if (!listening) FontRenderers.sf_medium.drawGradientString(context.getMatrices(), "Search...", (float) (x + 7f), (float) (y + sc), 2, false);
-        else FontRenderers.sf_medium.drawGradientString(context.getMatrices(), moduleName + (mc.player == null || ((mc.player.age / 10) % 2 == 0) ? " " : "_"), (float) (x + 7f), (float) (y + sc), 2, false);
+        // Render2DEngine.drawRoundDoubleColor(context.getMatrices(), x + 4, y + 1f, width - 8, height - 2, 3f, ClickGui.getInstance().getColor(200), ClickGui.getInstance().getColor(0));
+        // Render2DEngine.drawRound(context.getMatrices(), (float) (x + 4.5f), (float) (y + 1.5f), (float) (width - 9), (float) (height - 3), 3f, Render2DEngine.injectAlpha(ClickGui.getInstance().plateColor.getValue().getColorObject(), isHovered ? 220 : 255));
+        // if (!listening) FontRenderers.sf_medium.drawGradientString(context.getMatrices(), "Search...", (float) (x + 7f), (float) (y + sc), 2, false);
+        // else FontRenderers.sf_medium.drawGradientString(context.getMatrices(), moduleName + (mc.player == null || ((mc.player.age / 10) % 2 == 0) ? " " : "_"), (float) (x + 7f), (float) (y + sc), 2, false);
     }
 
     @Override
@@ -40,15 +45,15 @@ public class SearchBar extends AbstractButton {
             listening = false;
         }
 
-        if(listening) ThunderHack.currentKeyListener = ThunderHack.KeyListening.Search;
+        // if(listening) ThunderHack.currentKeyListener = ThunderHack.KeyListening.Search;
     }
 
     @Override
     public void keyTyped(int keyCode) {
         super.keyTyped(keyCode);
 
-        if(ThunderHack.currentKeyListener != ThunderHack.KeyListening.Search)
-            return;
+        // if(ThunderHack.currentKeyListener != ThunderHack.KeyListening.Search)
+        //     return;
 
         if (listening) {
             switch (keyCode) {

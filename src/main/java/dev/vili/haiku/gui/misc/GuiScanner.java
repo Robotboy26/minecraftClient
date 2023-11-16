@@ -17,7 +17,7 @@ public class GuiScanner extends Screen {
     public static boolean track = false;
     public static boolean busy = false;
 
-    public ArrayList<NoCommentExploit.Cout> consoleout = new ArrayList<>();
+    // public ArrayList<NoCommentExploit.Cout> consoleout = new ArrayList<>();
 
     int radarx, radary, radarx1, radary1, centerx, centery, consolex, consoley, consolex1, consoley1, hovery, hoverx, searchx, searchy, wheely;
 
@@ -61,13 +61,13 @@ public class GuiScanner extends Screen {
 
         Render2DEngine.drawRectDumbWay(context.getMatrices(), radarx, radary, radarx1, radary1, new Color(0xE0151515, true));
 
-        for (NoCommentExploit.Dot point : new ArrayList<>(NoCommentExploit.dots)) {
-            if (point.type() == NoCommentExploit.DotType.Searched) {
-                Render2DEngine.drawRectDumbWay(context.getMatrices(), (point.posX() / 4f) + centerx, (point.posY() / 4f) + centery, ((point.posX() / 4f) + (radarx1 - radarx) / 300f) + centerx, ((point.posY() / 4f) + (radary1 - radary) / 300f) + centery, new Color(0xE7A8A8A8, true));
-            } else {
-                Render2DEngine.drawRectDumbWay(context.getMatrices(), (point.posX() / 4f) + centerx, (point.posY() / 4f) + centery, ((point.posX() / 4f) + (radarx1 - radarx) / 300f) + centerx, ((point.posY() / 4f) + (radary1 - radary) / 300f) + centery, new Color(0x3CE708));
-            }
-        }
+        // for (NoCommentExploit.Dot point : new ArrayList<>(NoCommentExploit.dots)) {
+        //     if (point.type() == NoCommentExploit.DotType.Searched) {
+        //         Render2DEngine.drawRectDumbWay(context.getMatrices(), (point.posX() / 4f) + centerx, (point.posY() / 4f) + centery, ((point.posX() / 4f) + (radarx1 - radarx) / 300f) + centerx, ((point.posY() / 4f) + (radary1 - radary) / 300f) + centery, new Color(0xE7A8A8A8, true));
+        //     } else {
+        //         Render2DEngine.drawRectDumbWay(context.getMatrices(), (point.posX() / 4f) + centerx, (point.posY() / 4f) + centery, ((point.posX() / 4f) + (radarx1 - radarx) / 300f) + centerx, ((point.posY() / 4f) + (radary1 - radary) / 300f) + centery, new Color(0x3CE708));
+        //     }
+        // }
 
         Render2DEngine.drawRectDumbWay(context.getMatrices(), centerx - 1f, centery - 1f, centerx + 1f, centery + 1f, new Color(0xFF0303));
         Render2DEngine.drawRectDumbWay(context.getMatrices(), (float) ((mc.player.getX() / 16 / 4f) + centerx), (float) ((mc.player.getZ() / 16 / 4f) + centery), (float) (((mc.player.getX() / 16 / 4f) + (radarx1 - radarx) / 300f) + centerx), (float) (((mc.player.getZ() / 16 / 4f) + (radary1 - radary) / 300f) + centery), new Color(0x0012FF));
@@ -79,9 +79,9 @@ public class GuiScanner extends Screen {
 
         Render2DEngine.addWindow(context.getMatrices(), consolex, consoley, consolex1, consoley1 - 10, 1f);
 
-        for (NoCommentExploit.Cout out : new ArrayList<>(consoleout)) {
-            FontRenderers.monsterrat.drawString(context.getMatrices(), out.out(), consolex + 4, consoley + 6 + (out.posY() * 11) + wheely, -1);
-        }
+        // for (NoCommentExploit.Cout out : new ArrayList<>(consoleout)) {
+        //     FontRenderers.monsterrat.drawString(context.getMatrices(), out.out(), consolex + 4, consoley + 6 + (out.posY() * 11) + wheely, -1);
+        // }
         Render2DEngine.popWindow();
 
         FontRenderers.monsterrat.drawString(context.getMatrices(), "X+", radarx1 + 5, centery, -1);
@@ -96,16 +96,16 @@ public class GuiScanner extends Screen {
             busy = true;
             searchx = (int) (mouseX - centerx);
             searchy = (int) (mouseY - centery);
-            ModuleManager.noCommentExploit.rerun(searchx * 64, searchy * 64);
-            consoleout.add(new NoCommentExploit.Cout(ModuleManager.noCommentExploit.couti, "Selected pos " + searchx * 65 + "x " + searchy * 64 + "z "));
-            ++ModuleManager.noCommentExploit.couti;
+            // ModuleManager.noCommentExploit.rerun(searchx * 64, searchy * 64);
+            // consoleout.add(new NoCommentExploit.Cout(ModuleManager.noCommentExploit.couti, "Selected pos " + searchx * 65 + "x " + searchy * 64 + "z "));
+            // ++ModuleManager.noCommentExploit.couti;
         }
         if (mouseX > consolex && mouseX < consolex1 && mouseY > consoley1 + 20 && mouseY < consoley1 + 36) {
             track = !track;
         }
         if (mouseX > consolex && mouseX < consolex1 && mouseY > consoley1 + 38 && mouseY <  consoley1 + 53) {
-            ModuleManager.noCommentExploit.couti = 1;
-            consoleout.clear();
+            // ModuleManager.noCommentExploit.couti = 1;
+            // consoleout.clear();
         }
 
         return super.mouseClicked(mouseX, mouseY, button);
