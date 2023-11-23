@@ -18,19 +18,19 @@ import java.nio.file.attribute.PosixFilePermission;
 import java.nio.file.attribute.PosixFilePermissions;
 import java.util.Set;
 
-import dev.vili.haiku.MixinResources.altmanager.AltManager;
-import dev.vili.haiku.MixinResources.altmanager.Encryption;
-import dev.vili.haiku.MixinResources.mixinterface.IMinecraftClient;
-import dev.vili.haiku.command.CommandManager;
-import dev.vili.haiku.config.ConfigManager;
-import dev.vili.haiku.eventbus.EventBus;
-import dev.vili.haiku.module.ModuleManager;
-import dev.vili.haiku.setting.SettingManager;
-import dev.vili.haiku.utils.HaikuLogger;
-import dev.vili.haiku.utils.DownloadUtils;
-import meteordevelopment.orbit.IEventBus;
+import org.lwjgl.glfw.GLFW;
+
+import dev.vili.haiku.gui.ClickGUI;
+import dev.vili.haiku.gui.module.Category;
+import dev.vili.haiku.gui.module.ClickGUIModule;
+import dev.vili.haiku.gui.module.HUDEditorModule;
+import dev.vili.haiku.gui.module.LogoModule;
+import dev.vili.haiku.gui.module.TabGUIModule;
+import dev.vili.haiku.gui.module.WatermarkModule;
+
 import net.fabricmc.api.ModInitializer;
-import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientLifecycleEvents;
+import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
+import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
 import net.minecraft.client.MinecraftClient;
 
 /**
@@ -40,18 +40,14 @@ public class Haiku implements ModInitializer {
     public static final String MOD_NAME = "Haiku";
     public static final String MOD_VERSION = "1.0";
     public static final MinecraftClient mc = MinecraftClient.getInstance();
-    public static IMinecraftClient IMC;
-    private AltManager altManager;
     private static Haiku INSTANCE;
-    private final EventBus EVENT_BUS = new EventBus();
-    public static final IEventBus OEVENT_BUS = new meteordevelopment.orbit.EventBus();
-    private final ModuleManager MODULE_MANAGER = new ModuleManager();
-    private final CommandManager COMMAND_MANAGER = new CommandManager();
-    private final SettingManager SETTING_MANAGER = new SettingManager();
-    private final ConfigManager CONFIG_MANAGER = new ConfigManager();
     private Path haikuFolder;
     public static long initTime;
-    public boolean NoWeather = false;
+
+    // gui stuff
+    private static ClickGUI GUI;
+	private boolean GUIenabled = false;
+	private final boolean keys[] = new boolean[266];
 
     public Haiku() {
         INSTANCE = this;
@@ -70,9 +66,33 @@ public class Haiku implements ModInitializer {
     @Override
     public void onInitialize() {
         initTime = System.currentTimeMillis();
-
-        IMC = (IMinecraftClient)mc;
 		haikuFolder = createHaikuFolder();
+
+        // init gui
+        Category.init();
+		Category.OTHER.modules.add(new ClickGUIModule());
+		Category.OTHER.modules.add(new HUDEditorModule());
+		Category.HUD.modules.add(new TabGUIModule());
+		Category.HUD.modules.add(new WatermarkModule());
+		Category.HUD.modules.add(new LogoModule());
+		ClientTickEvents.END_CLIENT_TICK.register(client -> {
+			if (!GUIenabled) {
+				for (int i=32;i<keys.length;i++) keys[i]=GLFW.glfwGetKey(MinecraftClient.getInstance().getWindow().getHandle(),i)==GLFW.GLFW_PRESS;
+				GUI=new ClickGUI();
+				HudRenderCallback.EVENT.register((cli,tickDelta)->GUI.render());
+				GUIenabled=true;
+			}
+			for (int i=32;i<keys.length;i++) {
+				if (keys[i]!=(GLFW.glfwGetKey(MinecraftClient.getInstance().getWindow().getHandle(),i)==GLFW.GLFW_PRESS)) {
+					keys[i]=!keys[i];
+					if (keys[i]) {
+						if (i==ClickGUIModule.keybind.getKey()) GUI.enterGUI();
+						if (i==HUDEditorModule.keybind.getKey()) GUI.enterHUDEditor();
+						GUI.handleKeyEvent(i);
+					}
+				}
+            }
+        });   
 
         // loading mods "settings"
         Boolean installMods = false;
@@ -83,7 +103,6 @@ public class Haiku implements ModInitializer {
             String modsFolder = modfolder;
             Path currentPath = Paths.get("");
             String containingFolderName = currentPath.toAbsolutePath().getFileName().toString();
-            HaikuLogger.info("Containing folder name: " + containingFolderName);
             if (containingFolderName.equals("run")) {
                 modsFolder = modfolder;
             } else if (containingFolderName.equals("minecraft")) {
@@ -99,16 +118,16 @@ public class Haiku implements ModInitializer {
             Set<PosixFilePermission> pem = PosixFilePermissions.fromString("rwxr-xr-x");
             try {
                 Files.setPosixFilePermissions(base, pem);
-                HaikuLogger.info("Permissions set successfully for folder: " + base);
+                //HaikuLogger.info("Permissions set successfully for folder: " + base);
             } catch (Exception e) {
-                HaikuLogger.info("Error while setting permissions for folder: " + e.getMessage());
+                //HaikuLogger.info("Error while setting permissions for folder: " + e.getMessage());
                 e.printStackTrace();
             }
             try {
                 Files.setPosixFilePermissions(folderPath, perms);
-                HaikuLogger.info("Permissions set successfully for folder: " + folderPath);
+                //HaikuLogger.info("Permissions set successfully for folder: " + folderPath);
             } catch (Exception e) {
-                HaikuLogger.info("Error while setting permissions for folder: " + e.getMessage());
+                //HaikuLogger.info("Error while setting permissions for folder: " + e.getMessage());
                 e.printStackTrace();
             }
 
@@ -120,28 +139,28 @@ public class Haiku implements ModInitializer {
                 }
                 try (BufferedReader br = new BufferedReader(new FileReader("mods.txt"))) {
                     String line;
-                    HaikuLogger.logger.info("Loading mods from mods.txt");
+                    //HaikuLogger.logger.info("Loading mods from mods.txt");
                     while ((line = br.readLine()) != null) {
                         String url = line.split("|")[0];
                         String group = line.split("|")[1];
                         String[] parts = url.split("/");
                         if (group == "performance") {
                             try {
-                                HaikuLogger.logger.info("installing/loading mod: " + parts[parts.length - 1]);
+                                //HaikuLogger.logger.info("installing/loading mod: " + parts[parts.length - 1]);
                                 getMod(parts[parts.length - 1], line, modsFolder);
                             } catch (Exception e) {
-                                HaikuLogger.logger.info("installing/loading mod: " + line);
+                                //HaikuLogger.logger.info("installing/loading mod: " + line);
                                 getMod(line, line, modsFolder);
                             }
                         } else {
-                            HaikuLogger.logger.info("not installing mod becuase it is not in the wanted group '" + group + "' : " + line);
+                            //HaikuLogger.logger.info("not installing mod becuase it is not in the wanted group '" + group + "' : " + line);
                         }
                     }
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-                HaikuLogger.logger.info("Loaded mods!");
-                HaikuLogger.logger.info("If this is your first time running haiku, please restart your game!");
+                //HaikuLogger.logger.info("Loaded mods!");
+                //HaikuLogger.logger.info("If this is your first time running haiku, please restart your game!");
 
                 // download shaders (disabled by default but can be enabled from in the client (at somepoint you could make a hack that would enable it)(in like a more vinilla setting))
                 if (new File("shaderpacks").exists()) {
@@ -150,33 +169,27 @@ public class Haiku implements ModInitializer {
                     getMod(shaderUrlPart[shaderUrlPart.length - 2], shaderUrl, "shaderpacks");
                 }
             }
+        }
 
-            Path altsFile = haikuFolder.resolve("alts.encrypted_json");
-            Path encFolder = Encryption.chooseEncryptionFolder();
-            altManager = new AltManager(altsFile, encFolder);
+            //Path altsFile = haikuFolder.resolve("alts.encrypted_json");
+            //Path encFolder = Encryption.chooseEncryptionFolder();
+            //altManager = new AltManager(altsFile, encFolder);
 
-            HaikuLogger.logger.info(MOD_NAME + " v" + MOD_VERSION + " (phase 1) has initialized!");
-            CONFIG_MANAGER.load();
-            HaikuLogger.logger.info("Loaded config!");
+            //HaikuLogger.logger.info(MOD_NAME + " v" + MOD_VERSION + " (phase 1) has initialized!");
+            //CONFIG_MANAGER.load();
+            //HaikuLogger.logger.info("Loaded config!");
 
         // Save configs on shutdown
-        ClientLifecycleEvents.CLIENT_STOPPING.register(client -> {
-            CONFIG_MANAGER.save();
-            HaikuLogger.logger.info("Saved config!");
-        });
-
-        OEVENT_BUS.subscribe(this);
-    }
+    //     ClientLifecycleEvents.CLIENT_STOPPING.register(client -> {
+    //         //CONFIG_MANAGER.save();
+    //         //HaikuLogger.logger.info("Saved config!");
+    //     });
+    // }
 
     private void getMod(String modName, String modUrl, String modsFolder) {
         if (!new File(modsFolder, modName).exists()) {
-            try {
-                DownloadUtils.downloadMod(modUrl, modsFolder, modName);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
         } else {
-            HaikuLogger.logger.info("Already exists not downloading again! " + modName);
+            //HaikuLogger.logger.info("Already exists not downloading again! " + modName);
         }
     }
 
@@ -203,43 +216,38 @@ public class Haiku implements ModInitializer {
 		return haikuFolder;
 	}
 
-    public AltManager getAltManager()
-	{
-		return altManager;
-	}
-
     /**
      * Gets the event bus.
      */
-    public EventBus getEventBus() {
-        return EVENT_BUS;
-    }
+    //public EventBus getEventBus() {
+    //    return EVENT_BUS;
+    //}
 
     /**
      * Gets the module manager.
      */
-    public ModuleManager getModuleManager() {
-        return MODULE_MANAGER;
-    }
+    //public ModuleManager getModuleManager() {
+    //    return MODULE_MANAGER;
+    //}
 
     /**
      * Gets the command manager.
      */
-    public CommandManager getCommandManager() {
-        return COMMAND_MANAGER;
-    }
+    //public CommandManager getCommandManager() {
+    //    return COMMAND_MANAGER;
+    //}
 
     /**
      * Gets the setting manager.
      */
-    public SettingManager getSettingManager() {
-        return SETTING_MANAGER;
-    }
+    //public SettingManager getSettingManager() {
+    //    return SETTING_MANAGER;
+    //}
 
     /**
      * Gets the config manager.
      */
-    public ConfigManager getConfigManager() {
-        return CONFIG_MANAGER;
-    }
+    //public ConfigManager getConfigManager() {
+    //    return CONFIG_MANAGER;
+    //}
 }

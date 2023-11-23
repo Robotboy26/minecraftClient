@@ -6,22 +6,6 @@
   "mixins": [
   ],
   "client": [
-    "AbstractBlockAccessor",
-    "AccessorFrustum",
-    "AccessorMinecraftClient",
-    "AccessorWorldRenderer",
-    "ClientConnectionMixin",
-    "ClientPlayerEntityAccessor",
-    "ClientPlayerEntityMixin",
-    "ClientPlayNetworkHandlerMixin",
-    "ClientPlayNetworkHandlerAccessor",
-    "InGameHudMixin",
-    "MinecraftClientMixin",
-    "MultiplayerScreenMixin",
-    "WorldRendererMixin",
-    "LightmapTextureManagerMixin",
-    "TitleScreenMixin",
-    "MouseMixin"
   ],
   "injectors": {
     "defaultRequire": 1

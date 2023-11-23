@@ -54,6 +54,10 @@ repositories {
         name = "vram"
         url = "https://maven.vram.io//"
     }
+    maven {
+		name = "lukflug"
+		url = "https://lukflug.github.io/maven/"
+	}
 }
 
 configurations {
@@ -63,12 +67,10 @@ configurations {
 
     // include libraries
     implementation.extendsFrom(library)
-    shadow.extendsFrom(library)
 }
 
 ext {
     lwjglVersion = '3.3.1'
-    imguiVersion = '1.86.10'
 }
 
 dependencies {
@@ -84,31 +86,20 @@ dependencies {
     implementation 'net.fabricmc:fabric-language-kotlin:1.10.10+kotlin.1.9.10'
     include 'net.fabricmc:fabric-language-kotlin:1.10.10+kotlin.1.9.10'
 
+    // GUI package
+    // make sure to replace the version number by the newest version
+	implementation "com.lukflug:panelstudio:${project.panel_studio_version}"
+    include "com.lukflug:panelstudio:${project.panel_studio_version}"
+	implementation "com.lukflug:panelstudio-${project.panel_studio_minecraft_version}:${project.panel_studio_version}"
+    include "com.lukflug:panelstudio-${project.panel_studio_minecraft_version}:${project.panel_studio_version}"
+
     //baritone
     implementation "baritone:fabric:${project.minecraft_version}-SNAPSHOT"
     include "baritone:fabric:${project.minecraft_version}-SNAPSHOT"
 
-    // ImGui
-    implementation("io.github.spair:imgui-java-binding:$imguiVersion")
-    include("io.github.spair:imgui-java-binding:$imguiVersion")
-    implementation("io.github.spair:imgui-java-lwjgl3:$imguiVersion") {
-        exclude group: "org.lwjgl"
-    }
-    include("io.github.spair:imgui-java-lwjgl3:$imguiVersion")
-    ["linux", "macos", "windows"].each {
-        implementation("io.github.spair:imgui-java-natives-$it:$imguiVersion")
-        include("io.github.spair:imgui-java-natives-$it:$imguiVersion")
-    }
-
     // Baritone (https://github.com/MeteorDevelopment/baritone)
     //implementation "baritone:fabric:${project.minecraft_version}-SNAPSHOT"
     //include "baritone:fabric:${project.minecraft_version}-SNAPSHOT"
-
-    // Orbit from meteor development
-    implementation "meteordevelopment:orbit:${project.orbit_version}"
-    include "meteordevelopment:orbit:${project.orbit_version}"
-    implementation "meteordevelopment:starscript:${project.starscript_version}"
-    include "meteordevelopment:starscript:${project.starscript_version}"
 
     implementation "com.github.LlamaLad7.MixinExtras:mixinextras-fabric:${project.mixin_extras_version}"
     include "com.github.LlamaLad7.MixinExtras:mixinextras-fabric:${project.mixin_extras_version}"
