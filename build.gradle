@@ -19,14 +19,6 @@ repositories {
         url = "https://jitpack.io"
     }
     maven {
-        name = "Meteor Development Libraries"
-        url = "https://meteordev.org/repo/maven"
-    }
-    maven {
-        name = "meteor-maven"
-        url = "https://maven.meteordev.org/releases"
-    }
-    maven {
         name = "modrinth"
         url = "https://api.modrinth.com/maven"
 
@@ -34,21 +26,9 @@ repositories {
             includeGroup "maven.modrinth"
         }
     }
-    maven {
-           name = "meteor"
-           url = "https://maven.meteordev.org/"
-   }
    maven {
         name = 'fabricmc'
         url = 'https://maven.fabricmc.net/'
-    }
-    maven {
-        name = "meteor-maven"
-        url = "https://maven.meteordev.org/releases"
-    }
-    maven {
-        name = "meteor-maven-snapshots"
-        url = "https://maven.meteordev.org/snapshots"
     }
     maven {
         name = "vram"
@@ -94,10 +74,6 @@ dependencies {
     include "com.lukflug:panelstudio-${project.panel_studio_minecraft_version}:${project.panel_studio_version}"
 
     //baritone
-    implementation "baritone:fabric:${project.minecraft_version}-SNAPSHOT"
-    include "baritone:fabric:${project.minecraft_version}-SNAPSHOT"
-
-    // Baritone (https://github.com/MeteorDevelopment/baritone)
     //implementation "baritone:fabric:${project.minecraft_version}-SNAPSHOT"
     //include "baritone:fabric:${project.minecraft_version}-SNAPSHOT"
 
