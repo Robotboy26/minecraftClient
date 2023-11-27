@@ -11,26 +11,20 @@ import com.lukflug.panelstudio.hud.ListComponent;
 import dev.phantom.gui.setting.BooleanSetting;
 import dev.phantom.gui.setting.ColorSetting;
 import dev.phantom.gui.setting.StringSetting;
-import dev.phantom.utils.PhantomLogger;
 
 public class WatermarkModule extends Module {
 	private static WatermarkModule instance;
-	private static final ColorSetting color=new ColorSetting("Text Color","color","The color of the displayed text.",()->true,false,true,new Color(0,0,255),false);
-	private static final BooleanSetting sortUp=new BooleanSetting("Sort Up","sortUp","Whether to align the text from the bottom up.",()->true,false);
-	private static final BooleanSetting sortRight=new BooleanSetting("Sort Right","sortRight","Whether to align the text from right to left.",()->true,false);
-	private static final StringSetting line1=new StringSetting("First Line","line1","The first line of text.",()->true,"PanelStudio");
-	private static final StringSetting line2=new StringSetting("Second Line","line2","The second line of text.",()->true,"Example Mod");
-	private static final StringSetting line3=new StringSetting("Third Line","line3","The third line of text.",()->true,"made by lukflug");
+	private static final ColorSetting color = new ColorSetting("Text Color","color","The color of the displayed text.",()->true,false,true,new Color(0,0,255),false);
+	private static final BooleanSetting sortUp = new BooleanSetting("Sort Up","sortUp","Whether to align the text from the bottom up.",()->true,false);
+	private static final BooleanSetting sortRight = new BooleanSetting("Sort Right","sortRight","Whether to align the text from right to left.",()->true,false);
+	private static final StringSetting line1 = new StringSetting("First Line","line1","The first line of text.",()->true,"PanelStudio");
+	private static final StringSetting line2 = new StringSetting("Second Line","line2","The second line of text.",()->true,"Example Mod");
+	private static final StringSetting line3 = new StringSetting("Third Line","line3","The third line of text.",()->true,"made by lukflug");
 	
 	public WatermarkModule() {
 		super("Watermark","Module that displays text on HUD.",()->true,true);
-		instance=this;
-		settings.add(color);
-		settings.add(sortUp);
-		settings.add(sortRight);
-		settings.add(line1);
-		settings.add(line2);
-		settings.add(line3);
+		instance = this;
+		this.add(color, sortUp, sortRight, line1, line2, line3);
 	}
 
 	public static IFixedComponent getComponent() {

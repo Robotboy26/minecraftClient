@@ -15,11 +15,11 @@ public abstract class Setting<T> implements ILabeled {
 	private T value;
 	
 	public Setting (String displayName, String configName, String description, IBoolean visible, T value) {
-		this.displayName=displayName;
-		this.configName=configName;
-		this.description=description;
-		this.visible=visible;
-		this.value=value;
+		this.displayName = displayName;
+		this.configName = configName;
+		this.description = description;
+		this.visible = visible;
+		this.value = value;
 	}
 
 	public T getValue() {

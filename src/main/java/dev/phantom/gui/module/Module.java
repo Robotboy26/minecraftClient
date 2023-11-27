@@ -14,15 +14,21 @@ import dev.phantom.gui.setting.Setting;
 public class Module implements IModule {
 	public final String displayName,description;
 	public final IBoolean visible;
-	public final List<Setting<?>> settings=new ArrayList<Setting<?>>();
+	public final List<Setting<?>> settings = new ArrayList<Setting<?>>();
 	public final boolean toggleable;
-	private boolean enabled=false;
+	private boolean enabled = false;
 	
 	public Module (String displayName, String description, IBoolean visible, boolean toggleable) {
-		this.displayName=displayName;
-		this.description=description;
-		this.visible=visible;
-		this.toggleable=toggleable;
+		this.displayName = displayName;
+		this.description = description;
+		this.visible = visible;
+		this.toggleable = toggleable;
+	}
+
+	public void add(Object... settings) {
+		for (Object setting : settings) {
+			this.settings.add((Setting<?>) setting);
+		}
 	}
 	
 	@Override
@@ -51,7 +57,7 @@ public class Module implements IModule {
 
 			@Override
 			public void toggle() {
-				enabled=!enabled;
+				enabled =! enabled;
 			}
 		};
 	}
