@@ -89,4 +89,13 @@ public class Module implements IModule {
 	public Stream<ISetting<?>> getSettings() {
 		return settings.stream().filter(setting->setting instanceof ISetting).sorted((a,b)->a.displayName.compareTo(b.displayName)).map(setting->(ISetting<?>)setting);
 	}
+
+	public void setEnabled(Boolean enabled) {
+		this.enabled = enabled;
+		if (enabled) {
+			onEnable();
+		} else {
+			onDisable();
+		}
+	}
 }

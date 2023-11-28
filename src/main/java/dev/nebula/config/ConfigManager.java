@@ -20,6 +20,7 @@ import dev.nebula.gui.settings.Setting;
 import dev.nebula.utils.NebulaLogger;
 import net.minecraft.client.MinecraftClient;
 
+import java.awt.Color;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -118,48 +119,57 @@ public class ConfigManager {
      * Loads the config.
      */
     public void load() {
-        try {
-            NebulaLogger.logger.info("Loading config...");
-            Properties properties = new Properties();
-            properties.loadFromXML(new FileInputStream(file));
+    try {
+        NebulaLogger.logger.info("Loading config...");
+        Properties properties = new Properties();
+        FileInputStream fileInputStream = new FileInputStream(file);
+        properties.loadFromXML(fileInputStream);
 
-            for (Module module : Nebula.getInstance().getModuleManager().getModules()) {
-                if (Boolean.parseBoolean(properties.getProperty(module.getDisplayName() + ".enabled")) != module.isEnabled())
-                    module.setEnabled(Boolean.parseBoolean(properties.getProperty(module.getDisplayName() + ".enabled"))); // Set the enabled state.
-
-                for (Setting setting : module.settings) {
+        for (Module module : Nebula.getInstance().getModuleManager().getModules()) {
+            String enabled = properties.getProperty(module.getDisplayName() + ".enabled");
+            if (enabled != null) {
+                module.setEnabled(Boolean.parseBoolean(enabled));
+            }
+          
+            for (Setting setting : module.settings) {
+                String value = properties.getProperty(module.getDisplayName() + "." + setting.getDisplayName());
+                
+                if (value != null) {
                     switch (setting.getClass().getSimpleName()) {
-                        case "BooleanSetting" -> {
+                        case "BooleanSetting":
                             BooleanSetting booleanSetting = (BooleanSetting) setting;
-                            if (Boolean.parseBoolean(properties.getProperty(module.getDisplayName() + "." + setting.getDisplayName())) != booleanSetting.isEnabled())
-                                booleanSetting.setEnabled(Boolean.parseBoolean(properties.getProperty(module.getDisplayName() + "." + setting.getDisplayName())));
-                        }
-                        case "NumberSetting" -> {
-                            NumberSetting numberSetting = (NumberSetting) setting;
-                            if (Double.parseDouble(properties.getProperty(module.getDisplayName() + "." + setting.getDisplayName())) != numberSetting.getValue())
-                                numberSetting.setValue(Double.parseDouble(properties.getProperty(module.getDisplayName() + "." + setting.getDisplayName())));
-                        }
-                        case "StringSetting" -> {
+                            booleanSetting.setValue(Boolean.parseBoolean(value));
+                            break;
+                        case "ColorSetting":
+                            ColorSetting colorSetting = (ColorSetting) setting;
+                            colorSetting.setValue(Color.decode(value));
+                            break;
+                        case "DoubleSetting":
+                            DoubleSetting doubleSetting = (DoubleSetting) setting;
+                            doubleSetting.setValue(Double.parseDouble(value));
+                            break;
+                        case "EnumSetting":
+                            
+                            break;
+                        case "IntegerSetting":
+                            IntegerSetting integerSetting = (IntegerSetting) setting;
+                            integerSetting.setValue(Integer.parseInt(value));
+                            break;
+                        case "KeybindSetting":
+                            KeybindSetting keybindSetting = (KeybindSetting) setting;
+                            keybindSetting.setKey(Integer.parseInt(value));
+                            break;
+                        case "StringSetting":
                             StringSetting stringSetting = (StringSetting) setting;
-                            if (!properties.getProperty(module.getDisplayName() + "." + setting.getDisplayName()).equals(stringSetting.getString()))
-                                stringSetting.setString(properties.getProperty(module.getDisplayName() + "." + setting.getDisplayName()));
-                        }
-                        case "ModeSetting" -> {
-                            ModeSetting modeSetting = (ModeSetting) setting;
-                            if (!properties.getProperty(module.getDisplayName() + "." + setting.getDisplayName()).equals(modeSetting.getMode()))
-                                modeSetting.setMode(properties.getProperty(module.getDisplayName() + "." + setting.getDisplayName()));
-                        }
-                        case "KeybindSetting" -> {
-                            if (properties.getProperty(module.getDisplayName() + ".key") != null)
-                                module.setKey(Integer.parseInt(properties.getProperty(module.getDisplayName() + ".key"))); // Set the key.
-                        }
-                        default ->
-                                NebulaLogger.logger.error("Unknown setting type: " + setting.getClass().getSimpleName());
+                            stringSetting.setValue(value);
+                            break;
+                        default:
+                            NebulaLogger.logger.error("Unknown setting type: " + setting.getClass().getSimpleName());
                     }
                 }
             }
-        } catch (Exception e) {
-            NebulaLogger.logger.error("Error while loading config!", e);
         }
+    } catch (Exception e) {
+        NebulaLogger.logger.error("Error while loading config!", e);
     }
 }
