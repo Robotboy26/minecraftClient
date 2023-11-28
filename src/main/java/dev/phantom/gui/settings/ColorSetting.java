@@ -1,4 +1,4 @@
-package dev.phantom.gui.setting;
+package dev.phantom.gui.settings;
 
 import java.awt.Color;
 
@@ -6,8 +6,8 @@ import com.lukflug.panelstudio.base.IBoolean;
 import com.lukflug.panelstudio.setting.IColorSetting;
 import com.lukflug.panelstudio.theme.ITheme;
 
-import dev.phantom.gui.module.ClickGUIModule;
-import dev.phantom.gui.module.ClickGUIModule.ColorModel;
+import dev.phantom.module.modules.HUD.ClickGUIModule;
+import dev.phantom.module.modules.HUD.ClickGUIModule.ColorModel;
 
 public class ColorSetting extends Setting<Color> implements IColorSetting {
 	public final boolean hasAlpha,allowsRainbow;

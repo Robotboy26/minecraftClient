@@ -1,4 +1,4 @@
-package dev.phantom.gui.module;
+package dev.phantom.module;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -9,10 +9,13 @@ import com.lukflug.panelstudio.base.IToggleable;
 import com.lukflug.panelstudio.setting.IModule;
 import com.lukflug.panelstudio.setting.ISetting;
 
-import dev.phantom.gui.setting.Setting;
+import dev.phantom.Phantom;
+import dev.phantom.gui.settings.Setting;
+import dev.phantom.utils.PhantomLogger;
+import net.minecraft.util.Formatting;
 
 public class Module implements IModule {
-	public final String displayName,description;
+	public final String displayName, description;
 	public final IBoolean visible;
 	public final List<Setting<?>> settings = new ArrayList<Setting<?>>();
 	public final boolean toggleable;
@@ -25,7 +28,27 @@ public class Module implements IModule {
 		this.toggleable = toggleable;
 	}
 
-	public void add(Object... settings) {
+	/**
+     * Called when the module is enabled.
+     */
+    public void onEnable() {
+        Phantom.getInstance().getEventBus().register(this);
+        //Phantom.getInstance().getConfigManager().save();
+
+        PhantomLogger.info(Formatting.GREEN + "Enabled " + this.displayName + "!");
+    }
+
+    /**
+     * Called when the module is disabled.
+     */
+    public void onDisable() {
+        Phantom.getInstance().getEventBus().unregister(this);
+        //Phantom.getInstance().getConfigManager().save();
+
+        PhantomLogger.info(Formatting.RED + "Disabled " + this.displayName + "!");
+    }
+
+	public void addSettings(Object... settings) {
 		for (Object setting : settings) {
 			this.settings.add((Setting<?>) setting);
 		}

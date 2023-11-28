@@ -12,12 +12,9 @@ import dev.phantom.event.Event;
 public class KeyEvent extends Event {
     private final int key;
     private final int code;
-    private final Status status;
-
     public KeyEvent(int key, int code, Status status) {
         this.key = key;
         this.code = code;
-        this.status = status;
     }
 
     /**

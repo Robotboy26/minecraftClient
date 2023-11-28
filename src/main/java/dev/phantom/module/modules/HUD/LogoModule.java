@@ -1,4 +1,4 @@
-package dev.phantom.gui.module;
+package dev.phantom.module.modules.HUD;
 
 import java.awt.Color;
 import java.awt.Dimension;
@@ -10,9 +10,10 @@ import com.lukflug.panelstudio.base.IToggleable;
 import com.lukflug.panelstudio.component.IFixedComponent;
 import com.lukflug.panelstudio.hud.HUDComponent;
 
-import dev.phantom.gui.setting.BooleanSetting;
-import dev.phantom.gui.setting.ColorSetting;
-import dev.phantom.gui.setting.IntegerSetting;
+import dev.phantom.gui.settings.BooleanSetting;
+import dev.phantom.gui.settings.ColorSetting;
+import dev.phantom.gui.settings.IntegerSetting;
+import dev.phantom.module.Module;
 
 public class LogoModule extends Module {
 	private static LogoModule instance;
@@ -22,10 +23,8 @@ public class LogoModule extends Module {
 	
 	public LogoModule() {
 		super("Logo","Module that displays the PanelStudio icon on HUD.",()->true,true);
-		instance=this;
-		settings.add(rotation);
-		settings.add(parity);
-		settings.add(color);
+		this.addSettings(rotation, parity, color);
+		instance = this;
 	}
 
 	public static IFixedComponent getComponent (IInterface inter) {

@@ -1,4 +1,4 @@
-package dev.phantom.gui.module;
+package dev.phantom.module;
 
 import java.awt.Color;
 import java.util.ArrayList;
@@ -11,28 +11,28 @@ import com.lukflug.panelstudio.setting.ICategory;
 import com.lukflug.panelstudio.setting.IClient;
 import com.lukflug.panelstudio.setting.IModule;
 
-import dev.phantom.gui.setting.BooleanSetting;
-import dev.phantom.gui.setting.ColorSetting;
-import dev.phantom.gui.setting.DoubleSetting;
-import dev.phantom.gui.setting.IntegerSetting;
-import dev.phantom.gui.setting.Setting;
-import dev.phantom.gui.setting.StringSetting;
+import dev.phantom.gui.settings.BooleanSetting;
+import dev.phantom.gui.settings.ColorSetting;
+import dev.phantom.gui.settings.DoubleSetting;
+import dev.phantom.gui.settings.IntegerSetting;
+import dev.phantom.gui.settings.Setting;
+import dev.phantom.gui.settings.StringSetting;
 
 public enum Category implements ICategory {
-	COMBAT("Combat"),EXPLOITS("Exploits"),HUD("HUD"),MISCELLANEOUS("Miscellaneous"),MOVEMENT("Movement"),OTHER("Other"),RENDER("Render"),WORLD("World");
+	COMBAT("Combat"), EXPLOITS("Exploits"), HUD("HUD"), MISCELLANEOUS("Miscellaneous"), MOVEMENT("Movement"), OTHER("Other"), RENDER("Render"), WORLD("World");
 	public final String displayName;
-	public final List<Module> modules=new ArrayList<Module>();
-	public static Random random=new Random();
+	public final List<Module> modules = new ArrayList<Module>();
+	public static Random random = new Random();
 	
 	private Category (String displayName) {
-		this.displayName=displayName;
+		this.displayName = displayName;
 	}
 	
 	public static void init() {
 		for (Category category: Category.values()) {
-			int count=random.nextInt(6)+5;
-			for (int i=0;i<count;i++) {
-				if (category!=OTHER && category!=HUD) category.modules.add(generateRandomModule());
+			int count = random.nextInt(6) + 5;
+			for (int i=0; i<count; i++) {
+				if (category != OTHER && category != HUD) category.modules.add(generateRandomModule());
 			}
 		}
 	}

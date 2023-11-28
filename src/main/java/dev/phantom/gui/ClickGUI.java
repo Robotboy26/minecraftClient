@@ -68,16 +68,16 @@ import com.lukflug.panelstudio.widget.ITextFieldKeys;
 import com.lukflug.panelstudio.widget.Spinner;
 import com.lukflug.panelstudio.widget.ToggleSwitch;
 
-import dev.phantom.gui.module.Category;
-import dev.phantom.gui.module.ClickGUIModule;
-import dev.phantom.gui.module.HUDEditorModule;
-import dev.phantom.gui.module.LogoModule;
-import dev.phantom.gui.module.TabGUIModule;
-import dev.phantom.gui.module.WatermarkModule;
-import dev.phantom.gui.module.ClickGUIModule.Theme;
-import dev.phantom.gui.setting.BooleanSetting;
-import dev.phantom.gui.setting.ColorSetting;
-import dev.phantom.gui.setting.IntegerSetting;
+import dev.phantom.gui.settings.BooleanSetting;
+import dev.phantom.gui.settings.ColorSetting;
+import dev.phantom.gui.settings.IntegerSetting;
+import dev.phantom.module.Category;
+import dev.phantom.module.modules.HUD.ClickGUIModule;
+import dev.phantom.module.modules.HUD.HUDEditorModule;
+import dev.phantom.module.modules.HUD.LogoModule;
+import dev.phantom.module.modules.HUD.TabGUIModule;
+import dev.phantom.module.modules.HUD.WatermarkModule;
+import dev.phantom.module.modules.HUD.ClickGUIModule.Theme;
 import net.minecraft.util.Formatting;
 
 public class ClickGUI extends MinecraftHUDGUI {

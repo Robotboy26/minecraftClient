@@ -14,8 +14,8 @@ import net.minecraft.util.Formatting;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
 public class PhantomLogger {
+    public static MinecraftClient mc = MinecraftClient.getInstance();
     public static final Logger logger = LogManager.getFormatterLogger("Phantom");
     public static int INFO_COLOR = Formatting.LIGHT_PURPLE.getColorValue();
     public static int WARN_COLOR = Formatting.YELLOW.getColorValue();
@@ -33,7 +33,7 @@ public class PhantomLogger {
 
     public static void info(Text t) {
         try {
-            MinecraftClient.getInstance().inGameHud.getChatHud()
+            mc.inGameHud.getChatHud()
                     .addMessage(getText(INFO_COLOR)
                             .append(((MutableText) t).styled(s -> s.withColor(INFO_COLOR))));
         } catch (Exception e) {
@@ -53,7 +53,7 @@ public class PhantomLogger {
 
     public static void warn(Text t) {
         try {
-            MinecraftClient.getInstance().inGameHud.getChatHud()
+            mc.inGameHud.getChatHud()
                     .addMessage(getText(WARN_COLOR)
                             .append(((MutableText) t).styled(s -> s.withColor(WARN_COLOR))));
         } catch (Exception e) {
@@ -73,7 +73,7 @@ public class PhantomLogger {
 
     public static void error(Text t) {
         try {
-            MinecraftClient.getInstance().inGameHud.getChatHud()
+            mc.inGameHud.getChatHud()
                     .addMessage(getText(ERROR_COLOR)
                             .append(((MutableText) t).styled(s -> s.withColor(ERROR_COLOR))));
         } catch (Exception e) {
@@ -92,13 +92,13 @@ public class PhantomLogger {
 
     public static void noPrefix(Text text) {
         try {
-            MinecraftClient.getInstance().inGameHud.getChatHud().addMessage(text);
+            mc.inGameHud.getChatHud().addMessage(text);
         } catch (Exception e) {
             logger.log(Level.INFO, text.getString());
         }
     }
 
     private static MutableText getText(int color) {
-        return Text.literal("haiku$~ ").styled(s -> s.withColor(color));
+        return Text.literal("Phantom$~ ").styled(s -> s.withColor(color));
     }
 }

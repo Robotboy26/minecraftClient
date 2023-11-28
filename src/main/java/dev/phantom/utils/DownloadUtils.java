@@ -57,36 +57,33 @@ public class DownloadUtils {
         }
     }
 
-    public static void downloadFromFile(String modsFolder, String fileName, String fileUrl) {
+    public static void downloadFromFile(String modsFolder, Boolean cloud) {
         if (initiated == false) {
             init(modsFolder);
         }
         // this loads all the mods from the mods.txt file
         // might not even need this because if I was better I could just use the gradle build include to do this too and it would be better but that fine
         // first download the mods.txt file from the github if it does not exist
-        if (!new File("mods.txt").exists()) {
-            getMod("mods.txt", "https://raw.githubusercontent.com/Robotboy26/minecraftClient/master/cloudFiles//mods.txt", ".");
+        if (cloud) {
+            if (!new File("mods.txt").exists()) {
+                getMod("mods.txt", "https://raw.githubusercontent.com/Robotboy26/minecraftClient/master/cloudFiles//mods.txt", ".");
+            }
         }
         try (BufferedReader br = new BufferedReader(new FileReader("mods.txt"))) {
             String line;
             while ((line = br.readLine()) != null) {
-                String url = line.split("|")[0];
-                String group = line.split("|")[1];
-                String[] parts = url.split("/");
-                if (group == "performance") {
+                String[] parts = line.split("/");
                     try {
                         getMod(parts[parts.length - 1], line, modsFolder);
+                        PhantomLogger.info("Downloaded mod! " + parts[parts.length - 1]);
                     } catch (Exception e) {
                         getMod(line, line, modsFolder);
+                        PhantomLogger.info("Error while downloading mod from file: " + e.getMessage());
                     }
-                } else {
                 }
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
+        } catch (Exception e) {
+            System.err.println("Error while downloading mods from file: " + e.getMessage());
         }
-        //HaikuLogger.logger.info("Loaded mods!");
-        //HaikuLogger.logger.info("If this is your first time running haiku, please restart your game!");
     }
 
     public static void downloadMod(String url, String modsFolder, String modName) throws IOException {
@@ -103,10 +100,9 @@ public class DownloadUtils {
                 out.write(buffer, 0, len);
                 }   
             }
-        //HaikuLogger.logger.info("Downloaded mod!" + modName);
     }
     
-    public void loadMod() {
+    public static void loadMod() {
         Path modsFolder;
         if (System.getProperty("user.dir").endsWith("mods")) {
             modsFolder = Path.of("");
@@ -117,7 +113,7 @@ public class DownloadUtils {
 
         if (modFilePath.toFile().exists()) {
             try {
-                URLClassLoader classLoader = new URLClassLoader(new URL[] { modFilePath.toUri().toURL() }, getClass().getClassLoader());
+                URLClassLoader classLoader = new URLClassLoader(new URL[] { modFilePath.toUri().toURL() }, DownloadUtils.class.getClassLoader());
 
                 ServiceLoader<ModInitializer> initializerLoader = ServiceLoader.load(ModInitializer.class, classLoader);
                 Iterator<ModInitializer> iterator = initializerLoader.iterator();
@@ -137,8 +133,13 @@ public class DownloadUtils {
 
     public static void getMod(String modName, String modUrl, String modsFolder) {
         if (!new File(modsFolder, modName).exists()) {
+            try {
+                downloadMod(modUrl, modsFolder, modName);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         } else {
-            //HaikuLogger.logger.info("Already exists not downloading again! " + modName);
+            PhantomLogger.info("Mod already exists! " + modName);
         }
     }
 

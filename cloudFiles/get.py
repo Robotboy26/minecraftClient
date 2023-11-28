@@ -1,35 +1,38 @@
-import requests
-from bs4 import BeautifulSoup
+import modrinth
+import tqdm
 
-def search_and_install_mod(mod_name):
-    # Search for the mod on Modrinth
-    search_url = f"https://modrinth.com/search?q={mod_name}"
-    response = requests.get(search_url)
-    soup = BeautifulSoup(response.text, 'html.parser')
+def getVersion(mod, version):
+    results = modrinth.Projects.Search(mod)
+    print(f"Mod {results.hits[0].name} with the latest version {results.hits[0].versions[0]} has been found with version {results.hits[0]}")
+    project = modrinth.Projects.ModrinthProject(results.hits[0].id)
+    version = project.getVersion(project.versions[0])
+    for version in tqdm.tqdm(reversed(project.versions)):
+        modproject = project.getVersion(version)
+        if targetVersion in modproject.gameVersions:
+            print(f"found {modproject.gameVersions[0]}")
+            return modproject
+        else:
+            print(f"did not find the correct version instead found {modproject.gameVersions[0]}")
+    
+    return None
 
-    # Find the first search result
-    search_results = soup.find_all('div', class_='search-result')
-    if len(search_results) > 0:
-        first_result = search_results[0]
-        mod_slug = first_result['data-slug']
+inputFile = "input.txt"
+outputFile = "output.txt"
 
-        # Get the mod page
-        mod_url = f"https://modrinth.com/mod/{mod_slug}"
-        response = requests.get(mod_url)
-        soup = BeautifulSoup(response.text, 'html.parser')
+# load the wanted mods
+wantedMods = open(inputFile, "r").read().splitlines()
+outUrls = []
 
-        # Find the latest version's download link
-        latest_version = soup.find('div', class_='version-card')
-        download_link = latest_version.find('a', class_='download-button')['href']
+targetVersion = "1.20.2"
 
-        # Download the jar file
-        response = requests.get(download_link)
-        with open(f"{mod_name}.jar", 'wb') as file:
-            file.write(response.content)
+print(f"program started with {len(wantedMods)} mods. Note that this program is not optimized and will take a while to run.")
 
-        print(f"Successfully installed {mod_name}!")
-    else:
-        print(f"No results found for {mod_name}.")
+for mod in wantedMods:
+    project = getVersion(mod, targetVersion)
 
-# Example usage
-search_and_install_mod('iris')
+    url = project.files[0]["url"] # Returns the hash of the primary file
+    print(url) # Returns the download URL of the primary file
+    outUrls.append(url)
+
+with open(outputFile, "w") as f:
+    f.write("\n".join(outUrls))

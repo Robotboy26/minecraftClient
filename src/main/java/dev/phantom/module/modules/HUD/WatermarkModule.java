@@ -1,4 +1,4 @@
-package dev.phantom.gui.module;
+package dev.phantom.module.modules.HUD;
 
 import java.awt.Color;
 import java.awt.Point;
@@ -8,9 +8,10 @@ import com.lukflug.panelstudio.component.IFixedComponent;
 import com.lukflug.panelstudio.hud.HUDList;
 import com.lukflug.panelstudio.hud.ListComponent;
 
-import dev.phantom.gui.setting.BooleanSetting;
-import dev.phantom.gui.setting.ColorSetting;
-import dev.phantom.gui.setting.StringSetting;
+import dev.phantom.gui.settings.BooleanSetting;
+import dev.phantom.gui.settings.ColorSetting;
+import dev.phantom.gui.settings.StringSetting;
+import dev.phantom.module.Module;
 
 public class WatermarkModule extends Module {
 	private static WatermarkModule instance;
@@ -24,7 +25,7 @@ public class WatermarkModule extends Module {
 	public WatermarkModule() {
 		super("Watermark","Module that displays text on HUD.",()->true,true);
 		instance = this;
-		this.add(color, sortUp, sortRight, line1, line2, line3);
+		this.addSettings(color, sortUp, sortRight, line1, line2, line3);
 	}
 
 	public static IFixedComponent getComponent() {

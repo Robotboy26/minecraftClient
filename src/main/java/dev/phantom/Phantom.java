@@ -13,16 +13,13 @@ import java.nio.file.Path;
 import org.lwjgl.glfw.GLFW;
 
 import dev.phantom.command.CommandManager;
+import dev.phantom.eventbus.EventBus;
 import dev.phantom.gui.ClickGUI;
-import dev.phantom.gui.module.Category;
-import dev.phantom.gui.module.ClickGUIModule;
-import dev.phantom.gui.module.HUDEditorModule;
-import dev.phantom.gui.module.LogoModule;
-import dev.phantom.gui.module.TabGUIModule;
-import dev.phantom.gui.module.WatermarkModule;
-
+import dev.phantom.module.ModuleManager;
+import dev.phantom.module.modules.HUD.ClickGUIModule;
+import dev.phantom.module.modules.HUD.HUDEditorModule;
 import dev.phantom.utils.DownloadUtils;
-
+import dev.phantom.utils.PhantomLogger;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
@@ -35,10 +32,11 @@ public class Phantom implements ModInitializer {
     public static final String MOD_NAME = "Phantom";
     public static final String MOD_VERSION = "0.1";
     public static final MinecraftClient mc = MinecraftClient.getInstance();
-    //private final ModuleManager MODULE_MANAGER = new ModuleManager();
+    private final EventBus EVENT_BUS = new EventBus();
+    private final ModuleManager MODULE_MANAGER = new ModuleManager();
     private final CommandManager COMMAND_MANAGER = new CommandManager();
     private static Phantom INSTANCE;
-    private Path haikuFolder;
+    private Path PhantomFolder;
     public static long initTime;
 
     // gui stuff
@@ -51,40 +49,35 @@ public class Phantom implements ModInitializer {
     }
 
     /**
-     * Gets the instance of Haiku.
+     * Gets the instance of Phantom.
      */
     public static Phantom getInstance() {
         return INSTANCE;
     }
 
     /**
-     * Called when haiku is initialized.
+     * Called when Phantom is initialized.
      */
     @Override
     public void onInitialize() {
+        PhantomLogger.info("Starting Phantom Client version: " + MOD_VERSION);
         initTime = System.currentTimeMillis();
-		haikuFolder = createHaikuFolder();
+		PhantomFolder = createPhantomFolder();
 
         // init gui
-        Category.init();
-		Category.OTHER.modules.add(new ClickGUIModule());
-		Category.OTHER.modules.add(new HUDEditorModule());
-		Category.HUD.modules.add(new TabGUIModule());
-		Category.HUD.modules.add(new WatermarkModule());
-		Category.HUD.modules.add(new LogoModule());
 		ClientTickEvents.END_CLIENT_TICK.register(client -> {
 			if (!GUIenabled) {
-				for (int i=32;i<keys.length;i++) keys[i]=GLFW.glfwGetKey(MinecraftClient.getInstance().getWindow().getHandle(),i)==GLFW.GLFW_PRESS;
-				GUI=new ClickGUI();
-				HudRenderCallback.EVENT.register((cli,tickDelta)->GUI.render());
-				GUIenabled=true;
+				for (int i = 32; i<keys.length; i++) keys[i] = GLFW.glfwGetKey(MinecraftClient.getInstance().getWindow().getHandle(),i) == GLFW.GLFW_PRESS;
+				GUI = new ClickGUI();
+				HudRenderCallback.EVENT.register((cli,tickDelta) -> GUI.render());
+				GUIenabled = true;
 			}
-			for (int i=32;i<keys.length;i++) {
-				if (keys[i]!=(GLFW.glfwGetKey(MinecraftClient.getInstance().getWindow().getHandle(),i)==GLFW.GLFW_PRESS)) {
-					keys[i]=!keys[i];
+			for (int i = 32; i<keys.length; i++) {
+				if (keys[i] != (GLFW.glfwGetKey(MinecraftClient.getInstance().getWindow().getHandle(),i) == GLFW.GLFW_PRESS)) {
+					keys[i] =! keys[i];
 					if (keys[i]) {
-						if (i==ClickGUIModule.keybind.getKey()) GUI.enterGUI();
-						if (i==HUDEditorModule.keybind.getKey()) GUI.enterHUDEditor();
+						if (i == ClickGUIModule.keybind.getKey()) GUI.enterGUI();
+						if (i == HUDEditorModule.keybind.getKey()) GUI.enterHUDEditor();
 						GUI.handleKeyEvent(i);
 					}
 				}
@@ -92,23 +85,17 @@ public class Phantom implements ModInitializer {
         });   
 
         // loading mods "settings"
-        Boolean installMods = false;
+        Boolean installMods = true;
+        Boolean cloud = false;
         String modfolder = "mods";
 
         if (installMods) {
+            PhantomLogger.info("Installing mods...");
             DownloadUtils.init(modfolder);
-            // download shaders (disabled by default but can be enabled from in the client (at somepoint you could make a hack that would enable it)(in like a more vinilla setting))
+            DownloadUtils.downloadFromFile(modfolder, cloud);
             DownloadUtils.getShader();
             }
         }
-
-            //Path altsFile = haikuFolder.resolve("alts.encrypted_json");
-            //Path encFolder = Encryption.chooseEncryptionFolder();
-            //altManager = new AltManager(altsFile, encFolder);
-
-            //HaikuLogger.logger.info(MOD_NAME + " v" + MOD_VERSION + " (phase 1) has initialized!");
-            //CONFIG_MANAGER.load();
-            //HaikuLogger.logger.info("Loaded config!");
 
         // Save configs on shutdown
     //     ClientLifecycleEvents.CLIENT_STOPPING.register(client -> {
@@ -117,14 +104,14 @@ public class Phantom implements ModInitializer {
     //     });
     // }
 
-    private Path createHaikuFolder()
+    private Path createPhantomFolder()
 	{
 		Path dotMinecraftFolder = mc.runDirectory.toPath().normalize();
-		Path haikuFolder = dotMinecraftFolder.resolve("haiku");
+		Path PhantomFolder = dotMinecraftFolder.resolve("phantom");
 		
 		try
 		{
-			Files.createDirectories(haikuFolder);
+			Files.createDirectories(PhantomFolder);
 			
 		}catch(IOException e)
 		{
@@ -132,27 +119,27 @@ public class Phantom implements ModInitializer {
 				"Couldn't create .minecraft/haiku folder.", e);
 		}
 		
-		return haikuFolder;
+		return PhantomFolder;
 	}
 
-    public Path getHaikuFolder()
+    public Path getPhantomFolder()
 	{
-		return haikuFolder;
+		return PhantomFolder;
 	}
 
     /**
      * Gets the event bus.
      */
-    //public EventBus getEventBus() {
-    //    return EVENT_BUS;
-    //}
+    public EventBus getEventBus() {
+        return EVENT_BUS;
+    }
 
     /**
      * Gets the module manager.
      */
-    //public ModuleManager getModuleManager() {
-    //    return MODULE_MANAGER;
-    //}
+    public ModuleManager getModuleManager() {
+        return MODULE_MANAGER;
+    }
 
     /**
      * Gets the command manager.
@@ -160,13 +147,6 @@ public class Phantom implements ModInitializer {
     public CommandManager getCommandManager() {
         return COMMAND_MANAGER;
     }
-
-    /**
-     * Gets the setting manager.
-     */
-    //public SettingManager getSettingManager() {
-    //    return SETTING_MANAGER;
-    //}
 
     /**
      * Gets the config manager.

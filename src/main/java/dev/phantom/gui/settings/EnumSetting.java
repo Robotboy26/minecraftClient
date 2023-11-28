@@ -1,4 +1,4 @@
-package dev.phantom.gui.setting;
+package dev.phantom.gui.settings;
 
 import java.util.Arrays;
 

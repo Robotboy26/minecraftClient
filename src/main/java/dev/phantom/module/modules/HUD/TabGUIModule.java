@@ -1,4 +1,4 @@
-package dev.phantom.gui.module;
+package dev.phantom.module.modules.HUD;
 
 import java.awt.Color;
 import java.awt.Point;
@@ -17,16 +17,17 @@ import com.lukflug.panelstudio.tabgui.TabGUI;
 import com.lukflug.panelstudio.theme.IColorScheme;
 import com.lukflug.panelstudio.theme.ITheme;
 
-import dev.phantom.gui.setting.ColorSetting;
+import dev.phantom.gui.settings.ColorSetting;
+import dev.phantom.module.Module;
 
 public class TabGUIModule extends Module {
 	private static TabGUIModule instance;
 	private static ITabGUITheme theme;
 	
 	public TabGUIModule() {
-		super("TabGUI","HUD module that lets toggle modules.",()->true,true);
-		instance=this;
-		theme=new StandardTheme(new IColorScheme() {
+		super("TabGUI", "HUD module that lets toggle modules.", ()->true, true);
+		instance = this;
+		theme = new StandardTheme(new IColorScheme() {
 			@Override
 			public void createSetting(ITheme theme, String name, String description, boolean hasAlpha, boolean allowsRainbow, Color color, boolean rainbow) {
 				ColorSetting setting=new ColorSetting(name,name,description,()->true,allowsRainbow,hasAlpha,color,rainbow);
