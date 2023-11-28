@@ -8,7 +8,6 @@
 package dev.nebula.config;
 
 import dev.nebula.Nebula;
-import dev.nebula.module.Category;
 import dev.nebula.module.Module;
 import dev.nebula.gui.settings.BooleanSetting;
 import dev.nebula.gui.settings.ColorSetting;
@@ -70,18 +69,18 @@ public class ConfigManager {
             NebulaLogger.logger.info("Saving config...");
             Properties properties = new Properties();
 
-            for (Module module : Category.getModules()) {
+            for (Module module : Nebula.getInstance().getModuleManager().getModules()) {
                 properties.setProperty(module.getDisplayName() + ".enabled", String.valueOf(module.isEnabled()));
 
                 for (Setting setting : module.settings) {
                     switch (setting.getClass().getSimpleName()) {
                         case "BooleanSetting" -> {
                             BooleanSetting booleanSetting = (BooleanSetting) setting;
-                            properties.setProperty(module.getDisplayName() + "." + setting.getDisplayName(), String.valueOf(booleanSetting.isEnabled()));
+                            properties.setProperty(module.getDisplayName() + "." + setting.getDisplayName(), String.valueOf(booleanSetting.getValue()));
                         }
                         case "ColorSetting" -> {
                             ColorSetting colorSetting = (ColorSetting) setting;
-                            properties.setProperty(module.getDisplayName() + "." + setting.getDisplayName(), String.valueOf(colorSetting.color()));
+                            properties.setProperty(module.getDisplayName() + "." + setting.getDisplayName(), String.valueOf(colorSetting.getValue()));
                         }
                         case "DoubleSetting" -> {
                             DoubleSetting doubleSetting = (DoubleSetting) setting;
@@ -101,7 +100,7 @@ public class ConfigManager {
                         }
                         case "StringSetting" -> {
                             StringSetting stringSetting = (StringSetting) setting;
-                            properties.setProperty(module.getDisplayName() + "." + setting.getDisplayName(), String.valueOf(stringSetting.getString()));
+                            properties.setProperty(module.getDisplayName() + "." + setting.getDisplayName(), String.valueOf(stringSetting.getValue()));
                         }
                         default ->
                                 NebulaLogger.logger.error("Unknown setting type: " + setting.getClass().getSimpleName());
