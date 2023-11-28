@@ -60,7 +60,7 @@ public class Nebula implements ModInitializer {
      */
     @Override
     public void onInitialize() {
-        NebulaLogger.info("Starting " + Nebula.MOD_NAME + " version: " + MOD_VERSION);
+        NebulaLogger.info("Starting " + MOD_NAME + " version: " + MOD_VERSION);
         initTime = System.currentTimeMillis();
 		NebulaFolder = createNebulaFolder();
 
@@ -116,7 +116,7 @@ public class Nebula implements ModInitializer {
 		}catch(IOException e)
 		{
 			throw new RuntimeException(
-				"Couldn't create .minecraft/haiku folder.", e);
+				"Couldn't create nebula folder.", e);
 		}
 		
 		return NebulaFolder;

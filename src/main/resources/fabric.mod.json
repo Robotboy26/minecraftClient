@@ -12,7 +12,7 @@
     "repo": "ummmm"
   },
   "license": "GPL-3.0",
-  "icon": "assets/haiku/icon.png",
+  "icon": "assets/nebula/icon.png",
   "environment": "client",
   "entrypoints": {
     "main": [
