@@ -1,5 +1,7 @@
 package dev.nebula.module;
 
+import java.util.stream.Stream;
+
 import dev.nebula.module.modules.HUD.*;
 
 public class ModuleManager {
@@ -27,5 +29,25 @@ public class ModuleManager {
         // Render modules
 
         // World modules
+    }
+
+    // get all modules
+    public Module[] getModules() {
+        return Stream.of(Category.values()).flatMap(category -> category.modules.stream()).toArray(Module[]::new);
+    }
+
+    /**
+     * Gets the module by name.
+     */
+    public Module getModuleByName(String name) {
+        for (Category category : Category.values()) {
+            for (Module module : category.modules) {
+                if (module.getDisplayName().equalsIgnoreCase(name)) {
+                    return module;
+                }
+            }
+        }
+
+        return null;
     }
 }
