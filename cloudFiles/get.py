@@ -17,7 +17,7 @@ def getVersion(mod, version):
     return None
 
 inputFile = "input.txt"
-outputFile = "output.txt"
+outputFile = "mods.txt"
 
 # load the wanted mods
 wantedMods = open(inputFile, "r").read().splitlines()

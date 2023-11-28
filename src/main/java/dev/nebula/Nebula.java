@@ -86,7 +86,7 @@ public class Nebula implements ModInitializer {
 
         // loading mods "settings"
         Boolean installMods = true;
-        Boolean cloud = false;
+        Boolean cloud = true;
         String modfolder = "mods";
 
         if (installMods) {
