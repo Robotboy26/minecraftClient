@@ -149,7 +149,6 @@ public class ConfigManager {
                             doubleSetting.setValue(Double.parseDouble(value));
                             break;
                         case "EnumSetting":
-                            
                             break;
                         case "IntegerSetting":
                             IntegerSetting integerSetting = (IntegerSetting) setting;
@@ -165,11 +164,12 @@ public class ConfigManager {
                             break;
                         default:
                             NebulaLogger.logger.error("Unknown setting type: " + setting.getClass().getSimpleName());
+                        }
                     }
                 }
             }
+        } catch (Exception e) {
+            NebulaLogger.logger.error("Error while loading config!", e);
         }
-    } catch (Exception e) {
-        NebulaLogger.logger.error("Error while loading config!", e);
     }
 }
