@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
-  "id": "phantom",
+  "id": "nebula",
   "version": "0.1",
-  "name": "Phantom",
+  "name": "nebula",
   "description": "Open source base client for the latest Fabric version.",
   "authors": [
     "me"
@@ -16,11 +16,11 @@
   "environment": "client",
   "entrypoints": {
     "main": [
-      "dev.phantom.Phantom"
+      "dev.nebula.Nebula"
     ]
   },
   "mixins": [
-    "phantom.mixins.json"
+    "nebula.mixins.json"
   ],
   "depends": {
     "fabricloader": ">=0.14.24",

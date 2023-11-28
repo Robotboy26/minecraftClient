@@ -1,0 +1,22 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "dev.nebula.mixin",
+  "compatibilityLevel": "JAVA_17",
+  "mixins": [
+    "AccessorFrustum",
+    "AccessorMinecraftClient",
+    "AccessorWorldRenderer",
+    "BufferBuilderAccessor",
+    "BufferRendererAccessor",
+    "ClientPlayerEntityAccessor",
+    "ClientPlayNetworkHandlerAccessor",
+    "MinecraftClientMixin",
+    "TitleScreenMixin"
+  ],
+  "client": [
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}
