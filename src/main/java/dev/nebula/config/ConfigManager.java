@@ -27,11 +27,12 @@ import java.io.FileOutputStream;
 import java.util.Properties;
 
 public class ConfigManager {
+    private static MinecraftClient mc = MinecraftClient.getInstance();
     private final File file;
     private final File mainDirectory;
 
     public ConfigManager() {
-        mainDirectory = new File(MinecraftClient.getInstance().runDirectory, "haiku");
+        mainDirectory = new File(mc.runDirectory, "haiku");
 
         if (!mainDirectory.exists()) {
             mainDirectory.mkdir();

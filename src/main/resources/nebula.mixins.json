@@ -10,7 +10,6 @@
     "BufferBuilderAccessor",
     "BufferRendererAccessor",
     "ClientPlayerEntityAccessor",
-    "ClientPlayNetworkHandlerAccessor",
     "MinecraftClientMixin",
     "TitleScreenMixin"
   ],

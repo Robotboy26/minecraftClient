@@ -38,6 +38,9 @@ repositories {
 		name = "lukflug"
 		url = "https://lukflug.github.io/maven/"
 	}
+    flatDir {
+			dirs 'libs'
+		}
 }
 
 configurations {
@@ -63,8 +66,8 @@ dependencies {
     modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
 
     // fabric kotlin intigration
-    implementation 'net.fabricmc:fabric-language-kotlin:1.10.10+kotlin.1.9.10'
-    include 'net.fabricmc:fabric-language-kotlin:1.10.10+kotlin.1.9.10'
+    implementation 'net.fabricmc:fabric-language-kotlin:1.10.15+kotlin.1.9.21'
+    include 'net.fabricmc:fabric-language-kotlin:1.10.15+kotlin.1.9.21'
 
     // GUI package
     // make sure to replace the version number by the newest version
@@ -74,6 +77,8 @@ dependencies {
     include "com.lukflug:panelstudio-${project.panel_studio_minecraft_version}:${project.panel_studio_version}"
 
     //baritone
+    implementation files('cloudFiles/libs/baritone.jar')
+    include files('cloudFiles/libs/baritone.jar')
     //implementation "baritone:fabric:${project.minecraft_version}-SNAPSHOT"
     //include "baritone:fabric:${project.minecraft_version}-SNAPSHOT"
 
@@ -81,10 +86,6 @@ dependencies {
     include "com.github.LlamaLad7.MixinExtras:mixinextras-fabric:${project.mixin_extras_version}"
     annotationProcessor "com.github.LlamaLad7.MixinExtras:mixinextras-fabric:${project.mixin_extras_version}"
 }
-
-//loom {
-//	accessWidenerPath = file("src/main/resources/haiku.accesswidener")
-//}
 
 processResources {
     inputs.property "version", project.version

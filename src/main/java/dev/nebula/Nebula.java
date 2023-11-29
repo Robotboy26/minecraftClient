@@ -24,6 +24,7 @@ import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.gui.screen.ChatScreen;
 
 /**
  * Main class for haiku.
@@ -58,29 +59,34 @@ public class Nebula implements ModInitializer {
     /**
      * Called when Nebula is initialized.
      */
+
     @Override
     public void onInitialize() {
         NebulaLogger.info("Starting " + MOD_NAME + " version: " + MOD_VERSION);
         initTime = System.currentTimeMillis();
-		NebulaFolder = createNebulaFolder();
+        NebulaFolder = createNebulaFolder();
 
         // init gui
-		ClientTickEvents.END_CLIENT_TICK.register(client -> {
-			if (!GUIenabled) {
-				for (int i = 32; i<keys.length; i++) keys[i] = GLFW.glfwGetKey(MinecraftClient.getInstance().getWindow().getHandle(),i) == GLFW.GLFW_PRESS;
-				GUI = new ClickGUI();
-				HudRenderCallback.EVENT.register((cli,tickDelta) -> GUI.render());
-				GUIenabled = true;
-			}
-			for (int i = 32; i<keys.length; i++) {
-				if (keys[i] != (GLFW.glfwGetKey(MinecraftClient.getInstance().getWindow().getHandle(),i) == GLFW.GLFW_PRESS)) {
-					keys[i] =! keys[i];
-					if (keys[i]) {
-						if (i == ClickGUIModule.keybind.getKey()) GUI.enterGUI();
-						if (i == HUDEditorModule.keybind.getKey()) GUI.enterHUDEditor();
-						GUI.handleKeyEvent(i);
-					}
-				}
+        ClientTickEvents.END_CLIENT_TICK.register(client -> {
+            if (!GUIenabled) {
+                for (int i = 32; i<keys.length; i++) keys[i] = GLFW.glfwGetKey(MinecraftClient.getInstance().getWindow().getHandle(),i) == GLFW.GLFW_PRESS;
+                GUI = new ClickGUI();
+                HudRenderCallback.EVENT.register((cli,tickDelta) -> GUI.render());
+                GUIenabled = true;
+            }
+            if (mc.currentScreen instanceof ChatScreen) {
+                // Disable keybinds when chat is open
+                return;
+            }
+            for (int i = 32; i<keys.length; i++) {
+                if (keys[i] != (GLFW.glfwGetKey(MinecraftClient.getInstance().getWindow().getHandle(),i) == GLFW.GLFW_PRESS)) {
+                    keys[i] =! keys[i];
+                    if (keys[i]) {
+                        if (i == ClickGUIModule.keybind.getKey()) GUI.enterGUI();
+                        if (i == HUDEditorModule.keybind.getKey()) GUI.enterHUDEditor();
+                        GUI.handleKeyEvent(i);
+                    }
+                }
             }
         });   
 
@@ -94,8 +100,8 @@ public class Nebula implements ModInitializer {
             DownloadUtils.init(modfolder);
             DownloadUtils.downloadFromFile(modfolder, cloud);
             DownloadUtils.getShader();
-            }
         }
+    }
 
         // Save configs on shutdown
     //     ClientLifecycleEvents.CLIENT_STOPPING.register(client -> {

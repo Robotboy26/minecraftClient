@@ -1,4 +1,4 @@
-# Haiku
+# Nebula
 <img style="width: 50px; height: 50px;" src="https://github.com/V1li/haiku/blob/master/src/main/resources/assets/haiku/icon.png" alt="logo">
 
 Open source base client for the latest Fabric version.
