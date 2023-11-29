@@ -66,7 +66,7 @@ public class DownloadUtils {
         // first download the mods.txt file from the github if it does not exist
         if (cloud) {
             if (!new File("mods.txt").exists()) {
-                getMod("mods.txt", "https://raw.githubusercontent.com/Robotboy26/minecraftClient/master/cloudFiles//mods.txt", ".");
+                getMod("mods.txt", "https://raw.githubusercontent.com/Robotboy26/minecraftClient/master/cloudFiles/mods.txt", ".");
             }
         }
         try (BufferedReader br = new BufferedReader(new FileReader("mods.txt"))) {
@@ -148,6 +148,14 @@ public class DownloadUtils {
             String shaderUrl = "https://www.mediafire.com/file/stwyz8u89eivvq6/kuda-shaders-v6.5.26.zip/file";
             String[] shaderUrlPart = shaderUrl.split("/");
             getMod(shaderUrlPart[shaderUrlPart.length - 2], shaderUrl, "shaderpacks");
+        }
+    }
+
+    public static void getBaritone(Boolean cloud) {
+        if (cloud) {
+            if (!new File("mods/baritone.jar").exists()) {
+                getMod("baritone.jar", "https://raw.githubusercontent.com/Robotboy26/minecraftClient/master/cloudFiles/libs/baritone.jar", ".mods");
+            }
         }
     }
 }
