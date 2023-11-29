@@ -13,6 +13,7 @@ import java.nio.file.Path;
 import org.lwjgl.glfw.GLFW;
 
 import dev.nebula.command.CommandManager;
+import dev.nebula.config.ConfigManager;
 import dev.nebula.eventbus.EventBus;
 import dev.nebula.gui.ClickGUI;
 import dev.nebula.module.ModuleManager;
@@ -36,6 +37,7 @@ public class Nebula implements ModInitializer {
     private final EventBus EVENT_BUS = new EventBus();
     private final ModuleManager MODULE_MANAGER = new ModuleManager();
     private final CommandManager COMMAND_MANAGER = new CommandManager();
+    private final ConfigManager CONFIG_MANAGER = new ConfigManager();
     private static Nebula INSTANCE;
     private Path NebulaFolder;
     public static long initTime;
@@ -99,16 +101,20 @@ public class Nebula implements ModInitializer {
             NebulaLogger.info("Installing mods...");
             DownloadUtils.init(modfolder);
             DownloadUtils.downloadFromFile(modfolder, cloud);
+            DownloadUtils.getBaritone(cloud);
             DownloadUtils.getShader();
         }
     }
 
-        // Save configs on shutdown
-    //     ClientLifecycleEvents.CLIENT_STOPPING.register(client -> {
-    //         //CONFIG_MANAGER.save();
-    //         //HaikuLogger.logger.info("Saved config!");
-    //     });
-    // }
+    /**
+     * Called when Nebula is stopped.
+     */
+    // save the config
+    // ClientLifecycleEvents.CLIENT_STOPPING.@register((client) -> {
+    //         CONFIG_MANAGER.save();
+    //         NebulaLogger.logger.info("Configurations saved successfully.");
+    // });
+
 
     private Path createNebulaFolder()
 	{
@@ -157,7 +163,7 @@ public class Nebula implements ModInitializer {
     /**
      * Gets the config manager.
      */
-    //public ConfigManager getConfigManager() {
-    //    return CONFIG_MANAGER;
-    //}
+    public ConfigManager getConfigManager() {
+       return CONFIG_MANAGER;
+    }
 }
