@@ -23,7 +23,7 @@ outputFile = "mods.txt"
 wantedMods = open(inputFile, "r").read().splitlines()
 outUrls = []
 
-targetVersion = "1.20.4"
+targetVersion = "1.20.3"
 
 print(f"program started with {len(wantedMods)} mods. Note that this program is not optimized and will take a while to run.")
 

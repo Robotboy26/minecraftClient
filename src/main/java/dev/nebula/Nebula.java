@@ -16,11 +16,14 @@ import dev.nebula.command.CommandManager;
 import dev.nebula.config.ConfigManager;
 import dev.nebula.eventbus.EventBus;
 import dev.nebula.gui.ClickGUI;
+import dev.nebula.mixinterface.IMinecraftClient;
 import dev.nebula.module.ModuleManager;
 import dev.nebula.module.modules.HUD.ClickGUIModule;
 import dev.nebula.module.modules.HUD.HUDEditorModule;
 import dev.nebula.utils.DownloadUtils;
 import dev.nebula.utils.NebulaLogger;
+import dev.nebula.utils.altmanager.AltManager;
+import dev.nebula.utils.altmanager.Encryption;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
@@ -28,16 +31,18 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.ChatScreen;
 
 /**
- * Main class for haiku.
+ * Main class for nebula.
  */
 public class Nebula implements ModInitializer {
     public static final String MOD_NAME = "Nebula Client";
     public static final String MOD_VERSION = "0.1";
     public static final MinecraftClient mc = MinecraftClient.getInstance();
+    public static IMinecraftClient imc = (IMinecraftClient)mc;
     private final EventBus EVENT_BUS = new EventBus();
     private final ModuleManager MODULE_MANAGER = new ModuleManager();
     private final CommandManager COMMAND_MANAGER = new CommandManager();
     private final ConfigManager CONFIG_MANAGER = new ConfigManager();
+    private AltManager ALT_MANAGER;
     private static Nebula INSTANCE;
     private Path NebulaFolder;
     public static long initTime;
@@ -93,7 +98,7 @@ public class Nebula implements ModInitializer {
         });   
 
         // loading mods "settings"
-        Boolean installMods = false;
+        Boolean installMods = true;
         Boolean cloud = true;
         String modfolder = "mods";
 
@@ -101,10 +106,14 @@ public class Nebula implements ModInitializer {
             NebulaLogger.info("Installing mods...");
             DownloadUtils.init(modfolder);
             DownloadUtils.downloadFromFile(modfolder, cloud);
-            DownloadUtils.getBaritone(cloud);
             DownloadUtils.getShader();
             NebulaLogger.info("Are mods intalled and initiated " + DownloadUtils.modInstalled());
         }
+
+        // start alt manager
+        Path altsFile = Nebula.getInstance().createNebulaFolder().resolve("alts.encrypted_json");
+        Path encFolder = Encryption.chooseEncryptionFolder();
+        ALT_MANAGER = new AltManager(altsFile, encFolder);
     }
 
     /**
@@ -166,5 +175,12 @@ public class Nebula implements ModInitializer {
      */
     public ConfigManager getConfigManager() {
        return CONFIG_MANAGER;
+    }
+
+    /**
+     * Gets the alt manager
+     */
+    public AltManager getAltManager() {
+        return ALT_MANAGER;
     }
 }

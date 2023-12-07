@@ -32,7 +32,7 @@ public class ConfigManager {
     private final File mainDirectory;
 
     public ConfigManager() {
-        mainDirectory = new File(mc.runDirectory, "haiku");
+        mainDirectory = new File(mc.runDirectory, "Nebula");
 
         if (!mainDirectory.exists()) {
             mainDirectory.mkdir();

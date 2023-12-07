@@ -153,13 +153,6 @@ public class DownloadUtils {
         }
     }
 
-    public static void getBaritone(Boolean cloud) {
-        if (cloud) {
-            if (!new File("mods/baritone.jar").exists()) {
-                getMod("baritone.jar", "https://raw.githubusercontent.com/Robotboy26/minecraftClient/master/cloudFiles/libs/baritone.jar", ".mods");
-            }
-        }
-    }
     public static Boolean modInstalled() {
         return installed;
     }

@@ -22,6 +22,8 @@ import net.minecraft.client.resource.language.I18n;
 import net.minecraft.text.Text;
 
 import dev.nebula.Nebula;
+import dev.nebula.utils.DownloadUtils;
+import dev.nebula.utils.altmanager.screens.AltManagerScreen;
 
 @Mixin(TitleScreen.class)
 public abstract class TitleScreenMixin extends Screen
@@ -54,12 +56,25 @@ public abstract class TitleScreenMixin extends Screen
 		// make Realms button smaller
 		realmsButton.setWidth(98);
 		
-		// add AltManager button
-	// 	addDrawableChild(altsButton = ButtonWidget
-	// 		.builder(Text.literal("Alt Manager"),
-	// 			b -> client.setScreen(new AltManagerScreen(this,
-    //             Nebula.getInstance().getAltManager())))
-	// 		.dimensions(width / 2 + 2, realmsButton.getY(), 98, 20).build());
+		// alt manager button
+
+		
+
+		// add custom button
+		String buttonText = "Mods Not Installed (Please Restart)";
+		if (DownloadUtils.modInstalled()) {
+			buttonText = "Mods Installed";
+		}
+		addDrawableChild(ButtonWidget
+			.builder(Text.literal(buttonText), b -> {})
+			.dimensions((int) (width / 2 + 2 - ((realmsButton.getWidth() * 1.5) / 2)), -7, 147, 20).build());
+		
+	// add AltManager button
+	 	addDrawableChild(altsButton = ButtonWidget
+	 		.builder(Text.literal("Alt Manager"),
+	 			b -> client.setScreen(new AltManagerScreen(this,
+                 Nebula.getInstance().getAltManager())))
+	 		.dimensions(width / 2 + 2, realmsButton.getY(), 98, 20).build());
 	}
 	
 	@Inject(at = @At("RETURN"), method = "tick()V")
