@@ -23,16 +23,19 @@ outputFile = "mods.txt"
 wantedMods = open(inputFile, "r").read().splitlines()
 outUrls = []
 
-targetVersion = "1.20.2"
+targetVersion = "1.20.4"
 
 print(f"program started with {len(wantedMods)} mods. Note that this program is not optimized and will take a while to run.")
 
 for mod in wantedMods:
     project = getVersion(mod, targetVersion)
 
-    url = project.files[0]["url"] # Returns the hash of the primary file
-    print(url) # Returns the download URL of the primary file
-    outUrls.append(url)
+    try:
+        url = project.files[0]["url"] # Returns the hash of the primary file
+        print(url) # Returns the download URL of the primary file
+        outUrls.append(url)
+    except:
+        print(f"Could not find the mod {mod} with version {targetVersion}")
 
 with open(outputFile, "w") as f:
     f.write("\n".join(outUrls))

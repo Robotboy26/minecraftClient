@@ -93,7 +93,7 @@ public class Nebula implements ModInitializer {
         });   
 
         // loading mods "settings"
-        Boolean installMods = true;
+        Boolean installMods = false;
         Boolean cloud = true;
         String modfolder = "mods";
 
@@ -103,6 +103,7 @@ public class Nebula implements ModInitializer {
             DownloadUtils.downloadFromFile(modfolder, cloud);
             DownloadUtils.getBaritone(cloud);
             DownloadUtils.getShader();
+            NebulaLogger.info("Are mods intalled and initiated " + DownloadUtils.modInstalled());
         }
     }
 

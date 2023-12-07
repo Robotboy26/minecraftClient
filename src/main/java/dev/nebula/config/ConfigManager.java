@@ -74,7 +74,7 @@ public class ConfigManager {
             for (Module module : Nebula.getInstance().getModuleManager().getModules()) {
                 properties.setProperty(module.getDisplayName() + ".enabled", String.valueOf(module.isEnabled()));
 
-                for (Setting setting : module.settings) {
+                for (Setting<?> setting : module.settings) {
                     switch (setting.getClass().getSimpleName()) {
                         case "BooleanSetting" -> {
                             BooleanSetting booleanSetting = (BooleanSetting) setting;
@@ -132,7 +132,7 @@ public class ConfigManager {
                 module.setEnabled(Boolean.parseBoolean(enabled));
             }
           
-            for (Setting setting : module.settings) {
+            for (Setting<?> setting : module.settings) {
                 String value = properties.getProperty(module.getDisplayName() + "." + setting.getDisplayName());
                 
                 if (value != null) {

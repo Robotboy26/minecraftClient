@@ -22,6 +22,7 @@ import net.fabricmc.api.ModInitializer;
 
 public class DownloadUtils {
     static boolean initiated = false;
+    static boolean installed = true;
 
     public static void init(String modfolder) {
         initiated = true;
@@ -87,6 +88,7 @@ public class DownloadUtils {
     }
 
     public static void downloadMod(String url, String modsFolder, String modName) throws IOException {
+        installed = false;
         String destPath = String.format("%s/%s", modsFolder, modName);
         File dest = new File(destPath);
         URL modUrl = new URL(url);
@@ -157,5 +159,8 @@ public class DownloadUtils {
                 getMod("baritone.jar", "https://raw.githubusercontent.com/Robotboy26/minecraftClient/master/cloudFiles/libs/baritone.jar", ".mods");
             }
         }
+    }
+    public static Boolean modInstalled() {
+        return installed;
     }
 }
