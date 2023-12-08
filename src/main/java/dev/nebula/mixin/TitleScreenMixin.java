@@ -61,7 +61,7 @@ public abstract class TitleScreenMixin extends Screen
 		
 
 		// add custom button
-		String buttonText = "Mods Not Installed (Please Restart)";
+		String buttonText = "(Please Restart)";
 		if (DownloadUtils.modInstalled()) {
 			buttonText = "Mods Installed";
 		}

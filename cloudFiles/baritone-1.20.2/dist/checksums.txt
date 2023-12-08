@@ -1,0 +1,9 @@
+57b2e4bde2e29aefe03d7d0aedcc4e407b70ade8  baritone-unoptimized-fabric-1.10.2.jar
+aa89b7500cc6f81d3b34763f279c07ea570d36b9  baritone-unoptimized-forge-1.10.2.jar
+b15ccf6d2f8bc486f24c1cac02cb8e353d391d69  baritone-standalone-fabric-1.10.2.jar
+c6c4c6f0523d4067913dc8ec1e66cf694b0ab077  baritone-unoptimized-1.10.2.jar
+0fdf670756273a698cae6b00e9db85a2ec06c3f5  baritone-standalone-forge-1.10.2.jar
+45cd4cb5239db1c089221e3d5af49618d731c424  baritone-standalone-1.10.2.jar
+1d9eb1a73edaeea7852d8f794c5e818f4da69fe9  baritone-api-1.10.2.jar
+7a124c64886c0f5f057462cc9592717b7cc2b1fb  baritone-api-forge-1.10.2.jar
+209af61cf99683d98a7bea380986286f7532fa9d  baritone-api-fabric-1.10.2.jar
