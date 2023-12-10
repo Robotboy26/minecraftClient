@@ -28,7 +28,6 @@ import com.google.gson.JsonObject;
 import com.mojang.blaze3d.systems.RenderSystem;
 
 import it.unimi.dsi.fastutil.booleans.BooleanConsumer;
-import net.fabricmc.fabric.api.client.screen.v1.Screens;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
 // import net.minecraft.client.gui.Drawable;
@@ -522,25 +521,28 @@ public final class AltManagerScreen extends Screen
 		context.drawTooltip(textRenderer, tooltip, mouseX, mouseY);
 	}
 	
-	private void renderButtonTooltip(DrawContext context, int mouseX,
-		int mouseY)
-	{
-		for(ClickableWidget button : Screens.getButtons(this))
-		{
-			if(!button.isSelected())
+	private void renderButtonTooltip(DrawContext context, int mouseX, int mouseY) {
+		List<ClickableWidget> buttons = new ArrayList<>();
+		// Add code to populate the buttons list
+
+		for (ClickableWidget button : buttons) {
+			if (!button.isSelected()) {
 				continue;
-			
-			if(button != importButton && button != exportButton)
+			}
+
+			if (button != importButton && button != exportButton) {
 				continue;
-			
+			}
+
 			ArrayList<Text> tooltip = new ArrayList<>();
 			addTooltip(tooltip, "window");
-			
-			if(client.options.getFullscreen().getValue())
+
+			if (client.options.getFullscreen().getValue()) {
 				addTooltip(tooltip, "fullscreen");
-			else
+			} else {
 				addTooltip(tooltip, "window_freeze");
-			
+			}
+
 			context.drawTooltip(textRenderer, tooltip, mouseX, mouseY);
 			break;
 		}

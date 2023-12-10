@@ -13,7 +13,6 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-import net.fabricmc.fabric.api.client.screen.v1.Screens;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.TitleScreen;
 import net.minecraft.client.gui.widget.ButtonWidget;
@@ -24,6 +23,7 @@ import net.minecraft.text.Text;
 import dev.nebula.Nebula;
 import dev.nebula.utils.DownloadUtils;
 import dev.nebula.utils.altmanager.screens.AltManagerScreen;
+import net.minecraft.client.gui.Element;
 
 @Mixin(TitleScreen.class)
 public abstract class TitleScreenMixin extends Screen
@@ -40,19 +40,22 @@ public abstract class TitleScreenMixin extends Screen
 	@Inject(at = @At("RETURN"), method = "init()V")
 	private void onInitWidgetsNormal(CallbackInfo ci)
 	{	
-		for(ClickableWidget button : Screens.getButtons(this))
-		{
-			if(!button.getMessage().getString()
-				.equals(I18n.translate("menu.online")))
-				continue;
-			
-			realmsButton = button;
-			break;
+
+		ClickableWidget realmsButton = null;
+		for (Element child : children()) {
+			if (child instanceof ClickableWidget) {
+				ClickableWidget button = (ClickableWidget) child;
+				if (button.getMessage().getString().equals(I18n.translate("menu.online"))) {
+					realmsButton = button;
+					break;
+				}
+			}
 		}
-		
-		if(realmsButton == null)
+
+		if (realmsButton == null) {
 			throw new IllegalStateException("Couldn't find realms button!");
-		
+		}
+
 		// make Realms button smaller
 		realmsButton.setWidth(98);
 		

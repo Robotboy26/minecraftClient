@@ -107,7 +107,7 @@ public final class Encryption
 	{
 		String userHome = System.getProperty("user.home");
 		String xdgDataHome = System.getenv("XDG_DATA_HOME");
-		String encFolderName = ".Wurst encryption";
+		String encFolderName = ".Nebula encryption";
 		
 		Path homeEncFolder = Paths.get(userHome, encFolderName).normalize();
 		Path encFolder = homeEncFolder;
