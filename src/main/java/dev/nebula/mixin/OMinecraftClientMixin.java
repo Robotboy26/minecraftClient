@@ -28,7 +28,6 @@ package dev.nebula.mixin;
 // import meteordevelopment.starscript.Script;
 // import net.minecraft.client.MinecraftClient;
 // import net.minecraft.client.Mouse;
-// import net.minecraft.client.gui.screen.Screen;
 // import net.minecraft.client.network.ClientPlayerInteractionManager;
 // import net.minecraft.client.option.GameOptions;
 // import net.minecraft.client.util.Window;
@@ -110,13 +109,6 @@ package dev.nebula.mixin;
 //     @Inject(method = "doItemUse", at = @At("HEAD"))
 //     private void onDoItemUse(CallbackInfo info) {
 //         doItemUseCalled = true;
-//     }
-
-//     @Inject(method = "disconnect(Lnet/minecraft/client/gui/screen/Screen;)V", at = @At("HEAD"))
-//     private void onDisconnect(Screen screen, CallbackInfo info) {
-//         if (world != null) {
-//             MeteorClient.EVENT_BUS.post(GameLeftEvent.get());
-//         }
 //     }
 
 //     @Inject(method = "setScreen", at = @At("HEAD"), cancellable = true)

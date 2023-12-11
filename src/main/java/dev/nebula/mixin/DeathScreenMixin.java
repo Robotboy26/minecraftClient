@@ -14,7 +14,6 @@ package dev.nebula.mixin;
 // import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 // import net.minecraft.client.gui.screen.DeathScreen;
-// import net.minecraft.client.gui.screen.Screen;
 // import net.minecraft.text.Text;
 // import dev.vili.haiku.Haiku;
 

@@ -3,3 +3,4 @@ Starlight
 Indium
 Mod Menu
 Sodium
+ViaFabricPlus

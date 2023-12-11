@@ -8,7 +8,6 @@ package dev.nebula.mixin;
 // import org.spongepowered.asm.mixin.Shadow;
 
 // import dev.vili.haiku.utils.HaikuLogger;
-// import net.minecraft.client.gui.screen.Screen;
 // import net.minecraft.client.gui.screen.multiplayer.MultiplayerScreen;
 // import net.minecraft.client.gui.widget.ButtonWidget;
 // import net.minecraft.client.gui.screen.multiplayer.MultiplayerServerListWidget;

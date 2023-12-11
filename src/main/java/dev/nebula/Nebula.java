@@ -39,9 +39,9 @@ public class Nebula implements ModInitializer {
     public static final MinecraftClient mc = MinecraftClient.getInstance();
     public static IMinecraftClient imc = (IMinecraftClient)mc;
     private final EventBus EVENT_BUS = new EventBus();
-    private final ModuleManager MODULE_MANAGER = new ModuleManager();
-    private final CommandManager COMMAND_MANAGER = new CommandManager();
-    private final ConfigManager CONFIG_MANAGER = new ConfigManager();
+    private ModuleManager MODULE_MANAGER;
+    private CommandManager COMMAND_MANAGER;
+    private ConfigManager CONFIG_MANAGER;
     private AltManager ALT_MANAGER;
     private static Nebula INSTANCE;
     private Path NebulaFolder;
@@ -70,6 +70,10 @@ public class Nebula implements ModInitializer {
     @Override
     public void onInitialize() {
         NebulaLogger.info("Starting " + MOD_NAME + " version: " + MOD_VERSION);
+        CONFIG_MANAGER = new ConfigManager();
+        MODULE_MANAGER = new ModuleManager();
+        COMMAND_MANAGER = new CommandManager();
+
         initTime = System.currentTimeMillis();
         NebulaFolder = createNebulaFolder();
 

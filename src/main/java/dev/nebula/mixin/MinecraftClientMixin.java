@@ -7,7 +7,6 @@ package dev.nebula.mixin;
 
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.Mouse;
-import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.network.ClientPlayerInteractionManager;
 import net.minecraft.client.option.GameOptions;
 import net.minecraft.client.util.Window;
@@ -37,7 +36,6 @@ public abstract class MinecraftClientMixin implements IMinecraftClient {
     @Shadow public ClientWorld world;
     @Shadow @Final public Mouse mouse;
     @Shadow @Final private Window window;
-    @Shadow public Screen currentScreen;
     @Shadow @Final public GameOptions options;
 
     @Shadow protected abstract void doItemUse();
@@ -89,12 +87,6 @@ public abstract class MinecraftClientMixin implements IMinecraftClient {
     // private void onDoItemUse(CallbackInfo info) {
     //     doItemUseCalled = true;
     // }
-
-    @Inject(method = "disconnect(Lnet/minecraft/client/gui/screen/Screen;)V", at = @At("HEAD"))
-    private void onDisconnect(Screen screen, CallbackInfo info) {
-        // Nebula.getInstance().getModuleManager().getModule("Freecam").setEnabled(false);
-        // Nebula.getInstance().getModuleManager().getModule("LogoutTimer").setEnabled(false);
-    }
 
     // @Inject(method = "setScreen", at = @At("HEAD"), cancellable = true)
     // private void onSetScreen(Screen screen, CallbackInfo info) {

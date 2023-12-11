@@ -1,5 +1,5 @@
 plugins {
-    id 'fabric-loom' version '1.3-SNAPSHOT'
+    id 'fabric-loom' version '1.4-SNAPSHOT'
     id 'maven-publish'
 }
 
@@ -13,7 +13,6 @@ repositories {
     // See https://docs.gradle.org/current/userguide/declaring_repositories.html
     // for more information about repositories.
     mavenCentral()
-    maven { url 'https://maven.fabricmc.net/' }
     maven {
         name = "jitpack.io"
         url = "https://jitpack.io"
@@ -38,9 +37,6 @@ repositories {
 		name = "lukflug"
 		url = "https://lukflug.github.io/maven/"
 	}
-    flatDir {
-			dirs 'libs'
-		}
 }
 
 configurations {
@@ -53,7 +49,7 @@ configurations {
 }
 
 ext {
-    lwjglVersion = '3.3.1'
+    lwjglVersion = '3.3.2'
 }
 
 dependencies {
@@ -66,8 +62,7 @@ dependencies {
     modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
 
     // fabric kotlin intigration
-    implementation 'net.fabricmc:fabric-language-kotlin:1.10.15+kotlin.1.9.21'
-    include 'net.fabricmc:fabric-language-kotlin:1.10.15+kotlin.1.9.21'
+    include "net.fabricmc:fabric-language-kotlin:${fabric_language_kotlin_version}"
 
     // GUI package
     // make sure to replace the version number by the newest version
@@ -77,8 +72,8 @@ dependencies {
     include "com.lukflug:panelstudio-${project.panel_studio_minecraft_version}:${project.panel_studio_version}"
 
     //baritone
-    implementation files('cloudFiles/libs/baritone.jar')
-    include files('cloudFiles/libs/baritone.jar')
+    //implementation files('cloudFiles/libs/baritone.jar')
+    //include files('cloudFiles/libs/baritone.jar')
     //implementation "baritone:fabric:${project.minecraft_version}-SNAPSHOT"
     //include "baritone:fabric:${project.minecraft_version}-SNAPSHOT"
 
@@ -131,20 +126,3 @@ afterEvaluate {
       downloadThreads = 8
    }
 }
-
-// configure the maven publication
-// publishing {
-//     publications {
-//         mavenJava(MavenPublication) {
-//             from components.java
-//         }
-//     }
-
-//     // See https://docs.gradle.org/current/userguide/publishing_maven.html for information on how to set up publishing.
-//     repositories {
-//         // Add repositories to publish to here.
-//         // Notice: This block does NOT have the same function as the block in the top level.
-//         // The repositories here will be used for publishing your artifact, not for
-//         // retrieving dependencies.
-//     }
-// }
