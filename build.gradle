@@ -60,9 +60,10 @@ dependencies {
 
     // Fabric API
     modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
+    implementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
 
     // fabric kotlin intigration
-    include "net.fabricmc:fabric-language-kotlin:${fabric_language_kotlin_version}"
+    //implementation "net.fabricmc:fabric-language-kotlin:${fabric_language_kotlin_version}"
 
     // GUI package
     // make sure to replace the version number by the newest version

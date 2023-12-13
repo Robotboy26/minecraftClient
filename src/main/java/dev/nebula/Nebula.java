@@ -77,32 +77,33 @@ public class Nebula implements ModInitializer {
         initTime = System.currentTimeMillis();
         NebulaFolder = createNebulaFolder();
 
-        // init gui
-        ClientTickEvents.END_CLIENT_TICK.register(client -> {
-            if (!GUIenabled) {
-                for (int i = 32; i<keys.length; i++) keys[i] = GLFW.glfwGetKey(MinecraftClient.getInstance().getWindow().getHandle(),i) == GLFW.GLFW_PRESS;
-                GUI = new ClickGUI();
-                HudRenderCallback.EVENT.register((cli,tickDelta) -> GUI.render());
-                GUIenabled = true;
-            }
-            if (mc.currentScreen instanceof ChatScreen) {
-                // Disable keybinds when chat is open
-                return;
-            }
-            for (int i = 32; i<keys.length; i++) {
-                if (keys[i] != (GLFW.glfwGetKey(MinecraftClient.getInstance().getWindow().getHandle(),i) == GLFW.GLFW_PRESS)) {
-                    keys[i] =! keys[i];
-                    if (keys[i]) {
-                        if (i == ClickGUIModule.keybind.getKey()) GUI.enterGUI();
-                        if (i == HUDEditorModule.keybind.getKey()) GUI.enterHUDEditor();
-                        GUI.handleKeyEvent(i);
-                    }
-                }
-            }
-        });   
+        // // init gui
+        // ClientTickEvents.END_CLIENT_TICK.register(client -> {
+        //     if (!GUIenabled) {
+        //         for (int i = 32; i<keys.length; i++) keys[i] = GLFW.glfwGetKey(MinecraftClient.getInstance().getWindow().getHandle(),i) == GLFW.GLFW_PRESS;
+        //         GUI = new ClickGUI();
+        //         HudRenderCallback.EVENT.register((cli,tickDelta) -> GUI.render());
+        //         GUIenabled = true;
+        //     }
+        //     if (mc.currentScreen instanceof ChatScreen) {
+        //         // Disable keybinds when chat is open
+        //         return;
+        //     }
+        //     for (int i = 32; i<keys.length; i++) {
+        //         if (keys[i] != (GLFW.glfwGetKey(MinecraftClient.getInstance().getWindow().getHandle(),i) == GLFW.GLFW_PRESS)) {
+        //             keys[i] =! keys[i];
+        //             if (keys[i]) {
+        //                 if (i == ClickGUIModule.keybind.getKey()) GUI.enterGUI();
+        //                 if (i == HUDEditorModule.keybind.getKey()) GUI.enterHUDEditor();
+        //                 GUI.handleKeyEvent(i);
+        //             }
+        //         }
+        //     }
+        // });   
+    
 
         // loading mods "settings"
-        Boolean installMods = true;
+        Boolean installMods = false;
         Boolean cloud = true;
         String modfolder = "mods";
 
